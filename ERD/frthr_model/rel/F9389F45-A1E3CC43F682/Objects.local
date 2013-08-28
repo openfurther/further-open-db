@@ -1,0 +1,27 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<oracle.dbtools.crest.model.design.relational.RelationalDesign>
+   <object objectType="SchemaObject" objectID="86AFFAE7-26E5-07F6-FDA2-F636B36EAC87" name="FRTHR_MODEL" seqName="seg_0"/>
+   <object objectType="Table" objectID="1EDC341C-6C60-83FB-E7B2-4F25E34F5E75" name="FCONDITION_ERA" seqName="seg_0"/>
+   <object objectType="Table" objectID="53902FDE-8839-4DCC-C9A7-4D93E726635F" name="FCONDITION_OCCURRENCE" seqName="seg_0"/>
+   <object objectType="Table" objectID="3F042BE4-6BF2-9B20-E85E-7C42F1879738" name="FENCOUNTER" seqName="seg_0"/>
+   <object objectType="Table" objectID="78C2A77A-E3FF-F645-744B-BC215D6F189A" name="FOBSERVATION_FACT" seqName="seg_0"/>
+   <object objectType="Table" objectID="2975C08C-9605-BABE-63AE-2CF3F5519BED" name="FOBSERVATION_PERIOD" seqName="seg_0"/>
+   <object objectType="Table" objectID="475242DD-24BC-FB99-37D3-057B62B91900" name="FORDER_FACT" seqName="seg_0"/>
+   <object objectType="Table" objectID="800F297F-9BAD-1FAD-4CEE-B55C55843C96" name="FPERSON" seqName="seg_0"/>
+   <object objectType="Table" objectID="9C3943B2-9215-2396-BCF9-0790C2BC83FC" name="FPERSON_ASSOC" seqName="seg_0"/>
+   <object objectType="Table" objectID="C20F29EC-907B-037A-B522-CA0601CE1B10" name="FPERSON_LCTN" seqName="seg_0"/>
+   <object objectType="Table" objectID="1FD92D90-A1C6-DEC3-7C1B-AA3B447308E1" name="FPROCEDURE_OCCURRENCE" seqName="seg_0"/>
+   <object objectType="Table" objectID="21811C7D-AE56-C3AD-8652-5B3C351EDD6F" name="FPROVIDER" seqName="seg_0"/>
+   <object objectType="Table" objectID="EA390A4B-115A-E23D-C9FD-65ECABA1C58B" name="FPROVIDER_LCTN" seqName="seg_0"/>
+   <object objectType="Table" objectID="15F364DC-4F50-0C77-C90B-3CD1F0A811FE" name="FSPECIMEN" seqName="seg_0"/>
+   <object objectType="Table" objectID="6E4C9A04-D75E-976B-0D88-45247EA08232" name="FSPECIMEN_EVENT" seqName="seg_0"/>
+   <object objectType="Table" objectID="572C88FE-E945-76D5-CC2D-3AF4AEA0D455" name="FSPECIMEN_NOTE" seqName="seg_0"/>
+   <object objectType="Table" objectID="4D4B5324-D29F-5F89-40AD-242CDA02DE0E" name="FSTORAGE" seqName="seg_0"/>
+   <object objectType="FKIndexAssociation" objectID="3DEF807F-4305-2A5D-DB95-7B03C7AC6210" name="FCONDITION_ERA_FK" seqName="seg_0"/>
+   <object objectType="FKIndexAssociation" objectID="D8720BAC-C7EC-F222-D78D-79E2C42C97A8" name="FOBSERVATION_PERIOD_FK" seqName="seg_0"/>
+   <object objectType="FKIndexAssociation" objectID="EBB7DBF3-A4C7-E349-6835-E12C8A704F37" name="FPERSON_ASSOC_FK1" seqName="seg_0"/>
+   <object objectType="FKIndexAssociation" objectID="70D330A6-01D5-27D5-9E49-E983DC877AE2" name="FPERSON_ASSOC_FK2" seqName="seg_0"/>
+   <object objectType="FKIndexAssociation" objectID="EE9C55D2-D538-0860-1211-76E49830BC73" name="FPERSON_LCTN_FK" seqName="seg_0"/>
+   <object objectType="FKIndexAssociation" objectID="901CEA3E-530F-F065-6E23-43471EB1EFD2" name="FPROVIDER_FK" seqName="seg_0"/>
+   <object objectType="FKIndexAssociation" objectID="FF09A599-6433-0DFE-A6D0-FC08921D0BE2" name="FPROVIDER_LCTN_FK" seqName="seg_0"/>
+</oracle.dbtools.crest.model.design.relational.RelationalDesign>

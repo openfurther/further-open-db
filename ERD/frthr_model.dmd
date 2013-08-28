@@ -1,0 +1,9 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="frthr_model" id="E2F2B002-4BDA-2CD1-CCE5-5369301A379C" version="3.5">
+<createdBy>peter</createdBy>
+<createdTime>2012-05-01 15:30:05 UTC</createdTime>
+<comment>Federated Utah Research Translation Health e-Repository</comment>
+<ownerDesignName>frthr_model</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>E2F2B002-4BDA-2CD1-CCE5-5369301A379C</designId>
+</OSDM_Design>
