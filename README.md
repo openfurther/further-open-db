@@ -1,5 +1,5 @@
-further-open-db
-===============
+OpenFurther Database Artifacts
+----------------------
 
 OpenFurther database artifacts - ddls, erds, etc
 
