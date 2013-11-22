@@ -15,18 +15,19 @@ BEGIN
              where constraint_type='R' 
                and owner='FRTHR_MODEL'
              order by owner,table_name,constraint_name) LOOP
+    
+    -- Generate Drop FK Statements
     dbms_output.put_line('ALTER TABLE ' || i.owner || '.' || i.table_name || ' DROP CONSTRAINT ' || i.constraint_name ||';');
-    --Optionally Execute
+    
+    --Optionally Execute Drop
     --EXECUTE IMMEDIATE 'ALTER TABLE ' || i.owner || '.' || i.table_name || ' DROP CONSTRAINT ' || i.constraint_name ;
-  END LOOP;
 
+  END LOOP;
 
 END;
 /
 
 /* ***** END OF DROP FK DDL SCRIPT ***** */
-
-
 
 
 /* For Generating ERD ONLY, Drop the FKs later */
