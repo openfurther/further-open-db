@@ -1,29 +1,11 @@
 /* Oracle DDL for FRTHR_MODEL Schema */
 
-/* Drop If Necessary */
-/*
-drop view FRTHR_MODEL.Person_Specimen_V;
-drop view FRTHR_MODEL.Specimen_Storage_V;
+/* BEG Version Tracking */
+pwkm 20131203 Version 1.0.0
+Initial Harmonized Data Model with MPI and CADW (caTissue Data Warehouse)
 
-drop table FRTHR_MODEL.FCONDITION_OCCURRENCE;
-drop table FRTHR_MODEL.FCONDITION_ERA;
-drop table FRTHR_MODEL.FOBSERVATION_FACT;
-drop table FRTHR_MODEL.FOBSERVATION_PERIOD;
-drop table FRTHR_MODEL.FORDER_FACT;
-drop table FRTHR_MODEL.FPROCEDURE_OCCURRENCE;
-drop table FRTHR_MODEL.FENCOUNTER;
+/* END Version Tracking */
 
-drop table FRTHR_MODEL.FSTORAGE;
-drop table FRTHR_MODEL.FSPECIMEN_NOTE;
-drop table FRTHR_MODEL.FSPECIMEN_EVENT;
-drop table FRTHR_MODEL.FSPECIMEN;
-
-drop table FRTHR_MODEL.FPERSON_ASSOC;
-drop table FRTHR_MODEL.FPERSON_LCTN;
-drop table FRTHR_MODEL.FPROVIDER_LCTN;
-drop table FRTHR_MODEL.FPROVIDER;
-drop table FRTHR_MODEL.FPERSON;
-*/
 
 /* BEGIN CREATE TABLE */
 
@@ -76,6 +58,53 @@ COMMENT ON COLUMN FRTHR_MODEL.FPERSON_EXTID.ID_TYPE_CID
                IS 'DTS ID Type Concept ID';
 COMMENT ON COLUMN FRTHR_MODEL.FPERSON_EXTID.ID_VALUE 
                IS 'Person External ID Value';
+
+
+/* Person Names */
+CREATE TABLE FRTHR_MODEL.FPERSON_NAME
+(
+  FPERSON_NAME_ID NUMBER(*,0),
+  FPERSON_ID NUMBER(*,0),
+  DATASET_ID NUMBER(*,0),
+  FPERSON_COMPOSITE_ID VARCHAR2(64),
+  DATASOURCE_NMSPC_ID NUMBER(*,0),
+  NAME_TYPE_NMSPC_ID NUMBER(*,0),
+  NAME_TYPE_CID VARCHAR2(100),
+  FIRST_NAME VARCHAR2(128),
+  LAST_NAME VARCHAR2(128),
+  MAIDEN_NAME VARCHAR2(128),
+  MIDDLE_NAME VARCHAR2(128),
+  SALUTATION VARCHAR2(64),
+  SUFFIX VARCHAR2(64),
+  CONSTRAINT FPERSON_NAME_PK PRIMARY KEY (FPERSON_NAME_ID, DATASET_ID)
+);
+COMMENT ON  TABLE FRTHR_MODEL.FPERSON_NAME IS 'PERSON Names';
+COMMENT ON COLUMN FRTHR_MODEL.FPERSON_NAME.FPERSON_NAME_ID 
+               IS 'Auto ID to support the one(person)-to-many(Names) relationship';
+COMMENT ON COLUMN FRTHR_MODEL.FPERSON_NAME.FPERSON_ID 
+               IS 'FK to FPERSON.FPerson_ID';
+COMMENT ON COLUMN FRTHR_MODEL.FPERSON_NAME.DATASET_ID  
+               IS 'Dataset ID Similar to a FURTHER Query ID';
+COMMENT ON COLUMN FRTHR_MODEL.FPERSON_NAME.FPERSON_COMPOSITE_ID 
+               IS 'Composite key of dataset_id:fperson_id to reduce object-relational mapping complexity';
+COMMENT ON COLUMN FRTHR_MODEL.FPERSON_NAME.DATASOURCE_NMSPC_ID 
+               IS 'MDR Data Source Namespace ID';
+COMMENT ON COLUMN FRTHR_MODEL.FPERSON_NAME.NAME_TYPE_NMSPC_ID 
+               IS 'DTS Namespace ID for Name Types';
+COMMENT ON COLUMN FRTHR_MODEL.FPERSON_NAME.NAME_TYPE_CID 
+               IS 'DTS Name Type Concept ID such as Legal, Alias, etc.';
+COMMENT ON COLUMN FRTHR_MODEL.FPERSON_NAME.FIRST_NAME 
+               IS 'Person First Name';
+COMMENT ON COLUMN FRTHR_MODEL.FPERSON_NAME.LAST_NAME 
+               IS 'Person Last Name';
+COMMENT ON COLUMN FRTHR_MODEL.FPERSON_NAME.MAIDEN_NAME 
+               IS 'Person Maiden Name';
+COMMENT ON COLUMN FRTHR_MODEL.FPERSON_NAME.MIDDLE_NAME 
+               IS 'Person Middle Name';
+COMMENT ON COLUMN FRTHR_MODEL.FPERSON_NAME.SALUTATION 
+               IS 'Person Name Salutation';
+COMMENT ON COLUMN FRTHR_MODEL.FPERSON_NAME.SUFFIX 
+               IS 'Person Name Suffix';
 
 
 /* PERSON Location or ADDRESS */
@@ -177,6 +206,10 @@ COMMENT ON COLUMN FRTHR_MODEL.FLOCATION.END_DT
                IS 'Location Component Value End Date';
 
 /* Person Link to Location */
+/* Note: This is a many-to-many relationship.
+   We can potentially simplify things if we change to a one-to-many
+   from one person to many flocation 
+   But we can experiment with software to see which way is better. */
 CREATE TABLE FRTHR_MODEL.FPERSON_LCTN
 (
   FPERSON_LCTN_ID NUMBER(*,0),
@@ -1047,11 +1080,31 @@ COMMENT ON COLUMN FRTHR_MODEL.SCHEMA_VERSION.VERSION_ID
 COMMENT ON COLUMN FRTHR_MODEL.SCHEMA_VERSION.VERSION_DT 
         IS 'VERSION Datetime Defaults to Current DateTime';
 
-/* Example VERSION Insert */
-/* insert into schema_version(version_id) values ('1.0.0'); */
+/* Some Example VERSION Inserts */
+/*
+insert into schema_version(version_id) values ('1.0.0');
+OR
+insert into schema_version(version_id,version_dt) values ('1.0.0',default);
+OR
+insert into schema_version values ('1.0.0',default);
+OR
+insert into schema_version values ('1.0.0',sysdate);
+*/
 
 
 /* END OF CREATE TABLE DDL SCRIPT */
+
+/* BEG DB Views */
+
+/* V_CUR_SCHEMA_VERSION */
+create or replace view FRTHR_MODEL.V_CUR_SCHEMA_VERSION
+as
+select * 
+  from schema_version
+ where rownum = 1
+ order by version_dt desc;
+
+/* END DB Views */
 
 
 /* Some potential DB Views */
@@ -1094,3 +1147,10 @@ select spe.fspecimen_id,
 
 /* End DB Views */
 
+/* Always Update Version Number At the End of Script */
+/*
+insert into schema_version(version_id)
+     values ('1.0.0');
+
+commit;
+*/
