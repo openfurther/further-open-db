@@ -37,6 +37,28 @@ COMMENT ON COLUMN FMDR.ASSET.ASSET_DEACTIVATE_DT IS 'Asset Deactivation Date';
 COMMENT ON COLUMN FMDR.ASSET.ASSET_DSC IS 'Asset Description';
 
 
+/* ASSET_PROP Table */
+CREATE TABLE FMDR.ASSET_PROP 
+(
+  ASSET_PROP_ID NUMBER, 
+  ASSET_TYPE_PROP_ID NUMBER, 
+  ASSET_ID NUMBER, 
+  PROP_VALUE VARCHAR2(50), 
+  CONSTRAINT ASSET_PROP_PK PRIMARY KEY (ASSET_PROP_ID),
+  CONSTRAINT ASSET_PROP_FK1
+             FOREIGN KEY (ASSET_TYPE_PROP_ID)
+             REFERENCES FMDR.ASSET (ASSET_ID),
+  CONSTRAINT ASSET_PROP_FK2
+             FOREIGN KEY (ASSET_ID)
+             REFERENCES FMDR.ASSET (ASSET_ID)
+);
+COMMENT ON  TABLE FMDR.ASSET_PROP IS 'Asset Property';
+COMMENT ON COLUMN FMDR.ASSET_PROP.ASSET_PROP_ID IS 'Asset Property ID';
+COMMENT ON COLUMN FMDR.ASSET_PROP.ASSET_TYPE_PROP_ID IS 'Asset Type Asset ID';
+COMMENT ON COLUMN FMDR.ASSET_PROP.ASSET_ID IS 'Asset ID that owns this Property Value';
+COMMENT ON COLUMN FMDR.ASSET_PROP.PROP_VALUE IS 'Asset Property Value';
+
+
 /* ASSET_ASSOC Table */
 CREATE TABLE FMDR.ASSET_ASSOC
 (
@@ -314,7 +336,11 @@ SELECT av.asset_namespace_asset_id,
        get_asset_label(ap.asset_type_prop_id) as asset_type_prop_label,
        ap.prop_value as asset_prop_value
   FROM asset_v av, asset_prop ap
- WHERE av.asset_id = ap.asset_id;
+ WHERE av.asset_id = ap.asset_id
+ order by av.asset_namespace_asset_id,
+          av.asset_type_asset_id,
+          av.asset_id,
+          ap.asset_prop_id;
 
 /* END Views */
 
