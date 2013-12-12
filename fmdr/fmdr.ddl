@@ -7,7 +7,39 @@ CREATE USER FMDR IDENTIFIED BY fmdr
   TEMPORARY TABLESPACE "FRTHR_TMP";
 */
 
-/* ***** TABLES ***** */
+/* This Sequence Section is Commented Out
+
+  Sequence Object for ALL Asset Related (Exclude Users) Tables
+
+  Let's Assign Sequence Value Range 1,000,000 to 9,999,999
+  We will always create Assets in Development, and then Export & Import into Test & Prod Environments.
+  This way, we will keep Asset IDs the same across all environments.
+  We want to keep Asset IDs as unique as possible since Assets are very generic in the MDR, and 
+  can become confusing very quickly, if we use same ID Values for different things.
+
+  DROP SEQUENCE FMDR.ASSET_ID_SEQ;
+
+  CREATE SEQUENCE ASSET_ID_SEQ
+    MINVALUE 1000000 MAXVALUE 9999999
+    INCREMENT BY 1
+    START WITH 1000000
+    NOCACHE ORDER NOCYCLE;
+
+  Get Current Sequence Value without increment:
+  select FMDR.ASSET_ID_SEQ.currval from dual;
+
+  Get Current Sequence Value and increment its value (except for the initial value):
+  select FMDR.ASSET_ID_SEQ.nextval from dual;
+
+  To see the lastest LAST_NUMBER without incrementing the Sequence Object:
+  SELECT *
+    FROM user_sequences
+   where sequence_name = 'ASSET_ID_SEQ';
+
+End Sequence Comment */
+
+
+/* ***** BEG TABLES ***** */
 
 /* FMDR.ASSET */
 CREATE TABLE FMDR.ASSET
@@ -272,6 +304,8 @@ COMMENT ON COLUMN FMDR.ASSET_RESOURCE.UPDATE_DTS
         IS 'Last Updated Date Timestamp';
 COMMENT ON COLUMN FMDR.ASSET_RESOURCE.UPDATE_USER_ID
         IS 'Last Updated User ID';
+
+/* END Tables */
 
 
 /* BEG Views */

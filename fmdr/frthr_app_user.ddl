@@ -1,3 +1,32 @@
+/* This Sequence Section is Commented Out
+
+  Sequence Object for ALL User Related (Exclude Assets) Tables
+  The purpose of having this second sequence object, is so that when we add users directly into production,
+  We will not mess up the Sequence Numbers for the Assets.
+
+  Let's Assign Sequence Value Range 10,000 to 999,999
+
+  DROP SEQUENCE FMDR.APP_USER_ID_SEQ;
+
+  CREATE SEQUENCE  FMDR.APP_USER_ID_SEQ
+    MINVALUE 10000 MAXVALUE 999999
+    INCREMENT BY 1 START WITH 10000
+    NOCACHE ORDER NOCYCLE;
+
+  Get Current Sequence Value without increment:
+  select FMDR.APP_USER_ID_SEQ.currval from dual;
+
+  Get Current Sequence Value and increment its value (except for the initial value):
+  select FMDR.APP_USER_ID_SEQ.nextval from dual;
+
+  To see the lastest LAST_NUMBER without incrementing the Sequence Object:
+  SELECT *
+    FROM user_sequences
+   where sequence_name = 'APP_USER_ID_SEQ';
+
+End Sequence Comment */
+
+
 /* Create base tables with NO FKs first, then the Linking Tables with the FKs. */
 
 --------------------------------------------------------
