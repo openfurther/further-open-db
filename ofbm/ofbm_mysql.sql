@@ -6,10 +6,11 @@
   Date: 20140114
   DESCRIPTION:
     The OFBM is a de-normalized biospecimen data mart
-    to support ETL data from any single biobanking system.
+    to support ETL data from any single biobanking system(s).
     It was initially created to provide a simplified data model to connect
     with the OpenFurther data federation framework. 
-    However, it can be used for other reporting purpose as well.
+    However, it may be used for other reporting purpose as well.
+    Run ONLY the sections that you need below.
 */
 
 /* BEGIN Possible CLEANUP */
@@ -18,8 +19,6 @@ Drop schema ofbm;
 create schema ofbm;
 
 set foreign_key_checks=off;
-DROP TABLE IF EXISTS ofbm.consent;
-DROP TABLE IF EXISTS ofbm.person_protocol;
 DROP TABLE IF EXISTS ofbm.sample_extid;
 DROP TABLE IF EXISTS ofbm.sample_event;
 DROP TABLE IF EXISTS ofbm.sample_storage;
@@ -28,11 +27,11 @@ DROP TABLE IF EXISTS ofbm.person_dx;
 DROP TABLE IF EXISTS ofbm.person_race;
 DROP TABLE IF EXISTS ofbm.person_extid;
 DROP TABLE IF EXISTS ofbm.person;
+DROP TABLE IF EXISTS ofbm.protocol_consent;
 DROP TABLE IF EXISTS ofbm.protocol_dx;
 DROP TABLE IF EXISTS ofbm.protocol;
 
-Truncate TABLE ofbm.consent;
-Truncate TABLE ofbm.person_protocol;
+Truncate TABLE ofbm.protocol_consent;
 Truncate TABLE ofbm.protocol_dx;
 Truncate TABLE ofbm.protocol;
 Truncate TABLE ofbm.sample_extid;
@@ -43,7 +42,6 @@ Truncate TABLE ofbm.person_dx;
 Truncate TABLE ofbm.person_race;
 Truncate TABLE ofbm.person_extid;
 Truncate TABLE ofbm.person;
-
 set foreign_key_checks=on;
 
 */
@@ -122,13 +120,13 @@ create table ofbm.person_dx (
 ;
 
 
-/* Sample or Biospecimen */
+/* Sample or Biospecimen FACT Table */
 create table ofbm.sample
 ( 
   s_id int unsigned comment 'Sample ID',
   parent_s_id int unsigned comment 'Parent Sample ID',
   p_id int unsigned not null comment 'Person ID', 
-  protocol_id varchar(255) comment 'Protocol ID from External Biospecimen System',
+  protocol_id varchar(255) not null comment 'Protocol ID from External Biospecimen System',
   label varchar(64) comment 'Sample Label',
   barcode varchar(64) comment 'Sample Barcode',
   lineagetype varchar(32) comment 'Lineage Type such as Aliquot, Derived, etc.',
@@ -148,9 +146,10 @@ create table ofbm.sample
   conc decimal(10,2) comment 'Concentration Measurement Value',
   bodysite_nmspc_id int unsigned comment 'DTS Namespace for Body Site',
   bodysite_cid varchar(100) comment 'Body Site Concept ID for where Sample was extracted',
-  path_dx varchar(100) comment 'Pathology Diagnosis',
+  path_dx_desc varchar(100) comment 'Pathology Diagnosis Short Text Description',
   path_report varchar(255) comment 'Pathology Report Text',
   sample_gid int unsigned comment 'NCI Global Sample ID',
+  storage_path varchar(255) comment 'Full Storage Path Separated by Delimiter',
   ts timestamp default now() comment 'Auto Timestamp to keep track of ETL process',
   constraint sample_pk primary key (s_id)
 )
@@ -178,8 +177,8 @@ create table ofbm.sample_extid(
 create table ofbm.sample_event(
   s_event_id int unsigned auto_increment comment 'Auto-Increment Surrogate ID',
   s_id int unsigned not null comment 'Sample ID',
-  sample_label varchar(255) comment 'Sample Label',
-  sample_barcode varchar(255) comment 'Sample Barcode',
+  sample_label varchar(255) comment 'Optional Sample Event Label',
+  sample_barcode varchar(255) comment 'Optional Sample Event Barcode',
   event_ts datetime comment 'Event TimeStamp',
   event_nmspc_id int unsigned comment 'Event Namespace ID',
   event_cid varchar(100) comment 'Event Concept Code in DTS',
@@ -192,6 +191,7 @@ create table ofbm.sample_event(
 ;
 
 /* Sample Storage */
+/* Moved into sample.storage_path
 create table ofbm.sample_storage (
   s_id int unsigned comment 'Sample ID',
   site varchar(128) comment 'Site or Lab where the sample is located',
@@ -203,6 +203,7 @@ create table ofbm.sample_storage (
   default charset=utf8 
   comment='Sample Storage Location'
 ;
+*/
 
 /* sample Diagnosis */
 /*
@@ -225,8 +226,8 @@ create table ofbm.sample_dx (
 
 /* Protocol with Admin Data from a Single Biobanking System */
 create table ofbm.protocol (
-  protocol_id varchar(255) comment 'Protocol ID from External Biospecimen System',
-  protocol_nmspc varchar(255) comment 'Protocol Namespace for Protocol ID to support Federation',
+  protocol_id varchar(255) not null comment 'Protocol ID from External Biospecimen System',
+  protocol_nmspc varchar(255) comment 'Protocol Namespace(Organization) for Protocol ID to support Federation',
   protocol_type varchar(255) comment 'Protocol Type',
   irb_num varchar(255) comment 'IRB Number',
   pi_name varchar(255) comment 'Principal Investigator Name',
@@ -254,6 +255,7 @@ create table ofbm.protocol_dx (
 ;
 
 /* Person to Protocol Linking Table */
+/*
 create table ofbm.person_protocol (
   p_id int unsigned comment 'Person ID',
   protocol_id varchar(255) comment 'Protocol ID',
@@ -264,20 +266,22 @@ create table ofbm.person_protocol (
   default charset=utf8 
   comment='Person to Protocol Linking Table'
 ;
+*/
 
 /* Consent */
-create table ofbm.consent (
-  consent_id int(11) unsigned auto_increment comment 'Auto-Increment Surrogate ID',
+create table ofbm.protocol_consent (
+  protocol_consent_id int unsigned auto_increment comment 'Auto-Increment Surrogate ID',
   protocol_id varchar(255) not null comment 'Protocol ID',
   question varchar(255) not null comment 'Consent Question Statement Text',
   answer varchar(255) comment 'Consent answer usually Y or N',
   local_code varchar(255) comment 'Local Consent Statement Code',
-  rpms varchar(255) comment 'RPMS Category Code',
-  primary key (consent_id)
+  rpms_code varchar(255) comment 'RPMS Category Code',
+  ts timestamp default now() comment 'Auto Timestamp to keep track of ETL process',
+  primary key (protocol_consent_id)
 ) 
   engine=innodb 
   default charset=utf8 
-  comment='Consent Statements for Protocols'
+  comment='Consent Statements with Answers for Protocols'
 ;
 
 /* END TABLES */
@@ -285,10 +289,7 @@ create table ofbm.consent (
 
 /* BEGIN FK */
 
-/* Optional disable fk check */
-set foreign_key_checks=off;
-
-/* person */
+/* person stuff */
 alter table ofbm.person_race
   add constraint person_race_fk1
   foreign key ( p_id ) 
@@ -304,6 +305,18 @@ alter table ofbm.person_dx
   foreign key ( p_id )
   references ofbm.person( p_id );
 
+/* Protocol_dx */
+alter table ofbm.protocol_dx
+  add constraint protocol_dx_fk1
+  foreign key ( protocol_id )
+  references ofbm.protocol( protocol_id );
+
+/* Protocol_Consent */
+alter table ofbm.protocol_consent
+  add constraint protocol_consent_fk1
+  foreign key ( protocol_id ) 
+  references ofbm.protocol( protocol_id );
+
 /* sample */
 alter table ofbm.sample
   add constraint sample_fk1
@@ -312,99 +325,47 @@ alter table ofbm.sample
 
 alter table ofbm.sample
   add constraint sample_fk2
+  foreign key ( p_id )
+  references ofbm.person( p_id );
+
+alter table ofbm.sample
+  add constraint sample_fk3
   foreign key ( protocol_id ) 
   references ofbm.protocol( protocol_id );
 
-alter table ofbm.sample_storage
-  add constraint sample_storage_fk1
-  foreign key ( s_id ) 
-  references ofbm.sample( s_id );
+alter table ofbm.sample
+  add constraint sample_fk4
+  foreign key ( protocol_id ) 
+  references ofbm.protocol_dx( protocol_id );
 
+alter table ofbm.sample
+  add constraint sample_fk5
+  foreign key ( protocol_id ) 
+  references ofbm.protocol_consent( protocol_id );
+
+/* Sample External ID */
 alter table ofbm.sample_extid
   add constraint sample_extid_fk1
   foreign key ( s_id ) 
   references ofbm.sample( s_id );
-  
+
+/* Sample Events */
 alter table ofbm.sample_event
   add constraint sample_event_fk1
   foreign key ( s_id ) 
   references ofbm.sample( s_id );
 
+
+
+/* Views or SQLs */
 /*
-alter table ofbm.sample_dx
-  add constraint sample_dx_fk1
-  foreign key ( s_id ) 
-  references ofbm.sample( s_id );
+select p.p_id as personID,
+       p.last_name,
+       p.first_name,
+       s.s_id as sampleID,
+       s.label as sampleLabel,
+       s.barcode as sampleBarcode
+  from person p,
+       sample s
+ where p.p_id = s.s_id;
 */
-
-/* person_protocol */
-alter table ofbm.person_protocol
-  add constraint person_protocol_fk1
-  foreign key ( p_id ) 
-  references ofbm.person( p_id );
-
-alter table ofbm.person_protocol
-  add constraint person_protocol_fk2
-  foreign key ( protocol_id ) 
-  references ofbm.protocol( protocol_id );
-
-alter table ofbm.protocol_dx
-  add constraint protocol_dx_fk1
-  foreign key ( protocol_id )
-  references ofbm.protocol( protocol_id );
-
-alter table ofbm.consent
-  add constraint consent_fk1
-  foreign key ( protocol_id ) 
-  references ofbm.protocol( protocol_id );
-
-
-/* BEGIN Drop All FKs */
-/* FKs are for Design Purpose ONLY! */
-/* Not needed in the ETL */
-/*
-alter table ofbm.person_race
-      drop foreign key person_race_fk1;
-
-alter table ofbm.person_extid
-       drop foreign key person_extid_fk1;
-
-alter table ofbm.person_dx
-       drop foreign key person_dx_fk1;
-*/
-
-/* sample */
-/*
-alter table ofbm.sample
-       drop foreign key sample_fk1;
-
-alter table ofbm.sample_storage
-       drop foreign key sample_storage_fk1;
-
-alter table ofbm.sample_extid
-       drop foreign key sample_extid_fk1;
-  
-alter table ofbm.sample_event
-       drop foreign key sample_event_fk1;
-*/
-
-/*
-alter table ofbm.sample_dx
-       drop foreign key sample_dx_fk1;
-*/
-
-/* person_protocol */
-/*
-alter table ofbm.person_protocol
-       drop foreign key person_protocol_fk1;
-
-alter table ofbm.person_protocol
-       drop foreign key person_protocol_fk2;
-
-alter table ofbm.protocol_dx
-       drop foreign key protocol_dx_fk1;
-
-alter table ofbm.consent
-       drop foreign key consent_fk1;
-*/
-/* END DROP FK */
