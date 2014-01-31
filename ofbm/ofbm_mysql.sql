@@ -6,7 +6,7 @@
   Date: 20140114
   DESCRIPTION:
     The OFBM is a de-normalized biospecimen data mart
-    to support ETL data from any single biobanking system(s).
+    to support ETL data from any single biobanking system.
     It was initially created to provide a simplified data model to connect
     with the OpenFurther data federation framework. 
     However, it may be used for other reporting purpose as well.
@@ -21,7 +21,6 @@ create schema ofbm;
 set foreign_key_checks=off;
 DROP TABLE IF EXISTS ofbm.sample_extid;
 DROP TABLE IF EXISTS ofbm.sample_event;
-DROP TABLE IF EXISTS ofbm.sample_storage;
 DROP TABLE IF EXISTS ofbm.sample;
 DROP TABLE IF EXISTS ofbm.person_dx;
 DROP TABLE IF EXISTS ofbm.person_race;
@@ -37,7 +36,6 @@ Truncate TABLE ofbm.protocol;
 Truncate TABLE ofbm.sample_extid;
 Truncate TABLE ofbm.sample_event;
 Truncate TABLE ofbm.sample;
-Truncate TABLE ofbm.sample_storage;
 Truncate TABLE ofbm.person_dx;
 Truncate TABLE ofbm.person_race;
 Truncate TABLE ofbm.person_extid;
@@ -55,24 +53,20 @@ create table ofbm.person (
   last_name varchar(64) comment 'Last Name',
   first_name varchar(64) comment 'First Name',
   middle_name varchar(64) comment 'Middle Name',
-  ssn varchar(16) comment 'Social Security Number',
-  admin_gender_nmspc_id int unsigned comment 'Gender Namespace',
-  admin_gender_cid varchar(100) comment 'Gender Concept ID',
-  ethnicity_nmspc_id int unsigned comment 'Ethnicity Namespace',
-  ethnicity_cid varchar(100) comment 'Ethnicity Concept ID',
+  gender varchar(100) comment 'Gender',
+  ethnicity varchar(100) comment 'Ethnicity',
   birth_dt date comment 'Birth Date',
   birth_yr int unsigned comment 'Birth Year',
   birth_mon int unsigned comment 'Birth Month',
   birth_day int unsigned comment 'Birth Day',
-  vital_status_nmspc_id int unsigned comment 'Vital Status Namespace',
-  vital_status varchar(100) comment 'Vital Status Concept ID',
+  vital_status varchar(100) comment 'Vital Status',
   death_dt date comment 'Death Date',
   death_yr int unsigned comment 'Death Year',
   ts timestamp default now() comment 'Auto Timestamp to keep track of ETL process',
   primary key (p_id)
-) 
-  engine=innodb 
-  default charset=utf8 
+)
+  engine=innodb
+  default charset=utf8
   comment='Person'
 ;
 
@@ -80,8 +74,7 @@ create table ofbm.person (
 create table ofbm.person_race (
   p_race_id int unsigned auto_increment comment 'Auto-Increment Surrogate ID',
   p_id int unsigned not null comment 'Person ID',
-  race_nmspc_id int unsigned comment 'Race Namespace',
-  race_cid varchar(100) comment 'Race Concept ID',
+  race varchar(100) comment 'Race',
   ts timestamp default now() comment 'Auto Timestamp to keep track of ETL process',
   primary key (p_race_id)
 ) 
@@ -99,13 +92,14 @@ create table ofbm.person_extid (
   ext_value varchar(255) comment 'External ID Value',
   ts timestamp default now() comment 'Auto Timestamp to keep track of ETL process',
   primary key (p_ext_id)
-) 
-  engine=innodb 
-  default charset=utf8 
+)
+  engine=innodb
+  default charset=utf8
   comment='Person MRN or External IDs'
 ;
 
 /* Person Diagnosis */
+/* Will System use both icd9 and icd10 codes? */
 create table ofbm.person_dx (
   p_dx_id int unsigned auto_increment comment 'Auto-Increment Surrogate ID',
   p_id int unsigned not null comment 'Person ID',
@@ -130,22 +124,15 @@ create table ofbm.sample
   label varchar(64) comment 'Sample Label',
   barcode varchar(64) comment 'Sample Barcode',
   lineagetype varchar(32) comment 'Lineage Type such as Aliquot, Derived, etc.',
-  category_nmspc_id int unsigned comment 'DTS Category Namespace',
-  category_cid varchar(100) comment 'DTS Concept ID for Category',
-  type_nmspc_id int unsigned comment 'DTS Sample Type Namespace',
-  type_cid varchar(100) comment 'DTS Sample Type Concept ID',
-  qualifier_nmspc_id int unsigned comment 'DTS Qualifier Namespace',
-  qualifier_cid varchar(100) comment 'DTS Qualifier Concept ID',
-  status_nmspc_id int unsigned comment 'DTS Status Namespace',
-  status_cid varchar(100) comment 'DTS Status Concept ID',
-  amount_uom_nmspc_id int unsigned comment 'DTS Amount Unit of Measure Namespace',
-  amount_uom_cid varchar(100) comment 'DTS Amount Unit of Measure Concept ID',
+  category varchar(100) comment 'Category',
+  type varchar(100) comment 'Sample Type such as DNA, etc',
+  qualifier varchar(100) comment 'Qualifier',
+  status varchar(100) comment 'Status',
+  amount_uom varchar(100) comment 'Amount Unit of Measure',
   amount decimal(10,2) comment 'Sample Volume Amount',
-  conc_uom_nmspc_id int unsigned comment 'DTS Concentration Unit of Measure Namespace',
-  conc_uom_cid varchar(100) comment 'DTS Concentration Unit of Measure Concept ID',
+  conc_uom varchar(100) comment 'Concentration Unit of Measure',
   conc decimal(10,2) comment 'Concentration Measurement Value',
-  bodysite_nmspc_id int unsigned comment 'DTS Namespace for Body Site',
-  bodysite_cid varchar(100) comment 'Body Site Concept ID for where Sample was extracted',
+  bodysite varchar(100) comment 'Body Site for where Sample was extracted',
   path_dx_desc varchar(100) comment 'Pathology Diagnosis Short Text Description',
   path_report varchar(255) comment 'Pathology Report Text',
   sample_gid int unsigned comment 'NCI Global Sample ID',
@@ -180,8 +167,7 @@ create table ofbm.sample_event(
   sample_label varchar(255) comment 'Optional Sample Event Label',
   sample_barcode varchar(255) comment 'Optional Sample Event Barcode',
   event_ts datetime comment 'Event TimeStamp',
-  event_nmspc_id int unsigned comment 'Event Namespace ID',
-  event_cid varchar(100) comment 'Event Concept Code in DTS',
+  event varchar(100) comment 'Event',
   ts timestamp default now() comment 'Auto Timestamp to keep track of ETL process',
   primary key (s_event_id)
 ) 
@@ -190,44 +176,9 @@ create table ofbm.sample_event(
   comment='Sample events such as freezing, thawing, aliquot, etc.'
 ;
 
-/* Sample Storage */
-/* Moved into sample.storage_path
-create table ofbm.sample_storage (
-  s_id int unsigned comment 'Sample ID',
-  site varchar(128) comment 'Site or Lab where the sample is located',
-  full_path varchar(128) comment 'Full Storage Path Separated by Delimiter',
-  ts timestamp default now() comment 'Auto Timestamp to keep track of ETL process',
-  primary key (s_id)
-) 
-  engine=innodb 
-  default charset=utf8 
-  comment='Sample Storage Location'
-;
-*/
-
-/* sample Diagnosis */
-/*
-create table ofbm.sample_dx (
-  s_dx_id int unsigned not null auto_increment comment 'Auto-Increment Surrogate ID',
-  s_id int unsigned not null comment 'Sample ID',
-  collectiongroup varchar(255) comment 'Collection Group Name',
-  dx varchar(255) comment 'Clinical Diagnosis',
-  dx_status varchar(255) comment 'Clinical Diagnosis Status',
-  dx_nmspc_id int unsigned comment 'Diagnosis Namespace ID',
-  snomed int unsigned comment 'SNOMED Code',
-  ts timestamp default now() comment 'Auto Timestamp to keep track of ETL process',
-  primary key (s_dx_id)
-) 
-  engine=innodb 
-  default charset=utf8 
-  comment='Sample Medical Conditions or Diagnosis'
-;
-*/
-
 /* Protocol with Admin Data from a Single Biobanking System */
 create table ofbm.protocol (
   protocol_id varchar(255) not null comment 'Protocol ID from External Biospecimen System',
-  protocol_nmspc varchar(255) comment 'Protocol Namespace(Organization) for Protocol ID to support Federation',
   protocol_type varchar(255) comment 'Protocol Type',
   irb_num varchar(255) comment 'IRB Number',
   pi_name varchar(255) comment 'Principal Investigator Name',
