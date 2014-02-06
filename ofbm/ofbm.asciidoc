@@ -1,0 +1,100 @@
+////
+Comments
+:Author: Peter Mo
+:Email: peter.mo@utah.edu
+:Date: 20140206
+:Revision: 1.0
+////
+
+= OpenFurther Biospecimen Model Documentation
+
+== License
+Copyright (C) [2013] [The FURTHeR Project]
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at 
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+== Background
+
+=== The Role of the OpenFurther Biospecimen Data Model (OFBM)
+The OFBM is a de-normalized biospecimen data mart to support ETL data from any single biobanking system.
+It was initially created to provide a simplified data model to connect with the OpenFurther data federation framework.
+However, it may be used for other reporting purpose as well.
+
+=== Tables Descriptions
+[options="header"]
+|=======================
+|Table Name|Description
+|Sample|Samples
+|Sample_Extid|External Sample IDs
+|Sample_Event|Sample events such as freezing, thawing, aliquot, etc.
+|Protocol|Sample Collection Protocol with Admin Information
+|Protocol_DX|Protocol Diagnosis
+|Protocol_Consent|Consent Statements with Answers for Protocols
+|Person|Person
+|Person_Race|Person Race
+|Person_Extid|Person External IDs
+|Person_DX|Person Diagnosis
+|=======================
+
+== Data Table Definitions
+.Table Relationship Diagram
+image::ofbm.png[OFBM ERD]
+
+=== Sample
+.Sample Table
+[options="header"]
+|=======================
+|Field|Required|Type|Description
+|s_id|Yes|int|Sample ID
+|parent_s_id|No|int|Parent Sample ID
+|p_id|Yes|int|Person ID
+|protocol_id|Yes|varchar(255)|Protocol ID from External Biospecimen System
+|label|No|varchar(64)|Sample Label
+|barcode|No|varchar(64)|Sample Barcode
+|lineagetype|No|varchar(32)|Lineage Type such as Aliquot, Derived, etc.
+|category|No|varchar(100)|Category
+|type|No|varchar(100)|Sample Type such as DNA, etc
+|qualifier|No|varchar(100)|Qualifier
+|status|No|varchar(100)|Status
+|amount_uom|No|varchar(100)|Amount Unit of Measure
+|amount|No|decimal(10,2)|Sample Volume Amount
+|conc_uom|No|varchar(100)|Concentration Unit of Measure
+|conc|No|decimal(10,2)|Concentration Measurement Value
+|bodysite|No|varchar(100)|Body Site for where Sample was extracted
+|path_dx_desc|No|varchar(100)|Pathology Diagnosis Short Text Description
+|path_report|No|varchar(255)|Pathology Report Text
+|sample_gid|No|int|NCI Global Sample ID
+|storage_path|No|varchar(255)|Full Storage Path Separated by Delimiter
+|ts|No|timestamp|Auto Timestamp to keep track of ETL process
+|=======================
+
+
+=== Person
+.Person Table
+[options="header"]
+|=======================
+|Field|Required|Type|Description
+|p_id|Yes|int|Person ID
+|last_name|No|varchar(64)|Last Name
+|first_name|No|varchar(64)|First Name
+|middle_name|No|varchar(64)|Middle Name
+|gender|No|varchar(100)|Gender
+|ethnicity|No|varchar(100)|Ethnicity
+|birth_dt|No|date|Birth Date
+|birth_yr|No|int|Birth Year
+|birth_mon|No|int|Birth Month
+|birth_day|No|int|Birth Day
+|vital_status|No|varchar(100)|Vital Status
+|death_dt|No|date|Death Date
+|death_yr|No|int|Death Year
+|ts|No|timestamp|Auto Timestamp to keep track of ETL process
+|=======================
+
