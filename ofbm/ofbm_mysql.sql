@@ -235,6 +235,22 @@ create table ofbm.protocol_consent (
   comment='Consent Statements with Answers for Protocols'
 ;
 
+
+/* SCHEMA_VERSION Table */
+create table ofbm.schema_version
+( 
+  version_id varchar(16) comment 'unique version id or number',
+  version_dt timestamp default now() comment 'version datetime defaults to current datetime',
+  primary key (version_id)
+)
+  engine=innodb 
+  default charset=utf8 
+  comment='Tracks database schema or data model version'
+;
+/*
+insert into ofbm.schema_version(version_id) values ('1.0.0');
+*/
+
 /* END TABLES */
 
 
@@ -284,6 +300,12 @@ alter table ofbm.sample
   foreign key ( protocol_id ) 
   references ofbm.protocol( protocol_id );
 
+/* pwkm note:
+   Although we can query across from FSPECIMEN to FPROTOCOL_CONSENT,
+   We do not and should not have a physical implementation of a FK.
+   Because the FK relationship would have a false impression that each sample can only have one protocol consent.
+   So I am taking these two FKs out. */
+/* 
 alter table ofbm.sample
   add constraint sample_fk4
   foreign key ( protocol_id ) 
@@ -293,6 +315,7 @@ alter table ofbm.sample
   add constraint sample_fk5
   foreign key ( protocol_id ) 
   references ofbm.protocol_consent( protocol_id );
+*/
 
 /* Sample External ID */
 alter table ofbm.sample_extid
@@ -319,4 +342,12 @@ select p.p_id as personID,
   from person p,
        sample s
  where p.p_id = s.s_id;
+*/
+
+/* Get Consent Statements for Samples */
+/*
+SELECT * 
+  FROM ofbm.sample s, protocol_consent pc
+ where s. protocol_id = pc.protocol_id 
+ order by s.s_id;
 */

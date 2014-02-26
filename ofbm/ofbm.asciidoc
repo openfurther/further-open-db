@@ -1,10 +1,18 @@
-////
-Comments
-:Author: Peter Mo
+//////////////////////////////////////////
+Comment Block
+:Author: Peter Mo and BMIC Team
 :Email: peter.mo@utah.edu
 :Date: 20140206
 :Revision: 1.0
-////
+
+To create the html file:
+1) change into your asciidoc directory
+For example:
+cd c:\Apps\asciidoc
+2) Compile the doc into html with a table of contents
+For example:
+python asciidoc.py -a toc C:\Apps\further-open-db\ofbm\ofbm.asciidoc
+//////////////////////////////////////////
 
 = OpenFurther Biospecimen Model Documentation
 
