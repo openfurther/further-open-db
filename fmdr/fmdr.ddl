@@ -3,15 +3,15 @@
 /* FMDR USER */
 /* 
 CREATE USER FMDR IDENTIFIED BY fmdr
-  DEFAULT TABLESPACE "FRTHR"
-  TEMPORARY TABLESPACE "FRTHR_TMP";
+  DEFAULT TABLESPACE FRTHR
+  TEMPORARY TABLESPACE FRTHR_TMP;
 */
 
 /* This Sequence Section is Commented Out
 
   Sequence Object for ALL Asset Related (Exclude Users) Tables
 
-  Let's Assign Sequence Value Range 1,000,000 to 9,999,999
+  Let's Assign Sequence Value Range 10,000,000 to 999,999,999
   We will always create Assets in Development, and then Export & Import into Test & Prod Environments.
   This way, we will keep Asset IDs the same across all environments.
   We want to keep Asset IDs as unique as possible since Assets are very generic in the MDR, and 
@@ -20,23 +20,33 @@ CREATE USER FMDR IDENTIFIED BY fmdr
   DROP SEQUENCE FMDR.ASSET_ID_SEQ;
 
   CREATE SEQUENCE ASSET_ID_SEQ
-    MINVALUE 1000000 MAXVALUE 9999999
+    MINVALUE 10000000 MAXVALUE 999999999
     INCREMENT BY 1
-    START WITH 1000000
+    START WITH 10000000
     NOCACHE ORDER NOCYCLE;
 
-  Get Current Sequence Value without increment:
-  select FMDR.ASSET_ID_SEQ.currval from dual;
+  --Get Current Sequence Value without increment:
+  SELECT FMDR.ASSET_ID_SEQ.CURRVAL FROM DUAL;
 
-  Get Current Sequence Value and increment its value (except for the initial value):
-  select FMDR.ASSET_ID_SEQ.nextval from dual;
+  --Get Current Sequence Value and increment its value (except for the initial value):
+  SELECT FMDR.ASSET_ID_SEQ.NEXTVAL FROM DUAL;
 
-  To see the lastest LAST_NUMBER without incrementing the Sequence Object:
+  --To see the lastest LAST_NUMBER without incrementing the Sequence Object:
   SELECT *
-    FROM user_sequences
-   where sequence_name = 'ASSET_ID_SEQ';
+    FROM USER_SEQUENCES
+   WHERE SEQUENCE_NAME = 'ASSET_ID_SEQ';
+
 
 End Sequence Comment */
+
+/* Temp Value in Dev-DB during transition to new Asset Sequence Scheme
+  CREATE SEQUENCE ASSET_ID_SEQ
+    MINVALUE 9000 MAXVALUE 9999
+    INCREMENT BY 1
+    START WITH 9000
+    NOCACHE ORDER NOCYCLE;
+*/
+
 
 
 /* ***** BEG TABLES ***** */
@@ -310,71 +320,98 @@ COMMENT ON COLUMN FMDR.ASSET_RESOURCE.UPDATE_USER_ID
 
 /* BEG Views */
 
+
+/* Get ONLY Active Assets */
+CREATE OR REPLACE VIEW FMDR.ASSET_V 
+AS 
+SELECT ASSET_NAMESPACE_ASSET_ID,
+       GET_ASSET_LABEL( ASSET_NAMESPACE_ASSET_ID ) ASSET_NAMESPACE_LABEL,
+       ASSET_TYPE_ASSET_ID, 
+       GET_ASSET_LABEL( ASSET_TYPE_ASSET_ID ) ASSET_TYPE_LABEL,
+       ASSET_ID,
+       ASSET_LABEL,
+       ASSET_DSC,
+       ASSET_ACTIVATE_DT,
+       ASSET_DEACTIVATE_DT
+  FROM ASSET
+ WHERE ASSET_DEACTIVATE_DT > SYSDATE
+    OR ASSET_DEACTIVATE_DT IS NULL
+ ORDER BY ASSET_NAMESPACE_ASSET_ID,
+          ASSET_TYPE_ASSET_ID,
+          ASSET_ID
+;
+
+
 /* FMDR.ASSET_ASSOC_V (Enabled Associations ONLY) */
 CREATE OR REPLACE VIEW FMDR.ASSET_ASSOC_V 
 AS 
-SELECT aa.asset_assoc_id,
-       get_asset_type_id(ls_asset_id) ls_type_asset_id,
-       get_asset_type_label(ls_asset_id) ls_type_label,
-       get_asset_namespace_id(ls_asset_id) ls_namespace_asset_id,
-       get_asset_namespace_label(ls_asset_id) ls_namespace_label,
-       ls_asset_id,
-       get_asset_label(ls_asset_id) ls_asset_label,
-       assoc_asset_id,
-       get_asset_label(assoc_asset_id) assoc_asset_label,
-       get_asset_type_id(rs_asset_id) rs_type_asset_id,
-       get_asset_type_label(rs_asset_id) rs_type_label,
-       get_asset_namespace_id(rs_asset_id) rs_namespace_asset_id,
-       get_asset_namespace_label(rs_asset_id) rs_namespace_label,
-       rs_asset_id,
-       get_asset_label(rs_asset_id) rs_asset_label
-  FROM asset_assoc aa
- WHERE aa.enabled = 'Y';
+SELECT ASSET_ASSOC_ID,
+       GET_ASSET_TYPE_ID(LS_ASSET_ID) LS_TYPE_ASSET_ID,
+       GET_ASSET_TYPE_LABEL(LS_ASSET_ID) LS_TYPE_LABEL,
+       GET_ASSET_NAMESPACE_ID(LS_ASSET_ID) LS_NAMESPACE_ASSET_ID,
+       GET_ASSET_NAMESPACE_LABEL(LS_ASSET_ID) LS_NAMESPACE_LABEL,
+       LS_ASSET_ID,
+       GET_ASSET_LABEL(LS_ASSET_ID) LS_ASSET_LABEL,
+       ASSOC_ASSET_ID,
+       GET_ASSET_LABEL(ASSOC_ASSET_ID) ASSOC_ASSET_LABEL,
+       GET_ASSET_TYPE_ID(RS_ASSET_ID) RS_TYPE_ASSET_ID,
+       GET_ASSET_TYPE_LABEL(RS_ASSET_ID) RS_TYPE_LABEL,
+       GET_ASSET_NAMESPACE_ID(RS_ASSET_ID) RS_NAMESPACE_ASSET_ID,
+       GET_ASSET_NAMESPACE_LABEL(RS_ASSET_ID) RS_NAMESPACE_LABEL,
+       RS_ASSET_ID,
+       GET_ASSET_LABEL(RS_ASSET_ID) RS_ASSET_LABEL
+  FROM ASSET_ASSOC
+ WHERE UPPER(ENABLED) = 'Y'
+;
 
-/* FMDR.ASSET_ASSOC_V (Enabled AND Disabled Associations) */
+
+/* FMDR.ASSET_ASSOC_V_ALL (Enabled AND Disabled Associations) */
 CREATE OR REPLACE VIEW FMDR.ASSET_ASSOC_V_ALL 
 AS 
-SELECT aa.asset_assoc_id,
-       get_asset_type_id(ls_asset_id) ls_type_asset_id,
-       get_asset_type_label(ls_asset_id) ls_type_label,
-       get_asset_namespace_id(ls_asset_id) ls_namespace_asset_id,
-       get_asset_namespace_label(ls_asset_id) ls_namespace_label,
-       ls_asset_id,
-       get_asset_label(ls_asset_id) ls_asset_label,
-       assoc_asset_id,
-       get_asset_label(assoc_asset_id) assoc_asset_label,
-       get_asset_type_id(rs_asset_id) rs_type_asset_id,
-       get_asset_type_label(rs_asset_id) rs_type_label,
-       get_asset_namespace_id(rs_asset_id) rs_namespace_asset_id,
-       get_asset_namespace_label(rs_asset_id) rs_namespace_label,
-       rs_asset_id,
-       get_asset_label(rs_asset_id) rs_asset_label,
-       enabled
-  FROM asset_assoc aa;
+SELECT ASSET_ASSOC_ID,
+       GET_ASSET_TYPE_ID(LS_ASSET_ID) LS_TYPE_ASSET_ID,
+       GET_ASSET_TYPE_LABEL(LS_ASSET_ID) LS_TYPE_LABEL,
+       GET_ASSET_NAMESPACE_ID(LS_ASSET_ID) LS_NAMESPACE_ASSET_ID,
+       GET_ASSET_NAMESPACE_LABEL(LS_ASSET_ID) LS_NAMESPACE_LABEL,
+       LS_ASSET_ID,
+       GET_ASSET_LABEL(LS_ASSET_ID) LS_ASSET_LABEL,
+       ASSOC_ASSET_ID,
+       GET_ASSET_LABEL(ASSOC_ASSET_ID) ASSOC_ASSET_LABEL,
+       GET_ASSET_TYPE_ID(RS_ASSET_ID) RS_TYPE_ASSET_ID,
+       GET_ASSET_TYPE_LABEL(RS_ASSET_ID) RS_TYPE_LABEL,
+       GET_ASSET_NAMESPACE_ID(RS_ASSET_ID) RS_NAMESPACE_ASSET_ID,
+       GET_ASSET_NAMESPACE_LABEL(RS_ASSET_ID) RS_NAMESPACE_LABEL,
+       RS_ASSET_ID,
+       GET_ASSET_LABEL(RS_ASSET_ID) RS_ASSET_LABEL,
+       ENABLED
+  FROM ASSET_ASSOC
+;
 
 
-/* FMDR.ASSET_PROP_V */
+/* FMDR.ASSET_PROP_V Get Assets with its properties */
 CREATE OR REPLACE VIEW FMDR.ASSET_PROP_V 
 AS 
-SELECT av.asset_namespace_asset_id,
-       av.asset_namespace_label,
-       av.asset_type_asset_id,
-       av.asset_type_label,
-       av.asset_id,
-       av.asset_label,
-       av.asset_dsc,
-       av.asset_activate_dt,
-       av.asset_deactivate_dt,
-       ap.asset_prop_id,
-       ap.asset_type_prop_id,
-       get_asset_label(ap.asset_type_prop_id) as asset_type_prop_label,
-       ap.prop_value as asset_prop_value
-  FROM asset_v av, asset_prop ap
- WHERE av.asset_id = ap.asset_id
- order by av.asset_namespace_asset_id,
-          av.asset_type_asset_id,
-          av.asset_id,
-          ap.asset_prop_id;
+SELECT AV.ASSET_NAMESPACE_ASSET_ID,
+       AV.ASSET_NAMESPACE_LABEL,
+       AV.ASSET_TYPE_ASSET_ID,
+       AV.ASSET_TYPE_LABEL,
+       AV.ASSET_ID,
+       AV.ASSET_LABEL,
+       AV.ASSET_DSC,
+       AV.ASSET_ACTIVATE_DT,
+       AV.ASSET_DEACTIVATE_DT,
+       AP.ASSET_PROP_ID,
+       AP.ASSET_TYPE_PROP_ID,
+       GET_ASSET_LABEL(AP.ASSET_TYPE_PROP_ID) AS ASSET_TYPE_PROP_LABEL,
+       AP.PROP_VALUE AS ASSET_PROP_VALUE
+  FROM ASSET_V AV, ASSET_PROP AP
+ WHERE AV.ASSET_ID = AP.ASSET_ID
+ ORDER BY AV.ASSET_NAMESPACE_ASSET_ID,
+          AV.ASSET_TYPE_ASSET_ID,
+          AV.ASSET_ID,
+          AP.ASSET_PROP_ID
+;
+
 
 /* END Views */
 

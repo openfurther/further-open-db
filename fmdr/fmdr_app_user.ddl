@@ -4,13 +4,13 @@
   The purpose of having this second sequence object, is so that when we add users directly into production,
   We will not mess up the Sequence Numbers for the Assets.
 
-  Let's Assign Sequence Value Range 10,000 to 999,999
+  Let's Assign Sequence Value Range 100,000 to 9,999,999
 
   DROP SEQUENCE FMDR.APP_USER_ID_SEQ;
 
   CREATE SEQUENCE  FMDR.APP_USER_ID_SEQ
-    MINVALUE 10000 MAXVALUE 999999
-    INCREMENT BY 1 START WITH 10000
+    MINVALUE 100000 MAXVALUE 9999999
+    INCREMENT BY 1 START WITH 100000
     NOCACHE ORDER NOCYCLE;
 
   Get Current Sequence Value without increment:
