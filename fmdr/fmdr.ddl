@@ -1,6 +1,6 @@
-/* FURTHER MDR DDL */
+/* ***** FURTHER MDR DDL ***** */
 
-/* FMDR USER */
+/* ***** FMDR USER ***** */
 /* 
 CREATE USER FMDR IDENTIFIED BY fmdr
   DEFAULT TABLESPACE FRTHR
@@ -25,13 +25,21 @@ CREATE USER FMDR IDENTIFIED BY fmdr
     START WITH 10000000
     NOCACHE ORDER NOCYCLE;
 
-  --Get Current Sequence Value without increment:
+  -- Renamed ASSET_ID_SEQ to ASSET_SEQ
+  CREATE SEQUENCE FMDR.ASSET_SEQ
+    MINVALUE 10000000 MAXVALUE 999999999
+    INCREMENT BY 1 START WITH 10001055
+    NOCACHE ORDER NOCYCLE;
+
+
+  -- Get Current Sequence Value already in Session without increment:
   SELECT FMDR.ASSET_ID_SEQ.CURRVAL FROM DUAL;
 
-  --Get Current Sequence Value and increment its value (except for the initial value):
+  -- Get Current Sequence Value and increment its value (except for the initial value):
   SELECT FMDR.ASSET_ID_SEQ.NEXTVAL FROM DUAL;
 
-  --To see the lastest LAST_NUMBER without incrementing the Sequence Object:
+  -- To see the lastest LAST_NUMBER without incrementing the Sequence Object: 
+  -- Or without having the CURRVAL value in current Session.
   SELECT *
     FROM USER_SEQUENCES
    WHERE SEQUENCE_NAME = 'ASSET_ID_SEQ';
@@ -45,8 +53,14 @@ End Sequence Comment */
     INCREMENT BY 1
     START WITH 9000
     NOCACHE ORDER NOCYCLE;
-*/
 
+  -- Moment of Reset to New Sequence Scheme of 10000000
+  CREATE SEQUENCE FMDR.ASSET_ID_SEQ
+    MINVALUE 9000 MAXVALUE 9999
+    INCREMENT BY 1 
+    START WITH 9146
+    NOCACHE ORDER NOCYCLE;
+*/
 
 
 /* ***** BEG TABLES ***** */
@@ -315,11 +329,10 @@ COMMENT ON COLUMN FMDR.ASSET_RESOURCE.UPDATE_DTS
 COMMENT ON COLUMN FMDR.ASSET_RESOURCE.UPDATE_USER_ID
         IS 'Last Updated User ID';
 
-/* END Tables */
+/* ***** END Tables ***** */
 
 
-/* BEG Views */
-
+/* ***** BEG Views ***** */
 
 /* Get ONLY Active Assets */
 CREATE OR REPLACE VIEW FMDR.ASSET_V 
@@ -340,10 +353,17 @@ SELECT ASSET_NAMESPACE_ASSET_ID,
           ASSET_TYPE_ASSET_ID,
           ASSET_ID
 ;
+/*
+Yes, we can comment on Views, and even its Columns!
+But simply commenting the View is sufficient
+because the base tables already should have its column definitions.
+*/
+COMMENT ON  TABLE FMDR.ASSET_V IS 'View for Active Assets ONLY';
+-- COMMENT ON COLUMN FMDR.ASSET_V.ASSET_ID IS 'Asset ID';
 
 
 /* FMDR.ASSET_ASSOC_V (Enabled Associations ONLY) */
-CREATE OR REPLACE VIEW FMDR.ASSET_ASSOC_V 
+CREATE OR REPLACE VIEW FMDR.ASSET_ASSOC_V
 AS 
 SELECT ASSET_ASSOC_ID,
        GET_ASSET_TYPE_ID(LS_ASSET_ID) LS_TYPE_ASSET_ID,
@@ -363,10 +383,12 @@ SELECT ASSET_ASSOC_ID,
   FROM ASSET_ASSOC
  WHERE UPPER(ENABLED) = 'Y'
 ;
+COMMENT ON  TABLE FMDR.ASSET_ASSOC_V
+               IS 'View for Enabled Asset Associations ONLY';
 
 
-/* FMDR.ASSET_ASSOC_V_ALL (Enabled AND Disabled Associations) */
-CREATE OR REPLACE VIEW FMDR.ASSET_ASSOC_V_ALL 
+/* FMDR.ASSET_ASSOC_ALL_V (Enabled AND Disabled Associations) */
+CREATE OR REPLACE VIEW FMDR.ASSET_ASSOC_ALL_V
 AS 
 SELECT ASSET_ASSOC_ID,
        GET_ASSET_TYPE_ID(LS_ASSET_ID) LS_TYPE_ASSET_ID,
@@ -386,9 +408,12 @@ SELECT ASSET_ASSOC_ID,
        ENABLED
   FROM ASSET_ASSOC
 ;
+COMMENT ON  TABLE FMDR.ASSET_ASSOC_ALL_V
+               IS 'View for Enabled AND Disabled Asset Associations';
 
 
-/* FMDR.ASSET_PROP_V Get Assets with its properties */
+/* FMDR.ASSET_PROP_V 
+   Get Active Assets with its properties */
 CREATE OR REPLACE VIEW FMDR.ASSET_PROP_V 
 AS 
 SELECT AV.ASSET_NAMESPACE_ASSET_ID,
@@ -411,86 +436,134 @@ SELECT AV.ASSET_NAMESPACE_ASSET_ID,
           AV.ASSET_ID,
           AP.ASSET_PROP_ID
 ;
+COMMENT ON  TABLE FMDR.ASSET_PROP_V
+               IS 'View for Active Assets with its Properties';
 
 
-/* END Views */
+/* List Assets that are MDR Namespaces */
+CREATE OR REPLACE VIEW FMDR.NAMESPACE_V
+AS
+SELECT ASSET_ID,
+       ASSET_LABEL,
+       ASSET_ACTIVATE_DT,
+       ASSET_DEACTIVATE_DT,
+       ASSET_DSC
+  FROM ASSET
+ WHERE ASSET_TYPE_ASSET_ID = 10001 -- NEW NAMESPACE ASSET ID
+    OR ASSET_TYPE_ASSET_ID = 2 -- OLD NAMESPACE ASSET ID
+ ORDER BY ASSET_ID
+;
+COMMENT ON  TABLE FMDR.NAMESPACE_V
+               IS 'View for Assets that are MDR Namespaces';
 
 
+/* Tree View WITHIN Asset */
+/* Relationships BETWEEN Assets are in the Asset_Assoc_v */
+/* Level 1 is already represented in the later levels,
+   therefore, i'm using level > 1 */
+/* nocycle prevents endless loop */
+/* The attribute immediately after the prior keyword is the parent id */
+CREATE OR REPLACE VIEW FMDR.ASSET_TREE_V
+AS
+ SELECT ASSET_ID, 
+        ASSET_LABEL, 
+        ASSET_NAMESPACE_ASSET_ID,
+        ASSET_NAMESPACE_LABEL,
+        ASSET_TYPE_ASSET_ID,
+        ASSET_TYPE_LABEL,
+        LEVEL AS TREE_LEVEL,
+        SYS_CONNECT_BY_PATH(ASSET_LABEL, '^') AS PATH
+   FROM ASSET_V 
+  WHERE LEVEL > 1 
+CONNECT BY NOCYCLE PRIOR ASSET_ID = ASSET_TYPE_ASSET_ID
+  ORDER BY ASSET_NAMESPACE_LABEL, PATH
+;
+COMMENT ON  TABLE FMDR.ASSET_TREE_V
+               IS 'View for Hierarchical Structure of Assets';
 
-/* Disable ALL FKs */
+
+CREATE OR REPLACE VIEW FMDR.ASSET_RESOURCE_V
+AS
+SELECT ASSET_RESOURCE_ID,
+       ASSET_RESOURCE_TYPE_ID,
+       ASSET_VERSION_SEQ_ID,
+       ASSET_ID,
+       ASSET_VERSION,
+       RESOURCE_NAME,
+       RESOURCE_DSC,
+       RESOURCE_FILE_NAME,
+       STORAGE_CD,
+       MIME_TYPE,
+       RESOURCE_TEXT,
+       AR.RESOURCE_XML.GETCLOBVAL() AS RESOURCE_XML,
+       RESOURCE_CLOB,
+       RESOURCE_BLOB,
+       RESOURCE_URL,
+       RELATIVE_RESOURCE_URL,
+       RESOURCE_ACTIVATE_DT,
+       RESOURCE_DEACTIVATE_DT
+  FROM ASSET_RESOURCE AR
+ WHERE RESOURCE_DEACTIVATE_DT > SYSDATE
+    OR RESOURCE_DEACTIVATE_DT IS NULL
+ ORDER BY ASSET_ID
+;
+COMMENT ON  TABLE FMDR.ASSET_RESOURCE_V
+               IS 'View for Active Resources and Displays XML as Clob';
+
+
+CREATE OR REPLACE VIEW FMDR.ASSET_SUMMARY_V
+AS
+SELECT AST.ASSET_ID,
+       AST.ASSET_NAMESPACE_ASSET_ID NAMESPACE_ID,
+       GET_ASSET_LABEL(AST.ASSET_NAMESPACE_ASSET_ID) NAMESPACE_LABEL,
+       AST.ASSET_TYPE_ASSET_ID ASSET_TYPE_ID,
+       GET_ASSET_LABEL(AST.ASSET_TYPE_ASSET_ID) ASSET_TYPE_LABEL,
+       AST.ASSET_LABEL,
+       AV.ASSET_VERSION,
+       AV.ASSET_STATUS_ID,
+       GET_LOOKUP_LABEL( AV.ASSET_STATUS_ID ) STATUS_LABEL,
+       AR.ASSET_RESOURCE_ID RESOURCE_ID,
+       AR.ASSET_RESOURCE_TYPE_ID RESOURCE_TYPE_ID,
+       ATRT.ASSET_RESOURCE_CARDINALITY RESOURCE_CARDINALITY,
+       ATRT.ASSET_RESOURCE_PARAM_NM RESOURCE_PARAM_NM,
+       GET_RESOURCE_TYPE_LABEL( AR.ASSET_RESOURCE_TYPE_ID ) RESOURCE_TYPE_LABEL,
+       AR.RESOURCE_NAME RESOURCE_LABEL,
+       AR.STORAGE_CD,
+       AR.MIME_TYPE,
+       AR.RESOURCE_BLOB,
+       AR.RESOURCE_CLOB,
+       AR.RESOURCE_XML,
+       AR.RESOURCE_XML.GETCLOBVAL() RESOURCE_XML_CLOB,
+       AR.RESOURCE_TEXT,
+       AR.RESOURCE_URL,
+       AR.RELATIVE_RESOURCE_URL,
+       AR.RESOURCE_INDEX,
+       AR.UPDATE_USER_ID
+  -- ANSI Style Join
+  FROM ASSET AST
+  JOIN ASSET_VERSION AV 
+    ON AST.ASSET_ID = AV.ASSET_ID
+  JOIN ASSET_RESOURCE AR
+    ON AST.ASSET_ID = AR.ASSET_ID 
+   AND AV.ASSET_VERSION = AR.ASSET_VERSION
+  JOIN ASSET_TYPE_RESOURCE_TYPE ATRT
+    ON AST.ASSET_TYPE_ASSET_ID = ATRT.ASSET_TYPE_ID
+   AND AR.ASSET_RESOURCE_TYPE_ID = ATRT.ASSET_RESOURCE_TYPE_ID
+;
+COMMENT ON  TABLE FMDR.ASSET_SUMMARY_V
+               IS 'View for Asset Summary';
 /*
-alter table ASSET_RESOURCE disable constraint ASSET_RESOURCE_ASSET_VERS_FK1;
-alter table ASSET_RESOURCE disable constraint ASSET_RESOURCE_ASSET_RESO_FK1;
-alter table ASSET disable constraint ASSET_NAMESPACE_ASSET_ID_FK;
-alter table ASSET disable constraint ASSET_TYPE_ASSET_ID_FK;
-alter table ASSET_RESOURCE disable constraint ASSET_RESOURCE_ASSET_FK1;
-alter table ASSET_VERSION disable constraint ASSET_VERSION_ASSET_ID_FK;
-alter table ASSET_RESOURCE_COMMENT disable constraint ASSET_RESOURCE_COMMENT_AS_FK1;
-alter table LOOKUP_GROUP_VALUE disable constraint LOOKUP_GROUP_VALUE_LOOKUP_FK2;
-alter table APP_PROP disable constraint APP_PROP_LOOKUP_GROUP_FK1;
-alter table LOOKUP_GROUP_VALUE disable constraint LOOKUP_GROUP_VALUE_LOOKUP_FK1;
-alter table ASSET_RESOURCE_ASSOC disable constraint ASSET_RESOURCE_ASSOC_ASSO_FK1;
-alter table ASSET_TYPE_RESOURCE_TYPE disable constraint ASSET_TYPE_RESOURCE_TYPE_FK2;
-alter table ASSET_TYPE_RESOURCE_TYPE disable constraint ASSET_TYPE_RESOURCE_TYPE_FK1;
-alter table APP_USER_PROP disable constraint APP_USER_PROP_APP_USER_FK1;
-alter table APP_USER_ROLE disable constraint APP_USER_ROLE_APP_USER_FK1;
-alter table APP_ROLE_PRIV disable constraint APP_ROLE_PRIV_APP_ROLE_FK1;
-alter table APP_USER_ROLE disable constraint APP_USER_ROLE_APP_ROLE_FK1;
-alter table APP_USER_PROP disable constraint APP_USER_PROP_APP_PROP_FK1;
-alter table APP_ROLE_PRIV disable constraint APP_ROLE_PRIV_APP_PRIV_FK1;
+  -- ORACLE Style Join
+  FROM asset ast,
+    asset_version av,
+    asset_resource ar,
+    asset_type_resource_type atrt
+  WHERE ast.asset_id   = av.asset_id
+  AND ast.asset_id     = ar.asset_id
+  AND av.asset_version = ar.asset_version
+  AND ar.asset_resource_type_id = atrt.asset_resource_type_id
+  AND atrt.asset_type_id = ast.asset_type_asset_id;
 */
 
-/* DROP ALL FKs */
-/*
-alter table ASSET_RESOURCE drop constraint ASSET_RESOURCE_ASSET_VERS_FK1;
-alter table ASSET_RESOURCE_COMMENT drop constraint ASSET_RESOURCE_COMMENT_AS_FK1;
-alter table LOOKUP_GROUP_VALUE drop constraint LOOKUP_GROUP_VALUE_LOOKUP_FK2;
-alter table APP_PROP drop constraint APP_PROP_LOOKUP_GROUP_FK1;
-alter table LOOKUP_GROUP_VALUE drop constraint LOOKUP_GROUP_VALUE_LOOKUP_FK1;
-alter table ASSET_RESOURCE_ASSOC drop constraint ASSET_RESOURCE_ASSOC_ASSO_FK1;
-alter table ASSET_RESOURCE drop constraint ASSET_RESOURCE_ASSET_RESO_FK1;
-alter table ASSET_TYPE_RESOURCE_TYPE drop constraint ASSET_TYPE_RESOURCE_TYPE_FK2;
-alter table ASSET drop constraint ASSET_NAMESPACE_ASSET_ID_FK;
-alter table ASSET drop constraint ASSET_TYPE_ASSET_ID_FK;
-alter table ASSET_RESOURCE drop constraint ASSET_RESOURCE_ASSET_FK1;
-alter table ASSET_TYPE_RESOURCE_TYPE drop constraint ASSET_TYPE_RESOURCE_TYPE_FK1;
-alter table ASSET_VERSION drop constraint ASSET_VERSION_ASSET_ID_FK;
-alter table APP_USER_PROP drop constraint APP_USER_PROP_APP_USER_FK1;
-alter table APP_USER_ROLE drop constraint APP_USER_ROLE_APP_USER_FK1;
-alter table APP_ROLE_PRIV drop constraint APP_ROLE_PRIV_APP_ROLE_FK1;
-alter table APP_USER_ROLE drop constraint APP_USER_ROLE_APP_ROLE_FK1;
-alter table APP_USER_PROP drop constraint APP_USER_PROP_APP_PROP_FK1;
-alter table APP_ROLE_PRIV drop constraint APP_ROLE_PRIV_APP_PRIV_FK1;
-*/
 
-/* DROP ALL TABLES */
-/*
-drop table APP_LOG CASCADE CONSTRAINTS;
-drop table APP_PRIV CASCADE CONSTRAINTS;
-drop table APP_PROP CASCADE CONSTRAINTS;
-drop table APP_ROLE CASCADE CONSTRAINTS;
-drop table APP_ROLE_PRIV CASCADE CONSTRAINTS;
-drop table APP_USER CASCADE CONSTRAINTS;
-drop table APP_USER_PROP CASCADE CONSTRAINTS;
-drop table APP_USER_ROLE CASCADE CONSTRAINTS;
-drop table ASSET CASCADE CONSTRAINTS;
-drop table ASSET_ASSOC CASCADE CONSTRAINTS;
-drop table ASSET_ASSOC_PROP CASCADE CONSTRAINTS;
-drop table ASSET_PROP CASCADE CONSTRAINTS;
-drop table ASSET_RESOURCE_ASSOC CASCADE CONSTRAINTS;
-drop table ASSET_RESOURCE_TYPE CASCADE CONSTRAINTS;
-drop table ASSET_STAT CASCADE CONSTRAINTS;
-drop table ASSET_TRANS_MAP CASCADE CONSTRAINTS;
-drop table ASSET_TYPE_PROP CASCADE CONSTRAINTS;
-drop table ASSET_TYPE_RESOURCE_TYPE CASCADE CONSTRAINTS;
-drop table ASSOCIATION CASCADE CONSTRAINTS;
-drop table LOOKUP_GROUP CASCADE CONSTRAINTS;
-drop table LOOKUP_GROUP_VALUE CASCADE CONSTRAINTS;
-drop table LOOKUP_VALUE CASCADE CONSTRAINTS;
-drop table STATS_TABLE_CELL CASCADE CONSTRAINTS;
-drop table ASSET_RESOURCE CASCADE CONSTRAINTS;
-drop table ASSET_RESOURCE_VERSION CASCADE CONSTRAINTS;
-drop table ASSET_VERSION CASCADE CONSTRAINTS;
-drop table ASSET_RESOURCE_COMMENT CASCADE CONSTRAINTS;
-drop table STATS_TABLE CASCADE CONSTRAINTS;
-*/
+/* ***** END Views ***** */
