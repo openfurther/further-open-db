@@ -33,6 +33,7 @@ insert into fmdr.asset values (10007,10000,10005,'translatesTo',sysdate,null,'As
 insert into fmdr.asset values (10008,10000,10002,'XQuery Resources',sysdate,null,'XQuery Files');
 insert into fmdr.asset values (10009,10000,10002,'Terminology Namespace',sysdate,null,'Terminology Namespace such as Apelon DTS Namespace IDs');
 insert into fmdr.asset values (10010,10000,10002,'Data Source',sysdate,null,'This will be the Asset Type for Data Source Assets such as Enterprise Data Warehouse.');
+insert into fmdr.asset values (10011,10000,10002,'Java Data Type',sysdate,null,'Java Class Field Data Type');
 insert into fmdr.asset values (99999,10000,10002,'devNull',sysdate,null,'Support Assets that translatesTo Nothing');
 
 commit;
