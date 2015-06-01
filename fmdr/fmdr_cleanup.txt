@@ -1,66 +1,106 @@
 /* Oracle Drop all sequences and tables */
-/* Run as DB Owner User, Not Sys! */
+/* Run as DB Owner User, Not Sys! 
+   You can run each block separately from Begin to End */
 
 SET SERVEROUTPUT ON;
 
 BEGIN
 
-  dbms_output.put_line('--DROP Sequences for FMDR');
-  --Bye Sequences!
-  FOR i IN (SELECT us.sequence_name
-              FROM USER_SEQUENCES us) LOOP
-    dbms_output.put_line('drop sequence ' || i.sequence_name ||';');
-    --Optionally Execute
-    --EXECUTE IMMEDIATE 'drop sequence ' || i.sequence_name;
-  END LOOP;
+  --DROP SEQUENCES
+  BEGIN
+    DBMS_OUTPUT.PUT_LINE('--BEG DROP SEQUENCES');
+    FOR I IN (SELECT SEQUENCE_NAME
+                FROM USER_SEQUENCES
+               ORDER BY SEQUENCE_NAME) LOOP
+      DBMS_OUTPUT.PUT_LINE('DROP SEQUENCE ' || I.SEQUENCE_NAME ||';');
+      --OPTIONALLY EXECUTE
+      --EXECUTE IMMEDIATE 'DROP SEQUENCE ' || I.SEQUENCE_NAME;
+    END LOOP;
+    DBMS_OUTPUT.PUT_LINE('--END DROP SEQUENCES');
+    DBMS_OUTPUT.NEW_LINE;
+  END;
 
-  dbms_output.put_line('--DROP Tables for FMDR');
-  --Bye Tables!
-  FOR i IN (SELECT ut.table_name
-              FROM USER_TABLES ut) LOOP
-    dbms_output.put_line('drop table ' || i.table_name || ' CASCADE CONSTRAINTS;'); 
-    --Optionally Execute
-    --EXECUTE IMMEDIATE 'drop table ' || i.table_name || ' CASCADE CONSTRAINTS';
-  END LOOP;
+  --DROP TABLES
+  BEGIN
+    DBMS_OUTPUT.PUT_LINE('--BEG DROP TABLES');
+    FOR I IN (SELECT TABLE_NAME
+                FROM USER_TABLES
+               ORDER BY TABLE_NAME) LOOP
+      DBMS_OUTPUT.PUT_LINE('DROP TABLE ' || I.TABLE_NAME || ' CASCADE CONSTRAINTS;'); 
+      --OPTIONALLY EXECUTE
+      --EXECUTE IMMEDIATE 'DROP TABLE ' || I.TABLE_NAME || ' CASCADE CONSTRAINTS';
+    END LOOP;
+    DBMS_OUTPUT.PUT_LINE('--END DROP TABLES');
+    DBMS_OUTPUT.NEW_LINE;
+  END;
 
-  dbms_output.put_line('--DROP Views for FMDR');
-  --Optionally Remove Views!
-  FOR i IN (SELECT uv.view_name
-              FROM USER_VIEWS uv) LOOP
-    dbms_output.put_line('drop view ' || i.view_name || ' CASCADE CONSTRAINTS;'); 
-    --Optionally Execute
-    --EXECUTE IMMEDIATE 'drop view ' || i.view_name || ' CASCADE CONSTRAINTS';
-  END LOOP;
+  -- DROP VIEWS
+  BEGIN
+    DBMS_OUTPUT.PUT_LINE('--BEG DROP VIEWS');
+    FOR I IN (SELECT VIEW_NAME
+                FROM USER_VIEWS
+               ORDER BY VIEW_NAME) LOOP
+      DBMS_OUTPUT.PUT_LINE('DROP VIEW ' || I.VIEW_NAME || ' CASCADE CONSTRAINTS;'); 
+      --OPTIONALLY EXECUTE
+      --EXECUTE IMMEDIATE 'DROP VIEW ' || I.VIEW_NAME || ' CASCADE CONSTRAINTS';
+    END LOOP;
+    DBMS_OUTPUT.PUT_LINE('--END DROP VIEWS');
+    DBMS_OUTPUT.NEW_LINE;
+  END;
 
-  dbms_output.put_line('--DROP Foreign Keys for FMDR');
-  --DROP Foreign Keys for FMDR (Hard Coded)
-  FOR i IN (select owner,table_name,constraint_name
-              from all_constraints 
-             where constraint_type='R' 
-               and owner='FMDR'
-             order by owner,table_name,constraint_name) LOOP
-    dbms_output.put_line('ALTER TABLE ' || i.owner || '.' || i.table_name || ' DROP CONSTRAINT ' || i.constraint_name ||';');
-    --Optionally Execute
-    --EXECUTE IMMEDIATE 'ALTER TABLE ' || i.owner || '.' || i.table_name || ' DROP CONSTRAINT ' || i.constraint_name ;
-  END LOOP;
+  --DROP FOREIGN KEYS
+  BEGIN
+    DBMS_OUTPUT.PUT_LINE('--BEG DROP FOREIGN KEYS');
+    FOR I IN (SELECT TABLE_NAME, CONSTRAINT_NAME
+                FROM USER_CONSTRAINTS 
+               WHERE CONSTRAINT_TYPE='R'
+               ORDER BY TABLE_NAME, CONSTRAINT_NAME) LOOP
+      DBMS_OUTPUT.PUT_LINE('ALTER TABLE ' || I.TABLE_NAME || ' DROP CONSTRAINT ' || I.CONSTRAINT_NAME ||';');
+      --OPTIONALLY EXECUTE
+      --EXECUTE IMMEDIATE 'ALTER TABLE ' || I.TABLE_NAME || ' DROP CONSTRAINT ' || I.CONSTRAINT_NAME ;
+    END LOOP;
+    DBMS_OUTPUT.PUT_LINE('--END DROP FOREIGN KEYS');
+    DBMS_OUTPUT.NEW_LINE;
+  END;
 
-  dbms_output.put_line('--DISABLE Foreign Keys for FMDR');
-  --DISABLE Foreign Keys for FMDR (Hard Coded)
-  FOR i IN (select owner,table_name,constraint_name
-              from all_constraints 
-             where constraint_type='R' 
-               and owner='FMDR'
-             order by owner,table_name,constraint_name) LOOP
-    dbms_output.put_line('ALTER TABLE ' || i.owner || '.' || i.table_name || ' DISABLE CONSTRAINT ' || i.constraint_name ||';');
-    --Optionally Execute
-    --EXECUTE IMMEDIATE 'ALTER TABLE ' || i.owner || '.' || i.table_name || ' DISABLE CONSTRAINT ' || i.constraint_name ;
-  END LOOP;
+  --DISABLE FOREIGN KEYS
+  BEGIN
+    DBMS_OUTPUT.PUT_LINE('--BEG DISABLE FOREIGN KEYS');
+    FOR I IN (SELECT TABLE_NAME, CONSTRAINT_NAME
+                FROM USER_CONSTRAINTS 
+               WHERE CONSTRAINT_TYPE='R'
+               ORDER BY TABLE_NAME, CONSTRAINT_NAME) LOOP
+      DBMS_OUTPUT.PUT_LINE('ALTER TABLE ' || I.TABLE_NAME || ' DISABLE CONSTRAINT ' || I.CONSTRAINT_NAME ||';');
+      --OPTIONALLY EXECUTE
+      --EXECUTE IMMEDIATE 'ALTER TABLE ' || I.TABLE_NAME || ' DISABLE CONSTRAINT ' || I.CONSTRAINT_NAME ;
+    END LOOP;
+    DBMS_OUTPUT.PUT_LINE('--END DISABLE FOREIGN KEYS');
+    DBMS_OUTPUT.NEW_LINE;
+  END;
+
+  --ENABLE FOREIGN KEYS
+  BEGIN
+    DBMS_OUTPUT.PUT_LINE('--BEG ENABLE FOREIGN KEYS');
+    FOR I IN (SELECT TABLE_NAME, CONSTRAINT_NAME
+                FROM USER_CONSTRAINTS 
+               WHERE CONSTRAINT_TYPE='R'
+               ORDER BY TABLE_NAME, CONSTRAINT_NAME) LOOP
+      DBMS_OUTPUT.PUT_LINE('ALTER TABLE ' || I.TABLE_NAME || ' ENABLE CONSTRAINT ' || I.CONSTRAINT_NAME ||';');
+      --OPTIONALLY EXECUTE
+      --EXECUTE IMMEDIATE 'ALTER TABLE ' || I.TABLE_NAME || ' ENABLE CONSTRAINT ' || I.CONSTRAINT_NAME ;
+    END LOOP;
+    DBMS_OUTPUT.PUT_LINE('--END ENABLE FOREIGN KEYS');
+    DBMS_OUTPUT.NEW_LINE;
+  END;
 
 END;
 /
 
+
+
 /* Output */
-/*anonymous block completed
+/*
+
 --DROP Sequences for FMDR
 drop sequence APP_LOG_ID_SEQ;
 drop sequence APP_PRIV_ID_SEQ;
@@ -86,6 +126,7 @@ drop sequence LOOKUP_GROUP_VALUE_ID_SEQ;
 drop sequence LOOKUP_VALUE_ID_SEQ;
 drop sequence OBJ_ATTR_MAP_ID_SEQ;
 drop sequence OBJ_ID_SEQ;
+
 --DROP Tables for FMDR
 drop table ASSET_RESOURCE_COMMENT CASCADE CONSTRAINTS;
 drop table APP_LOG CASCADE CONSTRAINTS;
@@ -114,6 +155,7 @@ drop table LOOKUP_GROUP_VALUE CASCADE CONSTRAINTS;
 drop table LOOKUP_VALUE CASCADE CONSTRAINTS;
 drop table STATS_TABLE CASCADE CONSTRAINTS;
 drop table STATS_TABLE_CELL CASCADE CONSTRAINTS;
+
 --DROP Views for FMDR
 drop view APP_USER_PROP_V CASCADE CONSTRAINTS;
 drop view ASSET_ASSOC_V CASCADE CONSTRAINTS;
@@ -123,6 +165,7 @@ drop view ASSET_TRANS_MAP_V CASCADE CONSTRAINTS;
 drop view ASSET_V CASCADE CONSTRAINTS;
 drop view LOOKUP_V CASCADE CONSTRAINTS;
 drop view USERNAMES_V CASCADE CONSTRAINTS;
+
 --DROP Foreign Keys for FMDR
 ALTER TABLE FMDR.APP_PROP DROP CONSTRAINT APP_PROP_LOOKUP_GROUP_FK1;
 ALTER TABLE FMDR.APP_ROLE_PRIV DROP CONSTRAINT APP_ROLE_PRIV_APP_PRIV_FK1;
@@ -143,6 +186,7 @@ ALTER TABLE FMDR.ASSET_TYPE_RESOURCE_TYPE DROP CONSTRAINT ASSET_TYPE_RESOURCE_TY
 ALTER TABLE FMDR.ASSET_VERSION DROP CONSTRAINT ASSET_VERSION_ASSET_ID_FK;
 ALTER TABLE FMDR.LOOKUP_GROUP_VALUE DROP CONSTRAINT LOOKUP_GROUP_VALUE_LOOKUP_FK1;
 ALTER TABLE FMDR.LOOKUP_GROUP_VALUE DROP CONSTRAINT LOOKUP_GROUP_VALUE_LOOKUP_FK2;
+
 --DISABLE Foreign Keys for FMDR
 ALTER TABLE FMDR.APP_PROP DISABLE CONSTRAINT APP_PROP_LOOKUP_GROUP_FK1;
 ALTER TABLE FMDR.APP_ROLE_PRIV DISABLE CONSTRAINT APP_ROLE_PRIV_APP_PRIV_FK1;
@@ -163,4 +207,5 @@ ALTER TABLE FMDR.ASSET_TYPE_RESOURCE_TYPE DISABLE CONSTRAINT ASSET_TYPE_RESOURCE
 ALTER TABLE FMDR.ASSET_VERSION DISABLE CONSTRAINT ASSET_VERSION_ASSET_ID_FK;
 ALTER TABLE FMDR.LOOKUP_GROUP_VALUE DISABLE CONSTRAINT LOOKUP_GROUP_VALUE_LOOKUP_FK1;
 ALTER TABLE FMDR.LOOKUP_GROUP_VALUE DISABLE CONSTRAINT LOOKUP_GROUP_VALUE_LOOKUP_FK2;
+
 */
