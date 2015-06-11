@@ -190,6 +190,63 @@ COMMENT ON COLUMN FMDR.APP_USER_PROP.APP_PROP_VAL IS 'Property Value';
 
 
 --------------------------------------------------------
+--  DDL for Table APP_LOG
+--------------------------------------------------------
+CREATE TABLE FMDR.APP_LOG 
+(
+  APP_LOG_ID NUMBER, 
+  APP_MODULE VARCHAR2(255), 
+  APP_MSG_CD VARCHAR2(255), 
+  APP_LOG_MSG VARCHAR2(2000), 
+  APP_LOG_DTS DATE, 
+  APP_USER_ID NUMBER, 
+  CONSTRAINT APP_LOG_PK PRIMARY KEY (APP_LOG_ID)
+)
+;
+COMMENT ON  TABLE FMDR.APP_LOG IS 'Application Logging Table';
+COMMENT ON COLUMN FMDR.APP_LOG.APP_LOG_ID
+        IS 'Application Logging Auto Sequence ID';
+COMMENT ON COLUMN FMDR.APP_LOG.APP_MODULE
+        IS 'Application Module or Program that is generating the Logging Message';
+COMMENT ON COLUMN FMDR.APP_LOG.APP_MSG_CD
+        IS 'Message Code for the Type of Logging';
+COMMENT ON COLUMN FMDR.APP_LOG.APP_LOG_DTS
+        IS 'Application Logging Auto Date Time Stamp';
+COMMENT ON COLUMN FMDR.APP_LOG.APP_USER_ID
+        IS 'User ID who is generating the logging message';
+
+
+-- App_Log Table Trigger
+CREATE OR REPLACE TRIGGER FMDR.INSERT_APP_LOG 
+  BEFORE INSERT ON APP_LOG
+  FOR EACH ROW
+  DECLARE
+
+  LOG_ID NUMBER;
+
+  BEGIN
+
+    SELECT APP_LOG_ID_SEQ.NEXTVAL INTO LOG_ID FROM DUAL;
+  
+    :NEW.APP_LOG_ID := LOG_ID;
+    :NEW.APP_LOG_DTS := SYSDATE;
+
+  END;
+/
+
+ 
+-- Sequence for App_Log Table Use Only!
+CREATE SEQUENCE FMDR.APP_LOG_ID_SEQ
+  MINVALUE 1 MAXVALUE 999999999999999999999999999 
+  INCREMENT BY 1 
+  START WITH 2094 
+  NOCACHE ORDER NOCYCLE ;
+ 
+
+
+
+
+--------------------------------------------------------
 --  DDL for View APP_USER_PROP_V
 --------------------------------------------------------
 CREATE OR REPLACE VIEW FMDR.APP_USER_PROP_V 
