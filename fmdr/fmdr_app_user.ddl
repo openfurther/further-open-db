@@ -8,7 +8,13 @@
 
   DROP SEQUENCE FMDR.APP_USER_ID_SEQ;
 
-  CREATE SEQUENCE  FMDR.APP_USER_ID_SEQ
+  -- Rename FMDR.APP_USER_ID_SEQ to FMDR.APP_USER_SEQ
+  CREATE SEQUENCE FMDR.APP_USER_ID_SEQ
+    MINVALUE 100000 MAXVALUE 9999999
+    INCREMENT BY 1 START WITH 100000
+    NOCACHE ORDER NOCYCLE;
+  -- New
+  CREATE SEQUENCE FMDR.APP_USER_SEQ
     MINVALUE 100000 MAXVALUE 9999999
     INCREMENT BY 1 START WITH 100000
     NOCACHE ORDER NOCYCLE;
@@ -264,6 +270,26 @@ select aup.app_user_prop_id as APP_USER_PROP_ID,
        app_user au
  where aup.app_prop_id = ap.app_prop_id
    and aup.app_user_id = au.app_user_id;
+
+--------------------------------------------------------
+--  DDL for View APP_USER_ROLE_V
+--------------------------------------------------------
+CREATE OR REPLACE VIEW FMDR.APP_USER_ROLE_V 
+AS 
+SELECT AUR.APP_USER_ROLE_ID,
+       AU.APP_USER_ID,
+       AU.FIRSTNAME || ' ' || AU.LASTNAME AS USER_NAME,
+       AR.APP_ROLE_ID,
+       AR.APP_ROLE_NAME,
+       AR.APP_ROLE_DSC
+  FROM APP_USER_ROLE AUR,
+       APP_ROLE AR,
+       APP_USER AU
+ WHERE AUR.APP_USER_ID = AU.APP_USER_ID
+   AND AUR.APP_ROLE_ID = AR.APP_ROLE_ID
+ ORDER BY USER_NAME, AR.APP_ROLE_ID
+;
+
 
 
 /* End of DDL Script */
