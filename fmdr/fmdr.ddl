@@ -42,6 +42,10 @@ GRANT INSERT, SELECT, UPDATE ON FMDR.ASSET_RESOURCE TO FMDR_INTERFACE;
 
 -- Role I2B2_INTERFACE (Access to I2B2 Environment)
 CREATE ROLE I2B2_INTERFACE;
+
+-- Note: Stored Procs and Functions CANNOT use privileges inside of Roles!
+-- They are here to facilitate calling from SQLPLUS only!
+-- Grant EXECUTE of Stored Procs to User Directly!
 GRANT EXECUTE, DEBUG ON I2B2USER.CREATE_I2B2_USER TO I2B2_INTERFACE;
 GRANT EXECUTE, DEBUG ON I2B2USER.DELETE_I2B2_USER TO I2B2_INTERFACE;
 
