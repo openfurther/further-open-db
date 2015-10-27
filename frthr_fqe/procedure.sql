@@ -1,1657 +1,13 @@
 --------------------------------------------------------
---  File created - Friday-December-13-2013   
+-- Procedures  
 --------------------------------------------------------
---------------------------------------------------------
---  DDL for Sequence APP_LOG_ID_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "FRTHR_FQE"."APP_LOG_ID_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999999 INCREMENT BY 1 START WITH 1345587 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence CAS_LOG_ID_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "FRTHR_FQE"."CAS_LOG_ID_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 14826 CACHE 100 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence HIBERNATE_SEQUENCE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "FRTHR_FQE"."HIBERNATE_SEQUENCE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1495337 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence OBJ_ID_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "FRTHR_FQE"."OBJ_ID_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999999 INCREMENT BY 1 START WITH 27686618 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence QUERY_CRITERIA_ID_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "FRTHR_FQE"."QUERY_CRITERIA_ID_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999999 INCREMENT BY 1 START WITH 3 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence QUERY_ID_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "FRTHR_FQE"."QUERY_ID_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999999 INCREMENT BY 1 START WITH 259370 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SUBQUERY_ID_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "FRTHR_FQE"."SUBQUERY_ID_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Table APP_LOG
---------------------------------------------------------
-
-  CREATE TABLE "FRTHR_FQE"."APP_LOG" 
-   (	"APP_LOG_ID" NUMBER, 
-	"APP_MODULE" VARCHAR2(255), 
-	"APP_MSG_CD" VARCHAR2(255), 
-	"APP_LOG_MSG" CLOB, 
-	"APP_LOG_DTS" DATE, 
-	"APP_USER_ID" NUMBER
-   ) ;
---------------------------------------------------------
---  DDL for Table AUDIT_LOG
---------------------------------------------------------
-
-  CREATE TABLE "FRTHR_FQE"."AUDIT_LOG" 
-   (	"AUDIT_LOG_ID" NUMBER(19,0), 
-	"AUTHORIZATION_BODY" VARCHAR2(255 CHAR), 
-	"AUTHORIZATION_DETAIL" VARCHAR2(255 CHAR), 
-	"EVENT_DTS" TIMESTAMP (6), 
-	"EVENT_DSC" CLOB, 
-	"EVENT_SOURCE" VARCHAR2(255 CHAR), 
-	"EVENT_STATUS_CD" VARCHAR2(255 CHAR), 
-	"EVENT_TYPE_CD" VARCHAR2(255 CHAR), 
-	"USER_ID" VARCHAR2(255 CHAR)
-   ) ;
---------------------------------------------------------
---  DDL for Table COM_AUDIT_TRAIL
---------------------------------------------------------
-
-  CREATE TABLE "FRTHR_FQE"."COM_AUDIT_TRAIL" 
-   (	"ID" NUMBER(*,0), 
-	"AUD_USER" VARCHAR2(100), 
-	"AUD_CLIENT_IP" VARCHAR2(50), 
-	"AUD_SERVER_IP" VARCHAR2(50), 
-	"AUD_RESOURCE" VARCHAR2(100), 
-	"AUD_ACTION" VARCHAR2(100), 
-	"APPLIC_CD" VARCHAR2(5), 
-	"AUD_DATE" TIMESTAMP (6)
-   ) ;
---------------------------------------------------------
---  DDL for Table QUERY_ATTR
---------------------------------------------------------
-
-  CREATE TABLE "FRTHR_FQE"."QUERY_ATTR" 
-   (	"QUERY_ATTR_ID" NUMBER, 
-	"QUERY_ID" NUMBER, 
-	"QUERY_ATTR" VARCHAR2(100), 
-	"QUERY_ATTR_VALUE" VARCHAR2(100)
-   ) ;
---------------------------------------------------------
---  DDL for Table QUERY_CONTEXT
---------------------------------------------------------
-
-  CREATE TABLE "FRTHR_FQE"."QUERY_CONTEXT" 
-   (	"QUERY_ID" NUMBER(19,0), 
-	"DATASOURCEID" VARCHAR2(255 CHAR), 
-	"EXECUTION_ID" VARCHAR2(255 CHAR), 
-	"IS_STALE" NUMBER(1,0), 
-	"MAXRESPONDINGDATASOURCES" NUMBER(10,0), 
-	"MINRESPONDINGDATASOURCES" NUMBER(10,0), 
-	"ORIGIN_ID" NUMBER(19,0), 
-	"QUEUE_DATE" TIMESTAMP (6), 
-	"STALE_DATE" TIMESTAMP (6), 
-	"STATE" VARCHAR2(255 CHAR), 
-	"TARGETNAMESPACE" NUMBER(19,0), 
-	"END_DATE" TIMESTAMP (6), 
-	"START_DATE" TIMESTAMP (6), 
-	"USER_ID" VARCHAR2(255 CHAR), 
-	"ASSOCIATEDRESULT" NUMBER(19,0), 
-	"CURRENTSTATUS" NUMBER(19,0), 
-	"PARENT" NUMBER(19,0), 
-	"RESULTCONTEXT" NUMBER(19,0), 
-	"QUERY_TYPE" VARCHAR2(50)
-   ) ;
---------------------------------------------------------
---  DDL for Table QUERY_DEF
---------------------------------------------------------
-
-  CREATE TABLE "FRTHR_FQE"."QUERY_DEF" 
-   (	"QUERY_ID" VARCHAR2(100), 
-	"QUERY_NM" VARCHAR2(200), 
-	"QUERY_XML" "SYS"."XMLTYPE" , 
-	"CREATE_DTS" DATE, 
-	"CREATED_BY_USER_ID" VARCHAR2(100), 
-	"QUERY_CONTEXT_ID" NUMBER
-   ) ;
---------------------------------------------------------
---  DDL for Table QUERY_NMSPC
---------------------------------------------------------
-
-  CREATE TABLE "FRTHR_FQE"."QUERY_NMSPC" 
-   (	"QUERY_ID" VARCHAR2(100), 
-	"NAMESPACE_ID" NUMBER, 
-	"QUERY_XML" "SYS"."XMLTYPE" 
-   ) ;
---------------------------------------------------------
---  DDL for Table QUERY_TEMP
---------------------------------------------------------
-
-  CREATE TABLE "FRTHR_FQE"."QUERY_TEMP" 
-   (	"QUERY_ID" VARCHAR2(100), 
-	"NAMESPACE_ID" NUMBER, 
-	"QUERY_XML" "SYS"."XMLTYPE" 
-   ) ;
---------------------------------------------------------
---  DDL for Table QUERY_TEMP_ATTR
---------------------------------------------------------
-
-  CREATE TABLE "FRTHR_FQE"."QUERY_TEMP_ATTR" 
-   (	"NAMESPACE_ID" NUMBER, 
-	"QUERY_ID" NUMBER, 
-	"ATTR_NAME" VARCHAR2(1000)
-   ) ;
---------------------------------------------------------
---  DDL for Table QUERY_TEST_ASSERTION
---------------------------------------------------------
-
-  CREATE TABLE "FRTHR_FQE"."QUERY_TEST_ASSERTION" 
-   (	"QUERY_ID" NUMBER, 
-	"NAMESPACE_ID" NUMBER, 
-	"EXPECTED_RESULT_CD" VARCHAR2(20), 
-	"TEST_MSG" VARCHAR2(1000)
-   ) ;
---------------------------------------------------------
---  DDL for Table QUERY_TEST_RESULT
---------------------------------------------------------
-
-  CREATE TABLE "FRTHR_FQE"."QUERY_TEST_RESULT" 
-   (	"QUERY_ID" NUMBER, 
-	"NAMESPACE_ID" NUMBER, 
-	"TEST_CD" VARCHAR2(20), 
-	"ERROR_MSG" VARCHAR2(1000), 
-	"TEST_DTS" DATE
-   ) ;
---------------------------------------------------------
---  DDL for Table QUERY_TEST_SET
---------------------------------------------------------
-
-  CREATE TABLE "FRTHR_FQE"."QUERY_TEST_SET" 
-   (	"QUERY_ID" NUMBER, 
-	"QUERY_XML" "SYS"."XMLTYPE" , 
-	"COMMENTS" VARCHAR2(1000)
-   ) ;
---------------------------------------------------------
---  DDL for Table RESULT_CONTEXT
---------------------------------------------------------
-
-  CREATE TABLE "FRTHR_FQE"."RESULT_CONTEXT" 
-   (	"ID" NUMBER(19,0), 
-	"NUMRECORDS" NUMBER(19,0), 
-	"ROOT_ENTITY_CLASS" VARCHAR2(255 CHAR), 
-	"TRANSFER_OBJ_CLASS" VARCHAR2(255 CHAR)
-   ) ;
---------------------------------------------------------
---  DDL for Table RESULT_VIEWS
---------------------------------------------------------
-
-  CREATE TABLE "FRTHR_FQE"."RESULT_VIEWS" 
-   (	"VIEW_ID" NUMBER(19,0), 
-	"INTERSECTIONINDEX" NUMBER(10,0), 
-	"TYPE" VARCHAR2(20 CHAR), 
-	"VALUE" NUMBER(19,0), 
-	"QUERY_CONTEXT_ID" NUMBER(19,0)
-   ) ;
---------------------------------------------------------
---  DDL for Table SEARCH_QUERY
---------------------------------------------------------
-
-  CREATE TABLE "FRTHR_FQE"."SEARCH_QUERY" 
-   (	"SEARCH_QUERY_ID" NUMBER(19,0), 
-	"QID" NUMBER(19,0), 
-	"QUERYXML" CLOB, 
-	"QUERYCONTEXT" NUMBER(19,0), 
-	"ROOT_OBJECT" VARCHAR2(255)
-   ) ;
---------------------------------------------------------
---  DDL for Table STATUS_META_DATA
---------------------------------------------------------
-
-  CREATE TABLE "FRTHR_FQE"."STATUS_META_DATA" 
-   (	"ID" NUMBER(19,0), 
-	"DATASOURCEID" VARCHAR2(255 CHAR), 
-	"DURATION" NUMBER(19,0), 
-	"STATUS" VARCHAR2(255 CHAR), 
-	"STATUS_DATE" TIMESTAMP (6), 
-	"QUERYCONTEXT" NUMBER(19,0)
-   ) ;
---------------------------------------------------------
---  DDL for Table VIRTUAL_OBJ_ID_MAP
---------------------------------------------------------
-
-  CREATE TABLE "FRTHR_FQE"."VIRTUAL_OBJ_ID_MAP" 
-   (	"VIRTUAL_OBJ_ID_MAP_ID" NUMBER(19,0), 
-	"VIRTUAL_OBJ_ATTR" VARCHAR2(255 CHAR), 
-	"FED_OBJ_ID" NUMBER(19,0), 
-	"CREATE_DTS" TIMESTAMP (6), 
-	"CREATED_BY_CD" VARCHAR2(255 CHAR), 
-	"DEACTIVATE_DTS" TIMESTAMP (6), 
-	"VIRTUAL_OBJ_NAME" VARCHAR2(255 CHAR), 
-	"SRC_OBJ_ATTR" VARCHAR2(255 CHAR), 
-	"SRC_OBJ_ID" VARCHAR2(255 CHAR), 
-	"SRC_OBJ_NAME" VARCHAR2(255 CHAR), 
-	"SRC_OBJ_NMSPC_ID" NUMBER(19,0), 
-	"VIRTUAL_OBJ_ID" NUMBER(19,0)
-   ) ;
---------------------------------------------------------
---  DDL for View QUERY_V
---------------------------------------------------------
-
-  CREATE OR REPLACE FORCE VIEW "FRTHR_FQE"."QUERY_V" ("QUERY_ID", "QUERY_NM", "NAMESPACE_ID", "ANALYTICAL_QUERY", "PHYSICAL_QUERY", "EXEC_DTS", "USER_ID") AS 
-  select q.query_id, q.query_nm, qn.namespace_id, q.query_xml analytical_query, qn.query_xml physical_query, q.create_dts exec_dts, q.created_by_user_id user_id
-from query_def q, query_nmspc qn
-where q.query_id = qn.query_id
- 
- ;
---------------------------------------------------------
---  DDL for Index CAS_AUDIT_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "FRTHR_FQE"."CAS_AUDIT_PK" ON "FRTHR_FQE"."COM_AUDIT_TRAIL" ("ID") 
-  ;
---------------------------------------------------------
---  DDL for Index QUERY_DEF_INDEX1
---------------------------------------------------------
-
-  CREATE INDEX "FRTHR_FQE"."QUERY_DEF_INDEX1" ON "FRTHR_FQE"."QUERY_DEF" ("QUERY_NM") 
-  ;
---------------------------------------------------------
---  DDL for Index QUERY_DEF_UK1
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "FRTHR_FQE"."QUERY_DEF_UK1" ON "FRTHR_FQE"."QUERY_DEF" ("QUERY_CONTEXT_ID") 
-  ;
---------------------------------------------------------
---  DDL for Index QUERY_TEMP_ATTR_INDEX1
---------------------------------------------------------
-
-  CREATE INDEX "FRTHR_FQE"."QUERY_TEMP_ATTR_INDEX1" ON "FRTHR_FQE"."QUERY_TEMP_ATTR" ("NAMESPACE_ID") 
-  ;
---------------------------------------------------------
---  DDL for Index QUERY_TEMP_ATTR_INDEX2
---------------------------------------------------------
-
-  CREATE INDEX "FRTHR_FQE"."QUERY_TEMP_ATTR_INDEX2" ON "FRTHR_FQE"."QUERY_TEMP_ATTR" ("QUERY_ID") 
-  ;
---------------------------------------------------------
---  DDL for Index QUERY_TEMP_ATTR_INDEX3
---------------------------------------------------------
-
-  CREATE INDEX "FRTHR_FQE"."QUERY_TEMP_ATTR_INDEX3" ON "FRTHR_FQE"."QUERY_TEMP_ATTR" ("ATTR_NAME") 
-  ;
---------------------------------------------------------
---  DDL for Index SYS_C0023769
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "FRTHR_FQE"."SYS_C0023769" ON "FRTHR_FQE"."APP_LOG" ("APP_LOG_ID") 
-  ;
---------------------------------------------------------
---  DDL for Index SYS_C0023771
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "FRTHR_FQE"."SYS_C0023771" ON "FRTHR_FQE"."AUDIT_LOG" ("AUDIT_LOG_ID") 
-  ;
---------------------------------------------------------
---  DDL for Index SYS_C0023777
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "FRTHR_FQE"."SYS_C0023777" ON "FRTHR_FQE"."QUERY_ATTR" ("QUERY_ATTR_ID") 
-  ;
---------------------------------------------------------
---  DDL for Index SYS_C0023785
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "FRTHR_FQE"."SYS_C0023785" ON "FRTHR_FQE"."QUERY_CONTEXT" ("QUERY_ID") 
-  ;
---------------------------------------------------------
---  DDL for Index SYS_C0023786
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "FRTHR_FQE"."SYS_C0023786" ON "FRTHR_FQE"."QUERY_DEF" ("QUERY_ID") 
-  ;
---------------------------------------------------------
---  DDL for Index SYS_C0023788
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "FRTHR_FQE"."SYS_C0023788" ON "FRTHR_FQE"."QUERY_NMSPC" ("QUERY_ID", "NAMESPACE_ID") 
-  ;
---------------------------------------------------------
---  DDL for Index SYS_C0023789
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "FRTHR_FQE"."SYS_C0023789" ON "FRTHR_FQE"."QUERY_TEST_ASSERTION" ("QUERY_ID", "NAMESPACE_ID") 
-  ;
---------------------------------------------------------
---  DDL for Index SYS_C0023790
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "FRTHR_FQE"."SYS_C0023790" ON "FRTHR_FQE"."QUERY_TEST_SET" ("QUERY_ID") 
-  ;
---------------------------------------------------------
---  DDL for Index SYS_C0023792
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "FRTHR_FQE"."SYS_C0023792" ON "FRTHR_FQE"."RESULT_CONTEXT" ("ID") 
-  ;
---------------------------------------------------------
---  DDL for Index SYS_C0023794
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "FRTHR_FQE"."SYS_C0023794" ON "FRTHR_FQE"."RESULT_VIEWS" ("VIEW_ID") 
-  ;
---------------------------------------------------------
---  DDL for Index SYS_C0023796
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "FRTHR_FQE"."SYS_C0023796" ON "FRTHR_FQE"."SEARCH_QUERY" ("SEARCH_QUERY_ID") 
-  ;
---------------------------------------------------------
---  DDL for Index SYS_C0023798
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "FRTHR_FQE"."SYS_C0023798" ON "FRTHR_FQE"."STATUS_META_DATA" ("ID") 
-  ;
---------------------------------------------------------
---  DDL for Index SYS_C0023800
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "FRTHR_FQE"."SYS_C0023800" ON "FRTHR_FQE"."VIRTUAL_OBJ_ID_MAP" ("VIRTUAL_OBJ_ID_MAP_ID") 
-  ;
---------------------------------------------------------
---  Constraints for Table APP_LOG
---------------------------------------------------------
-
-  ALTER TABLE "FRTHR_FQE"."APP_LOG" ADD PRIMARY KEY ("APP_LOG_ID") ENABLE;
---------------------------------------------------------
---  Constraints for Table AUDIT_LOG
---------------------------------------------------------
-
-  ALTER TABLE "FRTHR_FQE"."AUDIT_LOG" MODIFY ("AUDIT_LOG_ID" NOT NULL ENABLE);
- 
-  ALTER TABLE "FRTHR_FQE"."AUDIT_LOG" ADD PRIMARY KEY ("AUDIT_LOG_ID") ENABLE;
---------------------------------------------------------
---  Constraints for Table COM_AUDIT_TRAIL
---------------------------------------------------------
-
-  ALTER TABLE "FRTHR_FQE"."COM_AUDIT_TRAIL" ADD CONSTRAINT "CAS_AUDIT_PK" PRIMARY KEY ("ID") ENABLE;
- 
-  ALTER TABLE "FRTHR_FQE"."COM_AUDIT_TRAIL" MODIFY ("ID" NOT NULL ENABLE);
- 
-  ALTER TABLE "FRTHR_FQE"."COM_AUDIT_TRAIL" MODIFY ("AUD_USER" NOT NULL ENABLE);
- 
-  ALTER TABLE "FRTHR_FQE"."COM_AUDIT_TRAIL" MODIFY ("AUD_ACTION" NOT NULL ENABLE);
- 
-  ALTER TABLE "FRTHR_FQE"."COM_AUDIT_TRAIL" MODIFY ("AUD_DATE" NOT NULL ENABLE);
---------------------------------------------------------
---  Constraints for Table QUERY_ATTR
---------------------------------------------------------
-
-  ALTER TABLE "FRTHR_FQE"."QUERY_ATTR" ADD PRIMARY KEY ("QUERY_ATTR_ID") ENABLE;
---------------------------------------------------------
---  Constraints for Table QUERY_CONTEXT
---------------------------------------------------------
-
-  ALTER TABLE "FRTHR_FQE"."QUERY_CONTEXT" MODIFY ("QUERY_ID" NOT NULL ENABLE);
- 
-  ALTER TABLE "FRTHR_FQE"."QUERY_CONTEXT" MODIFY ("EXECUTION_ID" NOT NULL ENABLE);
- 
-  ALTER TABLE "FRTHR_FQE"."QUERY_CONTEXT" MODIFY ("IS_STALE" NOT NULL ENABLE);
- 
-  ALTER TABLE "FRTHR_FQE"."QUERY_CONTEXT" MODIFY ("MAXRESPONDINGDATASOURCES" NOT NULL ENABLE);
- 
-  ALTER TABLE "FRTHR_FQE"."QUERY_CONTEXT" MODIFY ("MINRESPONDINGDATASOURCES" NOT NULL ENABLE);
- 
-  ALTER TABLE "FRTHR_FQE"."QUERY_CONTEXT" MODIFY ("STALE_DATE" NOT NULL ENABLE);
- 
-  ALTER TABLE "FRTHR_FQE"."QUERY_CONTEXT" MODIFY ("STATE" NOT NULL ENABLE);
- 
-  ALTER TABLE "FRTHR_FQE"."QUERY_CONTEXT" ADD PRIMARY KEY ("QUERY_ID") ENABLE;
---------------------------------------------------------
---  Constraints for Table QUERY_DEF
---------------------------------------------------------
-
-  ALTER TABLE "FRTHR_FQE"."QUERY_DEF" ADD CONSTRAINT "QUERY_DEF_UK1" UNIQUE ("QUERY_CONTEXT_ID") ENABLE;
- 
-  ALTER TABLE "FRTHR_FQE"."QUERY_DEF" ADD PRIMARY KEY ("QUERY_ID") ENABLE;
---------------------------------------------------------
---  Constraints for Table QUERY_NMSPC
---------------------------------------------------------
-
-  ALTER TABLE "FRTHR_FQE"."QUERY_NMSPC" ADD PRIMARY KEY ("QUERY_ID", "NAMESPACE_ID") ENABLE;
---------------------------------------------------------
---  Constraints for Table QUERY_TEST_ASSERTION
---------------------------------------------------------
-
-  ALTER TABLE "FRTHR_FQE"."QUERY_TEST_ASSERTION" ADD PRIMARY KEY ("QUERY_ID", "NAMESPACE_ID") ENABLE;
---------------------------------------------------------
---  Constraints for Table QUERY_TEST_SET
---------------------------------------------------------
-
-  ALTER TABLE "FRTHR_FQE"."QUERY_TEST_SET" ADD PRIMARY KEY ("QUERY_ID") ENABLE;
---------------------------------------------------------
---  Constraints for Table RESULT_CONTEXT
---------------------------------------------------------
-
-  ALTER TABLE "FRTHR_FQE"."RESULT_CONTEXT" MODIFY ("ID" NOT NULL ENABLE);
- 
-  ALTER TABLE "FRTHR_FQE"."RESULT_CONTEXT" ADD PRIMARY KEY ("ID") ENABLE;
---------------------------------------------------------
---  Constraints for Table RESULT_VIEWS
---------------------------------------------------------
-
-  ALTER TABLE "FRTHR_FQE"."RESULT_VIEWS" MODIFY ("VIEW_ID" NOT NULL ENABLE);
- 
-  ALTER TABLE "FRTHR_FQE"."RESULT_VIEWS" ADD PRIMARY KEY ("VIEW_ID") ENABLE;
---------------------------------------------------------
---  Constraints for Table SEARCH_QUERY
---------------------------------------------------------
-
-  ALTER TABLE "FRTHR_FQE"."SEARCH_QUERY" MODIFY ("SEARCH_QUERY_ID" NOT NULL ENABLE);
- 
-  ALTER TABLE "FRTHR_FQE"."SEARCH_QUERY" ADD PRIMARY KEY ("SEARCH_QUERY_ID") ENABLE;
---------------------------------------------------------
---  Constraints for Table STATUS_META_DATA
---------------------------------------------------------
-
-  ALTER TABLE "FRTHR_FQE"."STATUS_META_DATA" MODIFY ("ID" NOT NULL ENABLE);
- 
-  ALTER TABLE "FRTHR_FQE"."STATUS_META_DATA" ADD PRIMARY KEY ("ID") ENABLE;
---------------------------------------------------------
---  Constraints for Table VIRTUAL_OBJ_ID_MAP
---------------------------------------------------------
-
-  ALTER TABLE "FRTHR_FQE"."VIRTUAL_OBJ_ID_MAP" MODIFY ("VIRTUAL_OBJ_ID_MAP_ID" NOT NULL ENABLE);
- 
-  ALTER TABLE "FRTHR_FQE"."VIRTUAL_OBJ_ID_MAP" ADD PRIMARY KEY ("VIRTUAL_OBJ_ID_MAP_ID") ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table QUERY_CONTEXT
---------------------------------------------------------
-
-  ALTER TABLE "FRTHR_FQE"."QUERY_CONTEXT" ADD CONSTRAINT "FK2C94AD3857702D39" FOREIGN KEY ("CURRENTSTATUS")
-	  REFERENCES "FRTHR_FQE"."STATUS_META_DATA" ("ID") ENABLE;
- 
-  ALTER TABLE "FRTHR_FQE"."QUERY_CONTEXT" ADD CONSTRAINT "FK2C94AD38647CD91D" FOREIGN KEY ("RESULTCONTEXT")
-	  REFERENCES "FRTHR_FQE"."RESULT_CONTEXT" ("ID") ON DELETE CASCADE ENABLE;
- 
-  ALTER TABLE "FRTHR_FQE"."QUERY_CONTEXT" ADD CONSTRAINT "FK2C94AD387724A79E" FOREIGN KEY ("PARENT")
-	  REFERENCES "FRTHR_FQE"."QUERY_CONTEXT" ("QUERY_ID") ON DELETE CASCADE ENABLE;
- 
-  ALTER TABLE "FRTHR_FQE"."QUERY_CONTEXT" ADD CONSTRAINT "FK2C94AD38A22ADF97" FOREIGN KEY ("ASSOCIATEDRESULT")
-	  REFERENCES "FRTHR_FQE"."QUERY_CONTEXT" ("QUERY_ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table RESULT_VIEWS
---------------------------------------------------------
-
-  ALTER TABLE "FRTHR_FQE"."RESULT_VIEWS" ADD CONSTRAINT "FK1FB8FBCC9C24B876" FOREIGN KEY ("QUERY_CONTEXT_ID")
-	  REFERENCES "FRTHR_FQE"."QUERY_CONTEXT" ("QUERY_ID") ENABLE;
- 
-  ALTER TABLE "FRTHR_FQE"."RESULT_VIEWS" ADD CONSTRAINT "FK1FB8FBCCCBCEE79C" FOREIGN KEY ("VALUE")
-	  REFERENCES "FRTHR_FQE"."RESULT_CONTEXT" ("ID") ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table SEARCH_QUERY
---------------------------------------------------------
-
-  ALTER TABLE "FRTHR_FQE"."SEARCH_QUERY" ADD CONSTRAINT "FK1B7D0371DE01CADB" FOREIGN KEY ("QUERYCONTEXT")
-	  REFERENCES "FRTHR_FQE"."QUERY_CONTEXT" ("QUERY_ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  Ref Constraints for Table STATUS_META_DATA
---------------------------------------------------------
-
-  ALTER TABLE "FRTHR_FQE"."STATUS_META_DATA" ADD CONSTRAINT "FK82C59197DE01CADB" FOREIGN KEY ("QUERYCONTEXT")
-	  REFERENCES "FRTHR_FQE"."QUERY_CONTEXT" ("QUERY_ID") ON DELETE CASCADE ENABLE;
---------------------------------------------------------
---  DDL for Trigger GET_CAS_LOG_ID
---------------------------------------------------------
-
-  CREATE OR REPLACE TRIGGER "FRTHR_FQE"."GET_CAS_LOG_ID" 
-  BEFORE INSERT ON COM_AUDIT_TRAIL
-  FOR EACH ROW
-BEGIN
-  SELECT CAS_LOG_ID_SEQ.nextval
-    INTO :new.id
-    FROM dual;
-END;
-
-
-/
-ALTER TRIGGER "FRTHR_FQE"."GET_CAS_LOG_ID" ENABLE;
---------------------------------------------------------
---  DDL for Function CAN_QUERY
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."CAN_QUERY" ( p_namespace_str varchar2, p_query_context_id number ) RETURN number AS 
-
-  v_query_id number;
-  v_namespace_id number;
-  v_error_msg varchar2(4000);
-
-BEGIN
-
-  v_namespace_id := to_number( p_namespace_str );
-  v_query_id := prepare_analytical_query( v_namespace_id, p_query_context_id );
-
-  if ( v_namespace_id = const.get_uuedw_namespace_id and can_query_uuedw( v_query_id ) = 1 ) then
-  
-    return 1;
-    
-  elsif ( v_namespace_id = const.get_uuedw_apo_namespace_id  and can_query_uuedw_apo( v_query_id ) = 1 ) then
-  
-    return 1;
-    
-  elsif ( v_namespace_id = const.get_ih_apo_namespace_id  and can_query_ih_apo( v_query_id ) = 1) then
-  
-    return 1;
-    
-  elsif ( v_namespace_id = const.get_updbl_namespace_id  and can_query_updbl( v_query_id ) = 1) then
-  
-    return 1;
-    
-  else
-  
-    return 0;
-  
-  end if;
-
-  RETURN 0;
-  
-END CAN_QUERY;
-
-/
---------------------------------------------------------
---  DDL for Function CAN_QUERY_IH_APO
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."CAN_QUERY_IH_APO" ( p_query_id number ) return number AS
-
-  v_intro_msg varchar2(50);
-  
-BEGIN
-
-  v_intro_msg := 'QUERY( UPDBL:' || p_query_id || ') ';
-  further_pkg.log_msg($$PLSQL_UNIT,'DEBUG',v_intro_msg || 'BEGIN',1);
-  prepare_new_query( const.get_ih_apo_namespace_id, p_query_id );
-  
-  /* --------------------------------------------- */
-  /* Translate person - root attributes (no alias) */
-  /* --------------------------------------------- */
-  
-  TRANS_QUERY_DEMOG_IH_APO( p_query_id );
-  
-  /* ----------------------- */
-  /* Translate observations  */
-  /* ----------------------- */
-  
-  TRANS_QUERY_OBS_IH_APO( p_query_id );
-  
-  /* ------------------------------ */
-  /* Remove namespace attr criteria */
-  /* ------------------------------ */
-        
-  further_pkg.log_msg($$PLSQL_UNIT,'DEBUG',v_intro_msg || 'DELETE *NamespaceId',1);
-
-  update query_temp q
-  set q.query_xml = deleteXML( q.query_xml, '//criteria[parameters/parameter[ora:contains(text(),"%NamespaceId")>0]]', const.get_query_xml_namespace )
-  where query_id = p_query_id
-    and namespace_id = const.get_ih_apo_namespace_id;
-    
-  TRANS_QUERY_SUBQ( const.get_ih_apo_namespace_id, p_query_id );
-
-  check_translated_query( const.get_ih_apo_namespace_id, p_query_id );
-  
-  delete query_temp where query_id = p_query_id and namespace_id = const.get_ih_apo_namespace_id;
-  
-  further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'END',1);
-  
-  return 1;
-  
-END CAN_QUERY_IH_APO;
-
-/
---------------------------------------------------------
---  DDL for Function CAN_QUERY_UPDBL
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."CAN_QUERY_UPDBL" ( p_query_id number ) return number AS
-
-  v_intro_msg varchar2(50);
-  
-BEGIN
-
-  v_intro_msg := 'QUERY( UPDBL:' || p_query_id || ') ';
-  further_pkg.log_msg($$PLSQL_UNIT,'DEBUG',v_intro_msg || 'BEGIN',1);
-  prepare_new_query( const.get_updbl_namespace_id, p_query_id );
-  
-  /* --------------------------------------------- */
-  /* Translate person - root attributes (no alias) */
-  /* --------------------------------------------- */
-  
-  TRANS_QUERY_DEMOG_UPDBL( p_query_id );
-  
-  /* ----------------------- */
-  /* Translate locations     */
-  /* ----------------------- */
-  
-  TRANS_QUERY_LCTN_UPDBL( p_query_id );
-  
-  /* ----------------------- */
-  /* Translate observations  */
-  /* ----------------------- */
-  
-  TRANS_QUERY_OBS_UPDBL( p_query_id );
-  
-  /* ------------------------------ */
-  /* Remove namespace attr criteria */
-  /* ------------------------------ */
-        
-  further_pkg.log_msg($$PLSQL_UNIT,'DEBUG',v_intro_msg || 'DELETE *NamespaceId',1);
-
-  update query_temp q
-  set q.query_xml = deleteXML( q.query_xml, '//criteria[parameters/parameter[ora:contains(text(),"%NamespaceId")>0]]', const.get_query_xml_namespace )
-  where query_id = p_query_id
-    and namespace_id = const.get_updbl_namespace_id;
-    
-  TRANS_QUERY_SUBQ( const.get_updbl_namespace_id, p_query_id );
-
-  check_translated_query( const.get_updbl_namespace_id, p_query_id );
-  
-  delete query_temp where query_id = p_query_id and namespace_id = const.get_updbl_namespace_id;
-  
-  further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'END',1);
-  
-  return 1;
-  
-END CAN_QUERY_UPDBL;
-
-/
---------------------------------------------------------
---  DDL for Function CAN_QUERY_UUEDW
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."CAN_QUERY_UUEDW" ( p_query_id number ) RETURN number AS
-
-  v_intro_msg varchar2(50);
-  
-BEGIN
-
-  v_intro_msg := 'QUERY( UUEDW:' || p_query_id || ') ';
-  further_pkg.log_msg($$PLSQL_UNIT,'DEBUG',v_intro_msg || 'BEGIN',1);
-  
-  prepare_new_query( const.get_uuedw_namespace_id, p_query_id );
-
-  /* ------------------------------------ */
-  /* Translate all the observations first */
-  /* ------------------------------------ */
-  trans_query_obs_uuedw( p_query_id );      
-      
-  /* ------------------------ */
-  /* Translate all the orders */
-  /* ------------------------ */
-  trans_query_order_uuedw( p_query_id );      
-      
-  /* ------------------------ */
-  /* Translate locations */
-  /* ------------------------ */
-  trans_query_lctn_uuedw( p_query_id );      
-      
-  /* ------------------------ */
-  /* Translate encounters */
-  /* ------------------------ */
-  trans_query_encntr_uuedw( p_query_id );      
-      
-  /* --------------------------------------------- */
-  /* Translate person - root attributes (no alias) */
-  /* --------------------------------------------- */
-  trans_query_demog_uuedw( p_query_id );      
-  
-  /* ---------------------- */
-  /* Remove namespace attrs */
-  /* ---------------------- */
-  further_pkg.log_msg($$PLSQL_UNIT,'DEBUG',v_intro_msg || 'DELETE *Namespace',1);
-
-  update query_temp q
-  set q.query_xml = deleteXML( q.query_xml, '//criteria[parameters/parameter[ora:contains(text(),"%NamespaceId")>0]]', const.get_query_xml_namespace )
-  where query_id = p_query_id
-    and namespace_id = const.get_uuedw_namespace_id;
-  
-  check_translated_query( const.get_uuedw_namespace_id, p_query_id );
-  
-  delete query_temp where query_id = p_query_id and namespace_id = const.get_uuedw_namespace_id;
-  
-  return 1;
-
-  further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'END',1);
-    
-END CAN_QUERY_UUEDW;
-
-/
---------------------------------------------------------
---  DDL for Function CAN_QUERY_UUEDW_APO
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."CAN_QUERY_UUEDW_APO" ( p_query_id number ) RETURN number AS
-
-  v_intro_msg varchar2(50);
-  
-BEGIN
-
-  v_intro_msg := 'QUERY( UUEDW_APO:' || p_query_id || ') ';
-  further_pkg.log_msg($$PLSQL_UNIT,'DEBUG',v_intro_msg || 'BEGIN',1);
-    
-  return 1;
-
-  further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'END',1);
-    
-END CAN_QUERY_UUEDW_APO;
-
-/
---------------------------------------------------------
---  DDL for Function GET_ALIAS_FROM_ATTRIBUTE
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."GET_ALIAS_FROM_ATTRIBUTE" ( p_attr_name varchar2) RETURN VARCHAR2 AS 
-  v_alias varchar2(100);
-BEGIN
-
-  v_alias := substr(p_attr_name, 1, instr(p_attr_name, '.')-1);
-  
-  if const.get_debug = 1 then dbms_output.put_line( 'GET_ALIAS_FROM_ATTRIBUTE: attribute=' || p_attr_name || ' alias=' || v_alias ); end if;
-  
-  RETURN v_alias;
-  
-END GET_ALIAS_FROM_ATTRIBUTE;
-
-/
---------------------------------------------------------
---  DDL for Function GET_ALIAS_LCTN_TYPE
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."GET_ALIAS_LCTN_TYPE" ( p_query_id query_def.query_id%type, p_alias varchar2 ) RETURN VARCHAR2 AS 
-
-  v_type_str varchar2(100);
-  v_alias varchar2(100);
-  v_type varchar2(100);
-  
-BEGIN
-
-  further_pkg.log_msg($$PLSQL_UNIT,'DEBUG','query_id=' || p_query_id || ', alias=' || p_alias || '',1);
-
-  select plctn_type_str, plctn_alias, plctn_type into v_type_str, v_alias, v_type from (
-      select distinct
-             extract(column_value, '//parameter[ora:contains(text(),"personLocationType")>0]/text()', const.get_query_xml_namespace).getstringval() plctn_type_str,
-             substr( extract(column_value, '//parameter[ora:contains(text(),"personLocationType")>0]/text()', const.get_query_xml_namespace).getstringval()
-                    ,1
-                    ,instr( extract(column_value, '//parameter[ora:contains(text(),"personLocationType")>0]/text()', const.get_query_xml_namespace).getstringval(),'.')-1 ) plctn_alias,
-             extract(column_value, '//parameter[3]/text()', const.get_query_xml_namespace).getstringval() plctn_type
-      from query_def q
-          ,table(xmlsequence( q.query_xml.extract('//criteria[parameters/parameter[ora:contains(text(),"personLocationType")>0]]', const.get_query_xml_namespace) ) )
-      where query_id = p_query_id
-  )
-  where plctn_alias = p_alias;
-
-  further_pkg.log_msg($$PLSQL_UNIT,'DEBUG','RESULT Type=' || v_type_str || ', alias=' || v_alias || ', Type Value=' || v_type || ')',1);
-  
-  RETURN v_type;
-  
-END GET_ALIAS_LCTN_TYPE;
-
-/
---------------------------------------------------------
---  DDL for Function GET_ATTR_ASSOC_PROP
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."GET_ATTR_ASSOC_PROP" ( p_obj_asset_id number, p_attr_asset_label varchar2, p_prop_name varchar2 ) RETURN VARCHAR2 AS 
-
-  v_prop_val fmdr.asset_assoc_prop.prop_val%type;
-
-BEGIN
-
-  select prop_val into v_prop_val
-  from fmdr.asset_assoc_prop ap
-  where ap.asset_assoc_id in
-  (
-    select asset_assoc_id
-    from fmdr.asset_assoc_v
-    where ls_asset_id = p_obj_asset_id
-      and assoc_asset_id = 227
-      and rs_asset_label = p_attr_asset_label
-  )
-  and prop_name = p_prop_name;
-
-  return v_prop_val;
-
-  exception when no_data_found then return null;
-
-END GET_ATTR_ASSOC_PROP;
-
-/
---------------------------------------------------------
---  DDL for Function GET_ATTR_NAME_FROM_OBJ_ATTR
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."GET_ATTR_NAME_FROM_OBJ_ATTR" ( p_obj_attr varchar2) RETURN VARCHAR2 AS 
-  v_attr varchar2(100);
-BEGIN
-
-  v_attr := substr(p_obj_attr, instr(p_obj_attr, '.')+1, length(p_obj_attr));
-
-  RETURN v_attr;
-  
-END GET_ATTR_NAME_FROM_OBJ_ATTR;
-
-/
---------------------------------------------------------
---  DDL for Function GET_ATTR_SEARCH_TYPE
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."GET_ATTR_SEARCH_TYPE" ( p_query_id number, p_attr varchar2, p_attr_index number ) RETURN VARCHAR2 AS 
-
-  v_search_type varchar2(50);
-  
-BEGIN
-
-  select extract( q.query_xml,'(//*[parameters/parameter[text()="' || p_attr || '"]])[' || p_attr_index || ']' || '/searchType/text()', const.get_query_xml_namespace).getstringval()
-  into v_search_type
-  from query_def q
-  where query_id = p_query_id;
-
-  return v_search_type;
-
-END GET_ATTR_SEARCH_TYPE;
-
-/
---------------------------------------------------------
---  DDL for Function GET_ATTR_SIMPLE_OPERATOR
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."GET_ATTR_SIMPLE_OPERATOR" ( p_query_id number, p_attr varchar2, p_attr_index number ) RETURN VARCHAR2 AS 
-
-  v_search_type varchar2(50);
-  
-BEGIN
-
-  select extract( q.query_xml,'(//*[parameters/parameter[text()="' || p_attr || '"]])[' || p_attr_index || ']' ||
-                              '/searchType[text()="SIMPLE"]/../parameters/parameter[1]/text()'
-                              , const.get_query_xml_namespace).getstringval() oper
-  into v_search_type
-  from query_def q
-  where query_id = p_query_id;
-
-  return v_search_type;
-
-END GET_ATTR_SIMPLE_OPERATOR;
-
-/
---------------------------------------------------------
---  DDL for Function GET_OBJECT_BY_ALIAS
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."GET_OBJECT_BY_ALIAS" ( p_alias varchar2, p_query_id number) RETURN VARCHAR2 AS 
-  v_obj_nm varchar2(100);
-BEGIN
-
-  select extract( query_xml, '//aliases/alias[key="'|| p_alias || '"]/value/text()', const.get_query_xml_namespace).getstringval()
-  into v_obj_nm
-  from query_def
-  where query_id = p_query_id;
-
-  if const.get_debug = 1 then dbms_output.put_line( 'GET_OBJECT_BY_ALIAS: alias=' || p_alias || '   object=' || v_obj_nm || '   query_id=' || p_query_id ); end if;
-
-  RETURN v_obj_nm;
-  
-END GET_OBJECT_BY_ALIAS;
-
-/
---------------------------------------------------------
---  DDL for Function GET_QUERY_OBS_PHRASE_NMSPC_ID
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."GET_QUERY_OBS_PHRASE_NMSPC_ID" ( p_query_id query_def.query_id%type, p_nmspc_attr varchar2,  p_attr_name varchar2, p_attr_value varchar2, p_attr_index number) RETURN NUMBER AS
-
-  v_nmspc_id varchar2(100);
-  v_intro_msg varchar2(100);
-  loop_cnt number;
-  v_last_val varchar2(100);
-  
-BEGIN
-
-  v_intro_msg := 'QUERY( ' || p_query_id || ') ';
-  further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'NMSPC= ' || p_nmspc_attr || ' ATTR= ' || p_attr_name || ' ATTR_VAL=' || p_attr_value, 1);
-  
-  select q.query_xml.extract('(//criteria[parameters//parameter/text()="' || p_attr_name || '"' ||
-                  ' and parameters//parameter/text()="' || p_attr_value || '"])['|| p_attr_index ||']' ||
-                  '/../criteria[parameters/parameter/text()="' || p_nmspc_attr || '"]/parameters/parameter[3]/text()'
-                  ,const.get_query_xml_namespace).getstringval() into v_nmspc_id
-  from query_def q
-  where q.query_id = p_query_id;
-
-  further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'ATTR= ' || p_attr_name || ' ATTR_VAL=' || p_attr_value || ' NMPC=' || v_nmspc_id, 1);
-
-  RETURN to_number( v_nmspc_id );
-
-END GET_QUERY_OBS_PHRASE_NMSPC_ID;
-
-/
---------------------------------------------------------
---  DDL for Function GET_SIMPLE_QUERY_ATTR_VALUE
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."GET_SIMPLE_QUERY_ATTR_VALUE" ( p_query_id query_def.query_id%type, p_alias varchar2, p_attr_name varchar2 ) RETURN VARCHAR2 AS 
-
-  v_str varchar2(100);
-  v_alias varchar2(100);
-  v_val varchar2(100);
-  
-BEGIN
-
-  further_pkg.log_msg($$PLSQL_UNIT,'DEBUG','query_id=' || p_query_id || ', ALIAS=' || p_alias || ' ATTR=' || p_attr_name,1);
-
-  select q_str, q_alias, q_val into v_str, v_alias, v_val from (
-      select distinct
-             extract(column_value, '//parameter[ora:contains(text(),"' || p_attr_name || '")>0]/text()', const.get_query_xml_namespace).getstringval() q_str,
-             substr( extract(column_value, '//parameter[ora:contains(text(),"' || p_attr_name || '")>0]/text()', const.get_query_xml_namespace).getstringval()
-                    ,1
-                    ,instr( extract(column_value, '//parameter[ora:contains(text(),"' || p_attr_name || '")>0]/text()', const.get_query_xml_namespace).getstringval(),'.')-1 ) q_alias,
-             extract(column_value, '//parameter[3]/text()', const.get_query_xml_namespace).getstringval() q_val
-      from query_def q
-          ,table(xmlsequence( q.query_xml.extract('//criteria[parameters/parameter[ora:contains(text(),"' || p_attr_name || '")>0]]', const.get_query_xml_namespace) ) )
-      where query_id = p_query_id
-  )
-  where q_alias = p_alias;
-
-  further_pkg.log_msg($$PLSQL_UNIT,'DEBUG','RESULT ATTR=' || v_str || ', ALIAS=' || v_alias || ', VALUE=' || v_val ,1);
-  
-  RETURN v_val;
-  
-END GET_SIMPLE_QUERY_ATTR_VALUE;
-
-/
---------------------------------------------------------
---  DDL for Function GET_SIMPLE_QUERY_ATTR_VALUE_N
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."GET_SIMPLE_QUERY_ATTR_VALUE_N" ( p_query_id query_def.query_id%type, p_alias varchar2, p_attr_name varchar2, p_attr_index number ) RETURN VARCHAR2 AS 
-
-  v_str varchar2(100);
-  v_alias varchar2(100);
-  v_val varchar2(100);
-  
-BEGIN
-
-  further_pkg.log_msg($$PLSQL_UNIT,'DEBUG','query_id=' || p_query_id || ', ALIAS=' || p_alias || ' ATTR=' || p_attr_name,1);
-
-  select q.query_xml.extract('(//criteria[searchType/text()="SIMPLE" and parameters/parameter[2]/text()="' || p_alias || '.' || p_attr_name || '"])[' || p_attr_index || ']/parameters/parameter[3]/text()', const.get_query_xml_namespace).getstringval() into v_val
-  from query_def q
-  where query_id = p_query_id;
-
-  further_pkg.log_msg($$PLSQL_UNIT,'DEBUG','RESULT ATTR=' || v_str || ', ALIAS=' || v_alias || ', VALUE=' || v_val ,1);
-  
-  RETURN v_val;
-  
-END GET_SIMPLE_QUERY_ATTR_VALUE_N;
-
-/
---------------------------------------------------------
---  DDL for Function GET_STRING_VALUE_BY_XPATH
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."GET_STRING_VALUE_BY_XPATH" ( p_namespace_id number, p_query_id number, p_xpath varchar2) RETURN VARCHAR2 AS 
-
-  v_text_val varchar2(4000);
-
-BEGIN
-
-  begin
-    
-    select q.query_xml.extract(p_xpath,const.get_query_xml_namespace).getstringval() into v_text_val 
-    from query_temp q
-    where q.query_id = p_query_id 
-      and q.namespace_id = p_namespace_id;
-
-  end;
-
-  RETURN v_text_val;
-END GET_STRING_VALUE_BY_XPATH;
-
-/
---------------------------------------------------------
---  DDL for Function GET_TRANSLATED_ATTRIBUTE
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."GET_TRANSLATED_ATTRIBUTE" ( p_from_obj_asset_id number, p_to_obj_asset_id number, p_from_attr_nm varchar2) RETURN VARCHAR2 AS 
-  v_attr varchar2(100);
-BEGIN
-
-  select a1.rs_asset_label into v_attr
-  from fmdr.asset_assoc_v a1
-  where a1.assoc_asset_id = 363
-    and a1.ls_asset_id in (select a2.rs_asset_id from fmdr.asset_assoc_v a2 where a2.ls_asset_id = p_from_obj_asset_id and a2.assoc_asset_id = 227)
-    and a1.rs_asset_id in (select a3.rs_asset_id from fmdr.asset_assoc_v a3 where a3.ls_asset_id = p_to_obj_asset_id and a3.assoc_asset_id = 227)
-    and a1.ls_asset_label = p_from_attr_nm;
-
-  RETURN v_attr;
-END GET_TRANSLATED_ATTRIBUTE;
-
-/
---------------------------------------------------------
---  DDL for Function GET_TRANS_ASSOC_PROP
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."GET_TRANS_ASSOC_PROP" ( p_from_obj_asset_id number, p_to_obj_asset_id number, p_from_attr_nm varchar2, p_prop_nm varchar2) RETURN VARCHAR2 AS 
-  v_prop_val varchar2(100);
-BEGIN
-
-  select p.prop_val into v_prop_val
-  from fmdr.asset_assoc_prop p
-  where p.asset_assoc_id in (
-   select a1.asset_assoc_id
-    from fmdr.asset_assoc_v a1
-    where a1.assoc_asset_id = 363
-      and a1.ls_asset_id in (select a2.rs_asset_id from fmdr.asset_assoc_v a2 where a2.ls_asset_id = p_from_obj_asset_id and a2.assoc_asset_id = 227)
-      and a1.rs_asset_id in (select a3.rs_asset_id from fmdr.asset_assoc_v a3 where a3.ls_asset_id = p_to_obj_asset_id   and a3.assoc_asset_id = 227)
-      and a1.ls_asset_label = p_from_attr_nm
-  )
-    and p.prop_name = p_prop_nm;
-
-  RETURN v_prop_val;
-  
-  exception when no_data_found then return null;
-  
-END GET_TRANS_ASSOC_PROP;
-
-/
---------------------------------------------------------
---  DDL for Function GET_VALUE_BY_XPATH
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."GET_VALUE_BY_XPATH" ( p_namespace_id number, p_query_id number, xpath varchar2) RETURN VARCHAR2 AS 
-BEGIN
-
-
-
-
-
-
-  RETURN NULL;
-END GET_VALUE_BY_XPATH;
-
-/
---------------------------------------------------------
---  DDL for Function IS_NUMERIC
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."IS_NUMERIC" ( p_string varchar2 ) RETURN number AS
-
- v_number number;
-
-BEGIN
-  v_number := p_string;
-  return 1;
-  
-  exception
-    when others then
-      return 0;
-      
-END IS_NUMERIC;
-
-/
---------------------------------------------------------
---  DDL for Function IS_SUBQUERY
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."IS_SUBQUERY" ( p_query_id number, p_attr_name varchar2 ) RETURN number AS 
-
-  v_criteria xmltype;
-
-BEGIN
-
-  select q.query_xml.extract('//criteria[parameters/parameter[text()="' || p_attr_name || '"] ' ||
-                             'and query/rootCriterion//parameter[string-length(text())>0]]', const.get_query_xml_namespace) into v_criteria
-  from query_def q
-  where q.query_id = p_query_id;
-
-  if v_criteria is null then 
-    return 0;  
-  end if;
-
-  return 1;
-  
-  exception when no_data_found then return 0;
-  
-END IS_SUBQUERY;
-
-/
---------------------------------------------------------
---  DDL for Function IS_TRANS_ATTR
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."IS_TRANS_ATTR" ( p_from_obj_asset_id number, p_to_obj_asset_id number, p_from_attr_name varchar2 ) RETURN number AS 
-
-  v_attr_trans_func fmdr.asset_assoc_prop.prop_val%type;
-
-BEGIN
-
-  v_attr_trans_func := get_trans_assoc_prop( p_from_obj_asset_id, p_to_obj_asset_id, p_from_attr_name, const.get_attr_trans_prop_nm );
-  
-  if ( v_attr_trans_func is null ) then
-  
-    return -1;
-  
-  elsif ( v_attr_trans_func = const.get_attr_trans_func ) then
-  
-    return 1;
-    
-  end if;
-
-  return 0;
-END IS_TRANS_ATTR;
-
-/
---------------------------------------------------------
---  DDL for Function IS_TRANS_ATTR_DATA_TYPE
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."IS_TRANS_ATTR_DATA_TYPE" ( p_from_obj_asset_id number, p_to_obj_asset_id number, p_from_attr_name varchar2 ) RETURN number AS 
-
-  v_val fmdr.asset_assoc_prop.prop_val%type;
-
-BEGIN
-
-  v_val := get_trans_assoc_prop( p_from_obj_asset_id, p_to_obj_asset_id, p_from_attr_name, 'ATTR_VALUE_TRANS_TO_DATA_TYPE' );
-  
-  if ( v_val is not null ) then
-  
-    return 1;
-  
-  end if;
-
-  return 0;
-END IS_TRANS_ATTR_DATA_TYPE;
-
-/
---------------------------------------------------------
---  DDL for Function IS_TRANS_ATTR_VALUE
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."IS_TRANS_ATTR_VALUE" ( p_query_id number, p_from_obj_asset_id number, p_to_obj_asset_id number, p_from_attr_name varchar2 ) RETURN number AS 
-
-  v_attr_trans_func fmdr.asset_assoc_prop.prop_val%type;
-
-BEGIN
-
-  if is_subquery( p_query_id, p_from_attr_name ) = 1 then
-    return 0; 
-  end if; 
-
-  v_attr_trans_func := get_trans_assoc_prop( p_from_obj_asset_id, p_to_obj_asset_id, p_from_attr_name, const.get_attr_val_trans_prop_nm );
-  
-  if ( v_attr_trans_func is not null and v_attr_trans_func <> 'noTranslation' ) then 
-  
-    return 1;
-    
-  end if;
-
-  return 0;
-END IS_TRANS_ATTR_VALUE;
-
-/
---------------------------------------------------------
---  DDL for Function IS_VALID_ATTR
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."IS_VALID_ATTR" ( p_obj_asset_id number, p_attr_name varchar2 ) RETURN number AS 
-
-  v_cnt number;
- 
-BEGIN
-
-  select count(1) into v_cnt
-  from fmdr.asset_assoc_v
-  where ls_asset_id = p_obj_asset_id
-    and assoc_asset_id = 227
-    and rs_asset_label = p_attr_name;
-    
-  if ( v_cnt = 1 ) then 
-  
-    return 1;
-    
-  end if;
-
-  return 0;
-END IS_VALID_ATTR;
-
-/
---------------------------------------------------------
---  DDL for Function PREPARE_ANALYTICAL_QUERY
---------------------------------------------------------
-
-  CREATE OR REPLACE FUNCTION "FRTHR_FQE"."PREPARE_ANALYTICAL_QUERY" ( p_namespace_id number, p_query_context_id number )  RETURN number AS 
-
-  v_query_count number;
-  v_query_id number;
-  v_analytical_query_uuid varchar2(255);
-  v_query_context_id varchar2(255);
-  v_namespace_str varchar2(100);
-  v_user_id varchar2(100);
-  v_query_xml_clob clob;
-  v_query_xml xmltype;
-  v_intro_msg varchar2(100);
-  
-BEGIN
-
-  v_intro_msg := 'QUERY( ' || p_namespace_id || ':' || p_query_context_id || ') ';
-  further_pkg.log_msg($$PLSQL_UNIT,'DEBUG',v_intro_msg || 'BEGIN',1);
-
-  -- get the query namespace and parent id that contains analytical query data
-  select qc.user_id into v_user_id
-  from query_context qc
-  where qc.query_id = p_query_context_id;
-  --where qc.execution_id = p_query_context_uuid;
-
-  -- get the query
-  select sq.queryxml into v_query_xml_clob
-  from search_query sq
-  where sq.querycontext = p_query_context_id;
-
-  v_query_id := query_id_seq.nextval;
-  insert into query_def values( v_query_id, null, xmltype( v_query_xml_clob), sysdate, v_user_id, p_query_context_id );
-  commit;
-    
-  return v_query_id;
-
-  exception 
-    when DUP_VAL_ON_INDEX then 
-    select query_id into v_query_id
-    from query_def qd
-    where qd.query_context_id = p_query_context_id;
-    
-  further_pkg.log_msg($$PLSQL_UNIT,'DEBUG',v_intro_msg || 'END',1);
-    
-  return v_query_id;
-
-END PREPARE_ANALYTICAL_QUERY;
-
-/
---------------------------------------------------------
---  DDL for Package CONST
---------------------------------------------------------
-
-  CREATE OR REPLACE PACKAGE "FRTHR_FQE"."CONST" AS 
-
-  function get_debug return number;
-
-  function get_query_xml_namespace return varchar2;
-  function get_namespace_id_by_string( p_namespace_str varchar2 ) return number;
-  function get_uuedw_namespace_id return number;
-  function get_updbl_namespace_id return number;
-  function get_further_namespace_id return number;
-  function get_loinc_namespace_id return number;
-  function get_snomed_namespace_id return number;
-  function get_icd9_namespace_id return number;
-  function get_icd10_namespace_id return number;
-  function get_icdO_namespace_id return number;
-  function get_cpt_namespace_id return number;
-  function get_ih_namespace_id return number;
-  function get_uuedw_apo_namespace_id return number;
-  function get_ih_apo_namespace_id return number;
-  function get_test_namespace_id return number;
-
-  function get_namespace_label ( p_namespace_id number ) return varchar2;
-
-  function get_further_ontylog_nmspc_id return varchar2;
-
-  function get_uuedw_patient_obj_asset_id return number;
-  function get_frthr_person_obj_asset_id return number;
-  function get_uuedw_apo_person_asset_id return number;
-  function get_updbl_person_obj_asset_id return number;
-  function get_frthr_enc_asset_id return number;
-  function get_uuedw_enc_asset_id return number;
-  function get_ih_person_obj_asset_id return number;
-
-  function get_attr_relationship_id return number;
-  function is_id( p_var varchar2 ) return number;
-  function get_attr_trans_func return varchar2;
-  function get_attr_val_trans_func return varchar2;
-  function get_attr_trans_prop_nm return varchar2;
-  function get_attr_val_trans_prop_nm return varchar2;
-
-  function get_observation_type_dx return varchar2;
-  function get_observation_type_lab return varchar2;
-  function get_observation_type_procedure return varchar2;
-  function get_order_type_med return varchar2;
-  
-  function get_analytical_obs_class_id return number;
-  function get_uuedw_lab_obs_class_id return number;
-
-END CONST;
-
-/
---------------------------------------------------------
---  DDL for Package FURTHER_PKG
---------------------------------------------------------
-
-  CREATE OR REPLACE PACKAGE "FRTHR_FQE"."FURTHER_PKG" AS
-
-  TYPE query_nmspc_ref_cursor IS REF CURSOR RETURN query_nmspc%ROWTYPE;
-  
-  procedure log_msg( p_module app_log.app_module%type,  p_msg_cd app_log.app_msg_cd%type, p_msg app_log.app_log_msg%type, p_user_id app_log.app_user_id%type );
-
-  procedure get_physical_query( p_query_id query_def.query_id%type );
-
-  procedure build_uuedw_query( p_query_id number );
-  
-  
-
-END FURTHER_PKG;
- 
- 
-
-/
---------------------------------------------------------
---  DDL for Package Body CONST
---------------------------------------------------------
-
-  CREATE OR REPLACE PACKAGE BODY "FRTHR_FQE"."CONST" AS
-
-  function get_analytical_obs_class_id return number as 
-  begin
-    return 179;
-  end;
-
-  function get_uuedw_lab_obs_class_id return number as 
-  begin
-    return 133;
-  end;
-
-  function get_further_ontylog_nmspc_id return varchar2 as
-  begin
-    return 32771;
-  end;
-  
-  function get_test_namespace_id return number as
-  begin
-    return -1;
-  end;
-  
-  function get_query_xml_namespace return varchar2 as
-  begin
-    return 'xmlns="http://further.utah.edu/core/query" xmlns:ora="http://xmlns.oracle.com/xdb" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xp20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20"';
-  end;
-  
-  function get_frthr_enc_asset_id return number as
-  begin
-    return 178;
-  end;
-
-  function get_uuedw_enc_asset_id return number as
-  begin
-    return 134;
-  end;
-
-  function get_frthr_person_obj_asset_id return number as
-  begin
-    return 177;
-  end;
-  
-  function get_ih_person_obj_asset_id return number as
-  begin
-    return 2670;
-  end;
-
-  function get_updbl_person_obj_asset_id return number as
-  begin
-    return 180;
-  end;
-
-  function get_uuedw_patient_obj_asset_id return number as
-  begin
-    return 131;
-  end;
-
-  function get_uuedw_apo_person_asset_id return number as
-  begin
-    return 2850;
-  end;
-
-  function get_namespace_id_by_string( p_namespace_str varchar2 ) return number as
-  begin
-  
-    if p_namespace_str = 'UUEDW' then 
-    
-      return get_uuedw_namespace_id;
-      
-    elsif p_namespace_str = 'UPDBL' then 
-    
-      return get_updbl_namespace_id;
-      
-    elsif p_namespace_str = 'UPDB' then 
-    
-      return get_updbl_namespace_id;
-      
-    elsif p_namespace_str = 'FURTHER' then 
-    
-      return get_further_namespace_id;
-      
-    elsif p_namespace_str = 'SNOMED' then 
-    
-      return get_snomed_namespace_id;
-      
-    elsif p_namespace_str = 'LOINC' then 
-    
-      return get_loinc_namespace_id;
-      
-    elsif p_namespace_str = 'ICD9' then 
-    
-      return get_icd9_namespace_id;
-      
-    elsif p_namespace_str = 'ICD10' then 
-    
-      return get_icd10_namespace_id;
-      
-    elsif p_namespace_str = 'CPT' then 
-    
-      return get_cpt_namespace_id;
-      
-    else 
-    
-      return -1;
-      
-    end if;
-  
-  end;
-  function get_uuedw_apo_namespace_id return number as
-  begin
-    return 64901;
-  end;
-
-  function get_ih_apo_namespace_id return number as
-  begin
-    return 64902;
-  end;
-
-  function get_ih_namespace_id return number as
-  begin
-    return 32780;
-  end;
-
-  function get_uuedw_namespace_id return number as
-  begin
-    return 32776;
-  end;
-
-  function get_updbl_namespace_id return number as
-  begin
-    return 32774;
-  end;
-  
-  function get_further_namespace_id return number as
-  begin
-    return 32769;
-  end;
-  
-  function get_loinc_namespace_id return number as
-  begin
-    return 5102;
-  end;
-  
-  function get_icd9_namespace_id return number as
-  begin
-    return 10;
-  end;
-  
-  function get_icd10_namespace_id return number as
-  begin
-    return 1518;
-  end;
-  
-  function get_icdO_namespace_id return number as
-  begin
-    return 65043;
-  end;
-  
-  function get_cpt_namespace_id return number as
-  begin
-    return 20;
-  end;
-  
-  function get_snomed_namespace_id return number as
-  begin
-    return 30;
-  end;
-  
-  function get_namespace_label ( p_namespace_id number ) return varchar2 as
-  begin
-
-    if p_namespace_id = const.get_uuedw_namespace_id then 
-      return 'UUEDW';
-    elsif p_namespace_id = const.get_updbl_namespace_id then
-      return 'UPDBL';
-    else 
-      return null;
-    end if;
-  
-  end;
-  
-  function get_attr_relationship_id return number as
-  begin
-    return 1;
-  end;
-
-  function get_debug return number as
-  begin
-    return 1;
-  end;
-  
-  function is_id( p_var varchar2 ) return number as
-  begin
-    if ( instr( p_var, 'id.' ) = 1 ) then
-      return 1;
-    end if;
-    return 0;
-  end;
-  
-  function get_attr_trans_prop_nm return varchar2 as
-  begin
-    return 'ATTR_TRANS_FUNC';
-  end;
-
-  function get_attr_val_trans_prop_nm return varchar2 as
-  begin
-    return 'ATTR_VALUE_TRANS_FUNC';
-  end;
-
-  function get_attr_trans_func return varchar2 as
-  begin
-    return 'translateAttr';
-  end;
-
-  function get_attr_val_trans_func return varchar2 as
-  begin
-    return 'translateCode';
-  end;
-
-  function get_observation_type_dx return varchar2 as
-  begin
-    return 'Dx';
-  end;
-
-  function get_observation_type_lab return varchar2 as
-  begin
-    return 'Lab';
-  end;
-  
-  function get_observation_type_procedure return varchar2 as
-  begin
-    return 'Procedure';
-  end;
-
-  function get_order_type_med return varchar2 as
-  begin
-    return 'Medication';
-  end;
-
-
-
-END CONST;
-
-/
---------------------------------------------------------
---  DDL for Package Body FURTHER_PKG
---------------------------------------------------------
-
-  CREATE OR REPLACE PACKAGE BODY "FRTHR_FQE"."FURTHER_PKG" AS
-
-TYPE query_nmspc_ref_cursor IS REF CURSOR RETURN query_nmspc%ROWTYPE;
-
-
-procedure log_msg( p_module app_log.app_module%type,  p_msg_cd app_log.app_msg_cd%type, p_msg app_log.app_log_msg%type, p_user_id app_log.app_user_id%type ) as
-begin
-
-  dbms_output.put_line( to_char( sysdate, 'YYYY-DD-MON HH24:MI:SS') || ' MODULE: ' || p_module || ' CODE: ' || p_msg_cd || ' MSG: ' || p_msg   );
-  null;
-  --insert into app_log values( app_log_id_seq.nextval, p_module, p_msg_cd, p_msg, sysdate, p_user_id);
-end;
-
-procedure get_physical_query( p_query_id query_def.query_id%type ) as
-begin
-  null;
-end;
-
-procedure build_uuedw_query( p_query_id number ) as
-begin
-  null;
-end;
-
-function get_translated_values( p_src_nmspc_id number, p_src_prop_nm varchar2, p_src_prop_val varchar2, p_trgt_nmspc_id number, p_trgt_prop_nm varchar2 ) return varchar2 as 
-begin
-  null;
-end;
-
-function get_translated_concept_value( p_src_nmspc_id number, p_src_prop_nm varchar2, p_src_prop_val varchar2, p_trgt_nmspc_id number, p_trgt_prop_nm varchar2 ) return varchar2 as 
-begin
-  return  dts.GET_TRANSLATED_CONCEPT_VALUE(  p_src_nmspc_id, p_src_prop_nm, p_src_prop_val, p_trgt_nmspc_id, p_trgt_prop_nm );
-end;
-
-
-
-END FURTHER_PKG;
 
-/
 --------------------------------------------------------
 --  DDL for Procedure ADD_QUERY_OBJECT_ALIAS
 --------------------------------------------------------
 set define off;
 
-  CREATE OR REPLACE PROCEDURE "FRTHR_FQE"."ADD_QUERY_OBJECT_ALIAS" ( p_namespace_id number, p_query_id number, p_old_alias varchar2, p_new_alias varchar2, p_new_object varchar2) AS 
+CREATE OR REPLACE PROCEDURE FRTHR_FQE.ADD_QUERY_OBJECT_ALIAS ( p_namespace_id number, p_query_id number, p_old_alias varchar2, p_new_alias varchar2, p_new_object varchar2) AS 
    v_new_alias_xml varchar2(1000);
    is_existing_alias number;
 BEGIN
@@ -1660,7 +16,7 @@ BEGIN
   from query_temp q
   where q.query_id = p_query_id
     and q.namespace_id = p_namespace_id
-    and q.query_xml.existsNode( '//aliases/alias[key="' || p_new_alias || '"]/key/text()', const.get_query_xml_namespace) = 1;
+    and q.query_xml.existsNode( '//aliases/alias[key=' || p_new_alias || ']/key/text()', const.get_query_xml_namespace) = 1;
     
   if ( is_existing_alias = 0 ) then -- does not exist, create 
     
@@ -1672,7 +28,7 @@ BEGIN
 
      update query_temp q 
      set query_xml = insertChildXML( q.query_xml
-                      , '//aliases[alias/key[text()="' || p_old_alias || '"]]'
+                      , '//aliases[alias/key[text()=' || p_old_alias || ']]'
                       , 'alias', XMLType( v_new_alias_xml )
                       , const.get_query_xml_namespace ) 
      where q.query_id = p_query_id
@@ -1691,7 +47,7 @@ END ADD_QUERY_OBJECT_ALIAS;
 --------------------------------------------------------
 set define off;
 
-  CREATE OR REPLACE PROCEDURE "FRTHR_FQE"."CHECK_TRANSLATED_QUERY" ( p_namespace_id number, p_query_id number ) AS 
+CREATE OR REPLACE PROCEDURE FRTHR_FQE.CHECK_TRANSLATED_QUERY ( p_namespace_id number, p_query_id number ) AS 
 
   v_error_msg varchar2(4000); 
 
@@ -1746,7 +102,7 @@ END CHECK_TRANSLATED_QUERY;
 --------------------------------------------------------
 set define off;
 
-  CREATE OR REPLACE PROCEDURE "FRTHR_FQE"."DELETE_QUERY_ELEMENTS" ( p_namespace_id query_temp.namespace_id%type, p_query_id query_temp.query_id%type, p_xpath varchar2 ) AS 
+CREATE OR REPLACE PROCEDURE FRTHR_FQE.DELETE_QUERY_ELEMENTS ( p_namespace_id query_temp.namespace_id%type, p_query_id query_temp.query_id%type, p_xpath varchar2 ) AS 
 
   v_intro_msg varchar2(50);
   
@@ -1775,7 +131,7 @@ END DELETE_QUERY_ELEMENTS;
 --------------------------------------------------------
 set define off;
 
-  CREATE OR REPLACE PROCEDURE "FRTHR_FQE"."GET_PHYSICAL_QUERY" 
+CREATE OR REPLACE PROCEDURE FRTHR_FQE.GET_PHYSICAL_QUERY 
   (
     p_sys_refcur OUT SYS_REFCURSOR,
     p_namespace_str          VARCHAR2,
@@ -1802,7 +158,7 @@ BEGIN
     TRANS_QUERY_IH_APO( v_query_id );
   ELSE
   
-    v_error_msg := 'QUERY CONTEXT_UUID="' || p_query_context_id || '" NAMESPACE="' ||  v_namespace_str || '" not supported';
+    v_error_msg := 'QUERY CONTEXT_UUID=' || p_query_context_id || ' NAMESPACE=' ||  v_namespace_str || ' not supported';
     further_pkg.log_msg($$PLSQL_UNIT,'ERROR', v_error_msg, 1);
     RAISE_APPLICATION_ERROR(-20000, v_error_msg );
   
@@ -1818,7 +174,7 @@ END GET_PHYSICAL_QUERY;
 --------------------------------------------------------
 set define off;
 
-  CREATE OR REPLACE PROCEDURE "FRTHR_FQE"."PREPARE_NEW_QUERY" ( p_namespace_id number, p_query_id number)  AS 
+CREATE OR REPLACE PROCEDURE FRTHR_FQE.PREPARE_NEW_QUERY ( p_namespace_id number, p_query_id number)  AS 
 BEGIN
 
   delete query_temp  where query_id = p_query_id and namespace_id = p_namespace_id;
@@ -1847,7 +203,7 @@ BEGIN
 
   /* remove the queryId criteria */
   update query_temp q
-  set q.query_xml = deleteXML( q.query_xml, '//criteria[parameters/parameter/text()="id.queryId"]'
+  set q.query_xml = deleteXML( q.query_xml, '//criteria[parameters/parameter/text()=id.queryId]'
                                           , const.get_query_xml_namespace )
   where query_id = p_query_id
     and namespace_id = p_namespace_id;
@@ -1869,7 +225,7 @@ END PREPARE_NEW_QUERY;
 --------------------------------------------------------
 set define off;
 
-  CREATE OR REPLACE PROCEDURE "FRTHR_FQE"."RUN_QUERY_TRANS_TEST_SUITE" as
+CREATE OR REPLACE PROCEDURE FRTHR_FQE.RUN_QUERY_TRANS_TEST_SUITE as
   v_can_query_uuedw number;
   v_can_query_updbl number;
   v_error_msg varchar2(1000);
@@ -1959,7 +315,7 @@ end run_query_trans_test_suite;
 --------------------------------------------------------
 set define off;
 
-  CREATE OR REPLACE PROCEDURE "FRTHR_FQE"."TRANS_QUERY_DEMOG_IH_APO" ( p_query_id number ) AS
+CREATE OR REPLACE PROCEDURE FRTHR_FQE.TRANS_QUERY_DEMOG_IH_APO ( p_query_id number ) AS
 
   v_namespace_id number;
   v_ih_apo_person_asset_id number;
@@ -1994,8 +350,8 @@ BEGIN
   for crs in (
     select extract(column_value, '/parameter/text()', const.get_query_xml_namespace).getstringval() attr_name
     from query_def q
-        ,table(xmlsequence( q.query_xml.extract('//parameter[(position()=1 and ../../searchType/text()!="SIMPLE")' ||
-                                                        ' or (position()=2 and ../../searchType/text()="SIMPLE")]'
+        ,table(xmlsequence( q.query_xml.extract('//parameter[(position()=1 and ../../searchType/text()!=SIMPLE)' ||
+                                                        ' or (position()=2 and ../../searchType/text()=SIMPLE)]'
                           , const.get_query_xml_namespace) ) )
     where query_id = p_query_id
   ) loop
@@ -2040,7 +396,7 @@ BEGIN
       update query_temp qn 
          set query_xml = updatexml( 
              qn.query_xml
-            ,'(//parameter[text()="' || crs.attr_name || '"])[' || v_attr_count || ']/text()'
+            ,'(//parameter[text()=' || crs.attr_name || '])[' || v_attr_count || ']/text()'
             , v_trgt_attr
             , const.get_query_xml_namespace )
       where qn.query_id = p_query_id
@@ -2065,8 +421,8 @@ BEGIN
       for param in (
         select extract(column_value, '/parameter/text()', const.get_query_xml_namespace).getstringval() v_value
         from query_def q
-            ,table(xmlsequence( q.query_xml.extract('(//criteria[parameters/parameter[text()="' || crs.attr_name || '"]])[' || v_attr_count || ']' ||
-                               '//parameter[(position()>2 and ../../searchType/text()="SIMPLE") or (position()>1 and ../../searchType/text()!="SIMPLE")]'
+            ,table(xmlsequence( q.query_xml.extract('(//criteria[parameters/parameter[text()=' || crs.attr_name || ']])[' || v_attr_count || ']' ||
+                               '//parameter[(position()>2 and ../../searchType/text()=SIMPLE) or (position()>1 and ../../searchType/text()!=SIMPLE)]'
                                , const.get_query_xml_namespace) ) )
         where q.query_id = p_query_id       
       ) loop
@@ -2093,7 +449,7 @@ BEGIN
           
           if length(v_trgt_value) > 0 and v_trgt_value is not null then -- trgt_value indicates the value was translated and needs to be updated
   
-            v_xpath := '//criteria[parameters//parameter/text()="' || v_trgt_attr || '" and parameters//parameter/text()="' || param.v_value || '"]/parameters/parameter[text()="' || param.v_value || '"]';
+            v_xpath := '//criteria[parameters//parameter/text()=' || v_trgt_attr || ' and parameters//parameter/text()=' || param.v_value || ']/parameters/parameter[text()=' || param.v_value || ']';
             further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || '7 UPDATE QUERY NEW_ATTR=' || v_trgt_attr || ' NEW_ATTR_VALUE=' || v_trgt_value || ' xpath=' || v_xpath,1);
   
             update query_temp qn 
@@ -2123,12 +479,12 @@ BEGIN
       if ( v_is_trans_attr  = 1) then
 
         further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || '9 UPDATING: REMOVING untouched for ATTR=' || v_trgt_attr || ' VALUE=' || v_trgt_value,1);
-        delete_query_elements( v_namespace_id, p_query_id,'//criteria[parameters//parameter/text()="' || v_trgt_attr ||'"]/parameters/untouched');
+        delete_query_elements( v_namespace_id, p_query_id,'//criteria[parameters//parameter/text()=' || v_trgt_attr ||']/parameters/untouched');
 
       elsif ( v_is_trans_attr  = 0 and v_is_trans_attr_value  = 0 and is_valid_attr( const.get_frthr_person_obj_asset_id , crs.attr_name) = 1) then
 
         further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || '10 UPDATING: REMOVING untouched for ATTR=' || v_trgt_attr || ' VALUE=' || v_trgt_value,1);
-        delete_query_elements( v_namespace_id, p_query_id,'//criteria[parameters//parameter/text()="' || crs.attr_name || '"]/parameters/untouched');
+        delete_query_elements( v_namespace_id, p_query_id,'//criteria[parameters//parameter/text()=' || crs.attr_name || ']/parameters/untouched');
 
       end if;
       
@@ -2149,7 +505,7 @@ BEGIN
   end loop; -- attr loop
 
   -- delete the female administartive gender crieria when it is female - impled but not supported
-  delete_query_elements( v_namespace_id, p_query_id,'//criteria[parameters//parameter/text()="administrativeGender" and parameters//parameter/text()="248153007"]');
+  delete_query_elements( v_namespace_id, p_query_id,'//criteria[parameters//parameter/text()=administrativeGender and parameters//parameter/text()=248153007]');
   delete query_temp_attr where query_id = p_query_id and namespace_id=v_namespace_id;
   
   /* ----------------------------------------------------------
@@ -2169,7 +525,7 @@ END TRANS_QUERY_DEMOG_IH_APO;
 --------------------------------------------------------
 set define off;
 
-  CREATE OR REPLACE PROCEDURE "FRTHR_FQE"."TRANS_QUERY_DEMOG_UPDBL" ( p_query_id number ) AS
+CREATE OR REPLACE PROCEDURE FRTHR_FQE.TRANS_QUERY_DEMOG_UPDBL ( p_query_id number ) AS
 
   v_is_trans_attr number;
   v_is_trans_attr_value number;
@@ -2200,8 +556,8 @@ BEGIN
   for crs in (
     select extract(column_value, '/parameter/text()', const.get_query_xml_namespace).getstringval() attr_name
     from query_def q
-        ,table(xmlsequence( q.query_xml.extract('//parameter[(position()=1 and ../../searchType/text()!="SIMPLE")' ||
-                                                        ' or (position()=2 and ../../searchType/text()="SIMPLE")]'
+        ,table(xmlsequence( q.query_xml.extract('//parameter[(position()=1 and ../../searchType/text()!=SIMPLE)' ||
+                                                        ' or (position()=2 and ../../searchType/text()=SIMPLE)]'
                           , const.get_query_xml_namespace) ) )
     where query_id = p_query_id
   ) loop
@@ -2239,7 +595,7 @@ BEGIN
       update query_temp qn 
          set query_xml = updatexml( 
              qn.query_xml
-            ,'//parameter[text()="' || crs.attr_name || '"]/text()'
+            ,'//parameter[text()=' || crs.attr_name || ']/text()'
             , v_trgt_attr
             , const.get_query_xml_namespace )
       where qn.query_id = p_query_id
@@ -2264,8 +620,8 @@ BEGIN
       for param in (
         select extract(column_value, '/parameter/text()', const.get_query_xml_namespace).getstringval() v_value
         from query_def q
-            ,table(xmlsequence( q.query_xml.extract('(//*[parameters/parameter[text()="' || crs.attr_name || '"]])[' || v_attr_count || ']' ||
-                               '//parameter[(position()>2 and ../../searchType/text()="SIMPLE") or (position()>1 and ../../searchType/text()!="SIMPLE")]'
+            ,table(xmlsequence( q.query_xml.extract('(//*[parameters/parameter[text()=' || crs.attr_name || ']])[' || v_attr_count || ']' ||
+                               '//parameter[(position()>2 and ../../searchType/text()=SIMPLE) or (position()>1 and ../../searchType/text()!=SIMPLE)]'
                                , const.get_query_xml_namespace) ) )
         where q.query_id = p_query_id       
       ) loop
@@ -2294,7 +650,7 @@ BEGIN
           
           if length(v_trgt_value) > 0 then -- trgt_value indicates the value was translated and needs to be updated
   
-            v_xpath := '//*[parameters//parameter/text()="' || v_trgt_attr || '" and parameters//parameter/text()="' || param.v_value || '"]/parameters/parameter[text()="' || param.v_value || '"]';
+            v_xpath := '//*[parameters//parameter/text()=' || v_trgt_attr || ' and parameters//parameter/text()=' || param.v_value || ']/parameters/parameter[text()=' || param.v_value || ']';
             further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || '7 UPDATE QUERY NEW_ATTR=' || v_trgt_attr || ' NEW_ATTR_VALUE=' || v_trgt_value || ' xpath=' || v_xpath,1);
         
             if length(v_trnsltn_to_type) > 0 then -- translation type needs to be updated
@@ -2341,7 +697,7 @@ BEGIN
         further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || '8 UPDATING: REMOVING untouched for ATTR=' || v_trgt_attr,1);
         delete_query_elements( const.get_updbl_namespace_id
                              , p_query_id
-                             ,'//criteria[parameters//parameter/text()="' || v_trgt_attr || '"]/parameters/untouched'
+                             ,'//criteria[parameters//parameter/text()=' || v_trgt_attr || ']/parameters/untouched'
                              );
                                
       elsif ( v_is_trans_attr  = 1 and v_is_trans_attr_value  = 1 ) then
@@ -2349,8 +705,8 @@ BEGIN
         further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || '9 UPDATING: REMOVING untouched for ATTR=' || v_trgt_attr || ' VALUE=' || v_trgt_value,1);
         delete_query_elements( const.get_updbl_namespace_id
                              , p_query_id
-                             ,'//criteria[parameters//parameter/text()="' || v_trgt_attr || 
-                              '" and parameters//parameter/text()="' || v_trgt_value || '"]/parameters/untouched'
+                             ,'//criteria[parameters//parameter/text()=' || v_trgt_attr || 
+                              ' and parameters//parameter/text()=' || v_trgt_value || ']/parameters/untouched'
                              );
 
       elsif ( v_is_trans_attr  = 0 and v_is_trans_attr_value  = 0 and is_valid_attr( const.get_updbl_person_obj_asset_id, crs.attr_name) = 1) then
@@ -2358,7 +714,7 @@ BEGIN
         further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || '10 UPDATING: REMOVING untouched for ATTR=' || v_trgt_attr || ' VALUE=' || v_trgt_value,1);
         delete_query_elements( const.get_updbl_namespace_id
                              , p_query_id
-                             ,'//criteria[parameters//parameter/text()="' || crs.attr_name || '"]/parameters/untouched'
+                             ,'//criteria[parameters//parameter/text()=' || crs.attr_name || ']/parameters/untouched'
                              );
 
       end if;
@@ -2375,18 +731,18 @@ BEGIN
     
     end if;
     
-    -- if this was an "age BETWEEN" statement the order of the between values needs to be swapped.
+    -- if this was an age BETWEEN statement the order of the between values needs to be swapped.
     v_search_type := get_attr_search_type(p_query_id, crs.attr_name, v_attr_count );
-    further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || '12 SEARCH_TYPE for ATTR ' || crs.attr_name || '[' || v_attr_count || ']="' || v_search_type ||'"' ,1);
+    further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || '12 SEARCH_TYPE for ATTR ' || crs.attr_name || '[' || v_attr_count || ']=' || v_search_type ||'' ,1);
 
     if ( crs.attr_name = 'age' and v_search_type = 'BETWEEN' ) then 
 
       -- duplicate param[2] and add it to end of param list
       update query_temp q 
       set query_xml = insertChildXML( q.query_xml
-                      , '(//*[parameters/parameter[text()="' || v_trgt_attr || '"]])[' || v_attr_count || ']/parameters'
+                      , '(//*[parameters/parameter[text()=' || v_trgt_attr || ']])[' || v_attr_count || ']/parameters'
                       , 'parameter'
-                      , extract( q.query_xml,'(//*[parameters/parameter[text()="' || v_trgt_attr || '"]])[' || v_attr_count || ']' || '//parameter[2]', const.get_query_xml_namespace)
+                      , extract( q.query_xml,'(//*[parameters/parameter[text()=' || v_trgt_attr || ']])[' || v_attr_count || ']' || '//parameter[2]', const.get_query_xml_namespace)
                       , const.get_query_xml_namespace ) 
       where q.query_id = p_query_id
       and q.namespace_id = const.get_updbl_namespace_id;
@@ -2394,7 +750,7 @@ BEGIN
       -- delete param[2] to complete value position swap
       delete_query_elements( const.get_updbl_namespace_id
                              , p_query_id
-                             ,'(//*[parameters/parameter[text()="' || v_trgt_attr || '"]])[' || v_attr_count || ']/parameters/parameter[2]'
+                             ,'(//*[parameters/parameter[text()=' || v_trgt_attr || ']])[' || v_attr_count || ']/parameters/parameter[2]'
                              );
 
     elsif crs.attr_name = 'age' and v_search_type='SIMPLE' then -- need to change operator direction LT becomes GT and vice versa, same with LTE and GTE
@@ -2418,7 +774,7 @@ BEGIN
       
         update query_temp q 
         set query_xml = updateXML( q.query_xml
-                      , '(//*[parameters/parameter[text()="' || v_trgt_attr || '"]])[' || v_attr_count || ']/parameters/parameter[1]/text()'
+                      , '(//*[parameters/parameter[text()=' || v_trgt_attr || ']])[' || v_attr_count || ']/parameters/parameter[1]/text()'
                       , v_new_oper
                       , const.get_query_xml_namespace ) 
         where q.query_id = p_query_id
@@ -2451,7 +807,7 @@ END TRANS_QUERY_DEMOG_UPDBL;
 --------------------------------------------------------
 set define off;
 
-  CREATE OR REPLACE PROCEDURE "FRTHR_FQE"."TRANS_QUERY_DEMOG_UUEDW" ( p_query_id number ) AS
+CREATE OR REPLACE PROCEDURE FRTHR_FQE.TRANS_QUERY_DEMOG_UUEDW ( p_query_id number ) AS
 
   v_is_trans_attr number;
   v_is_trans_attr_value number;
@@ -2477,8 +833,8 @@ BEGIN
   for crs in (
     select extract(column_value, '/parameter/text()', const.get_query_xml_namespace).getstringval() attr_name
     from query_def q
-        ,table(xmlsequence( q.query_xml.extract('//criteria//parameter[(position()=1 and ../../searchType/text()!="SIMPLE")' ||
-                                                                  ' or (position()=2 and ../../searchType/text()="SIMPLE")]'
+        ,table(xmlsequence( q.query_xml.extract('//criteria//parameter[(position()=1 and ../../searchType/text()!=SIMPLE)' ||
+                                                                  ' or (position()=2 and ../../searchType/text()=SIMPLE)]'
                           , const.get_query_xml_namespace) ) )
     where query_id = p_query_id
   ) loop
@@ -2509,7 +865,7 @@ BEGIN
       update query_temp qn 
          set query_xml = updatexml( 
              qn.query_xml
-            ,'//criteria/parameters/parameter[text()="' || crs.attr_name || '"]/text()'
+            ,'//criteria/parameters/parameter[text()=' || crs.attr_name || ']/text()'
             , v_trgt_attr
             , const.get_query_xml_namespace )
       where qn.query_id = p_query_id
@@ -2533,8 +889,8 @@ BEGIN
       for param in (
         select extract(column_value, '/parameter/text()', const.get_query_xml_namespace).getstringval() v_value
         from query_def q
-            ,table(xmlsequence( q.query_xml.extract('(//criteria[parameters/parameter[text()="' || crs.attr_name || '"]])[' || v_attr_count || ']' ||
-                               '//parameter[(position()>2 and ../../searchType/text()="SIMPLE") or (position()>1 and ../../searchType/text()!="SIMPLE")]'
+            ,table(xmlsequence( q.query_xml.extract('(//criteria[parameters/parameter[text()=' || crs.attr_name || ']])[' || v_attr_count || ']' ||
+                               '//parameter[(position()>2 and ../../searchType/text()=SIMPLE) or (position()>1 and ../../searchType/text()!=SIMPLE)]'
                                , const.get_query_xml_namespace) ) )
         where q.query_id = p_query_id       
       ) loop
@@ -2567,7 +923,7 @@ BEGIN
           
           if length(v_trgt_value) > 0 and v_trgt_value is not null then -- trgt_value indicates the value was translated and needs to be updated
   
-            v_xpath := '//criteria[parameters//parameter/text()="' || v_trgt_attr || '" and parameters//parameter/text()="' || param.v_value || '"]/parameters/parameter[text()="' || param.v_value || '"]';
+            v_xpath := '//criteria[parameters//parameter/text()=' || v_trgt_attr || ' and parameters//parameter/text()=' || param.v_value || ']/parameters/parameter[text()=' || param.v_value || ']';
             further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || '7 UPDATE QUERY NEW_ATTR=' || v_trgt_attr || ' NEW_ATTR_VALUE=' || v_trgt_value || ' xpath=' || v_xpath,1);
   
             update query_temp qn 
@@ -2599,7 +955,7 @@ BEGIN
         further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || '8 UPDATING: REMOVING untouched for ATTR=' || v_trgt_attr,1);
         delete_query_elements( const.get_uuedw_namespace_id
                              , p_query_id
-                             ,'//criteria[parameters//parameter/text()="' || v_trgt_attr || '"]/parameters/untouched'
+                             ,'//criteria[parameters//parameter/text()=' || v_trgt_attr || ']/parameters/untouched'
                              );
                                
       elsif ( v_is_trans_attr  = 1 and v_is_trans_attr_value  = 1 ) then
@@ -2607,8 +963,8 @@ BEGIN
         further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || '9 UPDATING: REMOVING untouched for ATTR=' || v_trgt_attr || ' VALUE=' || v_trgt_value,1);
         delete_query_elements( const.get_uuedw_namespace_id
                              , p_query_id
-                             ,'//criteria[parameters//parameter/text()="' || v_trgt_attr || 
-                              '" and parameters//parameter/text()="' || v_trgt_value || '"]/parameters/untouched'
+                             ,'//criteria[parameters//parameter/text()=' || v_trgt_attr || 
+                              ' and parameters//parameter/text()=' || v_trgt_value || ']/parameters/untouched'
                              );
 
       elsif ( v_is_trans_attr  = 0 and v_is_trans_attr_value  = 0 and is_valid_attr( const.get_uuedw_patient_obj_asset_id, crs.attr_name) = 1) then
@@ -2616,7 +972,7 @@ BEGIN
         further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || '10 UPDATING: REMOVING untouched for ATTR=' || v_trgt_attr || ' VALUE=' || v_trgt_value,1);
         delete_query_elements( const.get_uuedw_namespace_id
                              , p_query_id
-                             ,'//criteria[parameters//parameter/text()="' || crs.attr_name || '"]/parameters/untouched'
+                             ,'//criteria[parameters//parameter/text()=' || crs.attr_name || ']/parameters/untouched'
                              );
 
       end if;
@@ -2651,7 +1007,7 @@ END TRANS_QUERY_DEMOG_UUEDW;
 --------------------------------------------------------
 set define off;
 
-  CREATE OR REPLACE PROCEDURE "FRTHR_FQE"."TRANS_QUERY_DEMOG_UUEDW_APO" ( p_query_id number ) AS
+CREATE OR REPLACE PROCEDURE FRTHR_FQE.TRANS_QUERY_DEMOG_UUEDW_APO ( p_query_id number ) AS
 
   v_is_trans_attr number;
   v_is_trans_attr_value number;
@@ -2679,8 +1035,8 @@ BEGIN
   for crs in (
     select extract(column_value, '/parameter/text()', const.get_query_xml_namespace).getstringval() attr_name
     from query_def q
-        ,table(xmlsequence( q.query_xml.extract('//criteria//parameter[(position()=1 and ../../searchType/text()!="SIMPLE")' ||
-                                                                  ' or (position()=2 and ../../searchType/text()="SIMPLE")]'
+        ,table(xmlsequence( q.query_xml.extract('//criteria//parameter[(position()=1 and ../../searchType/text()!=SIMPLE)' ||
+                                                                  ' or (position()=2 and ../../searchType/text()=SIMPLE)]'
                           , const.get_query_xml_namespace ) ) )
     where query_id = p_query_id
   ) loop
@@ -2713,7 +1069,7 @@ BEGIN
       update query_temp qn 
          set query_xml = updatexml( 
              qn.query_xml
-            ,'//criteria/parameters/parameter[text()="' || crs.attr_name || '"]/text()'
+            ,'//criteria/parameters/parameter[text()=' || crs.attr_name || ']/text()'
             , v_trgt_attr
             , const.get_query_xml_namespace )
       where qn.query_id = p_query_id
@@ -2737,8 +1093,8 @@ BEGIN
       for param in (
         select extract(column_value, '/parameter/text()', const.get_query_xml_namespace).getstringval() v_value
         from query_def q
-            ,table(xmlsequence( q.query_xml.extract('(//criteria[parameters/parameter[text()="' || crs.attr_name || '"]])[' || v_attr_count || ']' ||
-                               '//parameter[(position()>2 and ../../searchType/text()="SIMPLE") or (position()>1 and ../../searchType/text()!="SIMPLE")]'
+            ,table(xmlsequence( q.query_xml.extract('(//criteria[parameters/parameter[text()=' || crs.attr_name || ']])[' || v_attr_count || ']' ||
+                               '//parameter[(position()>2 and ../../searchType/text()=SIMPLE) or (position()>1 and ../../searchType/text()!=SIMPLE)]'
                                , const.get_query_xml_namespace) ) )
         where q.query_id = p_query_id       
       ) loop
@@ -2771,7 +1127,7 @@ BEGIN
           
           if length(v_trgt_value) > 0 and v_trgt_value is not null then -- trgt_value indicates the value was translated and needs to be updated
   
-            v_xpath := '//criteria[parameters//parameter/text()="' || v_trgt_attr || '" and parameters//parameter/text()="' || param.v_value || '"]/parameters/parameter[text()="' || param.v_value || '"]';
+            v_xpath := '//criteria[parameters//parameter/text()=' || v_trgt_attr || ' and parameters//parameter/text()=' || param.v_value || ']/parameters/parameter[text()=' || param.v_value || ']';
             further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || '7 UPDATE QUERY NEW_ATTR=' || v_trgt_attr || ' NEW_ATTR_VALUE=' || v_trgt_value || ' xpath=' || v_xpath,1);
   
             update query_temp qn 
@@ -2803,7 +1159,7 @@ BEGIN
         further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || '8 UPDATING: REMOVING untouched for ATTR=' || v_trgt_attr,1);
         delete_query_elements( v_namespace_id
                              , p_query_id
-                             ,'//criteria[parameters//parameter/text()="' || v_trgt_attr || '"]/parameters/untouched'
+                             ,'//criteria[parameters//parameter/text()=' || v_trgt_attr || ']/parameters/untouched'
                              );
                                
       elsif ( v_is_trans_attr  = 1 and v_is_trans_attr_value  = 1 ) then
@@ -2811,8 +1167,8 @@ BEGIN
         further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || '9 UPDATING: REMOVING untouched for ATTR=' || v_trgt_attr || ' VALUE=' || v_trgt_value,1);
         delete_query_elements( v_namespace_id
                              , p_query_id
-                             ,'//criteria[parameters//parameter/text()="' || v_trgt_attr || 
-                              '" and parameters//parameter/text()="' || v_trgt_value || '"]/parameters/untouched'
+                             ,'//criteria[parameters//parameter/text()=' || v_trgt_attr || 
+                              ' and parameters//parameter/text()=' || v_trgt_value || ']/parameters/untouched'
                              );
 
       elsif ( v_is_trans_attr  = 0 and v_is_trans_attr_value  = 0 and is_valid_attr( const.get_uuedw_patient_obj_asset_id, crs.attr_name) = 1) then
@@ -2820,7 +1176,7 @@ BEGIN
         further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || '10 UPDATING: REMOVING untouched for ATTR=' || v_trgt_attr || ' VALUE=' || v_trgt_value,1);
         delete_query_elements( v_namespace_id
                              , p_query_id
-                             ,'//criteria[parameters//parameter/text()="' || crs.attr_name || '"]/parameters/untouched'
+                             ,'//criteria[parameters//parameter/text()=' || crs.attr_name || ']/parameters/untouched'
                              );
 
       end if;
@@ -2854,7 +1210,7 @@ END TRANS_QUERY_DEMOG_UUEDW_APO;
 --------------------------------------------------------
 set define off;
 
-  CREATE OR REPLACE PROCEDURE "FRTHR_FQE"."TRANS_QUERY_ENCNTR_UUEDW" ( p_query_id number ) AS 
+CREATE OR REPLACE PROCEDURE FRTHR_FQE.TRANS_QUERY_ENCNTR_UUEDW ( p_query_id number ) AS 
 
   v_attr varchar2(100);
   v_data_type varchar2(100);
@@ -2883,7 +1239,7 @@ BEGIN
     (select extract(column_value, '/alias/key/text()', const.get_query_xml_namespace).getstringval() c_alias,
             extract(column_value, '/alias/value/text()', const.get_query_xml_namespace).getstringval() c_object
      from query_def q
-         ,table(xmlsequence( q.query_xml.extract('//aliases/alias[value/text()="encounters"]', const.get_query_xml_namespace) ) )
+         ,table(xmlsequence( q.query_xml.extract('//aliases/alias[value/text()=encounters]', const.get_query_xml_namespace) ) )
      where query_id = p_query_id) loop
 
     further_pkg.log_msg($$PLSQL_UNIT,'DEBUG',v_intro_msg || 'START TRANSLATION ALIAS=' || c1.c_alias || ' OBJECT=' || c1.c_object,1);
@@ -2895,7 +1251,7 @@ BEGIN
           from query_def q,
             table(xmlsequence
                   (q.query_xml.extract
-                    ('//parameter[ora:contains(text(),"' || c1.c_alias || '.")>0]', const.get_query_xml_namespace)
+                    ('//parameter[ora:contains(text(),' || c1.c_alias || '.)>0]', const.get_query_xml_namespace)
                   )
                 )
           where q.query_id = p_query_id
@@ -2941,7 +1297,7 @@ BEGIN
         update query_temp qn 
            set query_xml = updatexml( 
                qn.query_xml
-              ,'//parameter[text()="' || c2.c_aliased_attr || '"][1]/text()'
+              ,'//parameter[text()=' || c2.c_aliased_attr || '][1]/text()'
               , v_trgt_attr
               , const.get_query_xml_namespace )
         where qn.query_id = p_query_id
@@ -2956,8 +1312,8 @@ BEGIN
         update query_temp q
            set q.query_xml = updatexml( 
                               q.query_xml
-                            , '//parameters[parameter/text()="' || v_working_aliased_attr || '"]'
-                                       ||' /parameter[(position()>2 and ../../searchType/text()="SIMPLE") or (position()>1 and ../../searchType/text()!="SIMPLE")]/@xsi:type'
+                            , '//parameters[parameter/text()=' || v_working_aliased_attr || ']'
+                                       ||' /parameter[(position()>2 and ../../searchType/text()=SIMPLE) or (position()>1 and ../../searchType/text()!=SIMPLE)]/@xsi:type'
                             , v_data_type
                             , const.get_query_xml_namespace)
         where q.query_id = p_query_id
@@ -2984,17 +1340,17 @@ BEGIN
         
         delete_query_elements( const.get_uuedw_namespace_id
                              , p_query_id
-                             ,'(//criteria[parameters/parameter/text()="' || c1.c_alias || '.lengthOfStayUnits"])[' || v_attr_count || ']' );
+                             ,'(//criteria[parameters/parameter/text()=' || c1.c_alias || '.lengthOfStayUnits])[' || v_attr_count || ']' );
         
       end if;
 
       delete_query_elements( const.get_uuedw_namespace_id
                            , p_query_id
-                           ,'(//criteria[parameters/parameter[text()="' || v_trgt_attr || '"]])[' || v_attr_count || ']/parameters/untouched' );
+                           ,'(//criteria[parameters/parameter[text()=' || v_trgt_attr || ']])[' || v_attr_count || ']/parameters/untouched' );
 
       delete_query_elements( const.get_uuedw_namespace_id
                            , p_query_id
-                           ,'//alias[key/text()="' || c1.c_alias || '"]/untouchedAlias' );
+                           ,'//alias[key/text()=' || c1.c_alias || ']/untouchedAlias' );
 
     
     end loop;
@@ -3017,7 +1373,7 @@ END TRANS_QUERY_ENCNTR_UUEDW;
 --------------------------------------------------------
 set define off;
 
-  CREATE OR REPLACE PROCEDURE "FRTHR_FQE"."TRANS_QUERY_IH_APO" ( p_query_id number ) AS
+CREATE OR REPLACE PROCEDURE FRTHR_FQE.TRANS_QUERY_IH_APO ( p_query_id number ) AS
 
   v_intro_msg varchar2(50);
   v_namespace_id number;
@@ -3041,7 +1397,7 @@ BEGIN
   further_pkg.log_msg($$PLSQL_UNIT,'DEBUG',v_intro_msg || 'DELETE *NamespaceId',1);
 
   update query_temp q
-  set q.query_xml = deleteXML( q.query_xml, '//criteria[parameters/parameter[ora:contains(text(),"%NamespaceId")>0]]', const.get_query_xml_namespace )
+  set q.query_xml = deleteXML( q.query_xml, '//criteria[parameters/parameter[ora:contains(text(),%NamespaceId)>0]]', const.get_query_xml_namespace )
   where query_id = p_query_id
     and namespace_id = v_namespace_id;
 
@@ -3068,7 +1424,7 @@ END TRANS_QUERY_IH_APO;
 --------------------------------------------------------
 set define off;
 
-  CREATE OR REPLACE PROCEDURE "FRTHR_FQE"."TRANS_QUERY_LCTN_UPDBL" ( p_query_id number ) AS 
+CREATE OR REPLACE PROCEDURE FRTHR_FQE.TRANS_QUERY_LCTN_UPDBL ( p_query_id number ) AS 
 
   v_iter number;
   v_person_lctn_type varchar2(100);
@@ -3094,7 +1450,7 @@ BEGIN
     (select extract(column_value, '/alias/key/text()', const.get_query_xml_namespace).getstringval() v_alias,
             extract(column_value, '/alias/value/text()', const.get_query_xml_namespace).getstringval() v_object
      from query_def q
-         ,table(xmlsequence( q.query_xml.extract('//aliases/alias[value/text()="locations"]', const.get_query_xml_namespace) ) )
+         ,table(xmlsequence( q.query_xml.extract('//aliases/alias[value/text()=locations]', const.get_query_xml_namespace) ) )
      where query_id = p_query_id) loop
      
      v_iter := v_iter + 1;
@@ -3127,13 +1483,13 @@ BEGIN
        update query_temp q
        set q.query_xml = updatexml( 
            q.query_xml
-         , '//parameter[text()="' || cc.v_alias || '.location"]/text()'
+         , '//parameter[text()=' || cc.v_alias || '.location]/text()'
          , v_attr_update, const.get_query_xml_namespace)
        where q.query_id = p_query_id
          and q.namespace_id = const.get_updbl_namespace_id;       
 
        if sql%rowcount = 0 then 
-         v_error_msg := v_error_msg || 'ATTR UPDATE ERROR: ATTR="' || cc.v_alias || '.location" was NOT updated. ';           
+         v_error_msg := v_error_msg || 'ATTR UPDATE ERROR: ATTR=' || cc.v_alias || '.location was NOT updated. ';           
        end if;
        
      else 
@@ -3147,14 +1503,14 @@ BEGIN
      for attr in (
        SELECT extract(column_value, '/parameter/text()', const.get_query_xml_namespace).getstringval() v_value
        FROM query_def q ,
-         TABLE(xmlsequence( q.query_xml.extract('//parameters[parameter[text()="' || cc.v_alias || '.location"]] '
-                                             || '//parameter[(position()>2 and ../../searchType/text()="SIMPLE") or (position()>1 and ../../searchType/text()!="SIMPLE")]' , const.get_query_xml_namespace) ) )
+         TABLE(xmlsequence( q.query_xml.extract('//parameters[parameter[text()=' || cc.v_alias || '.location]] '
+                                             || '//parameter[(position()>2 and ../../searchType/text()=SIMPLE) or (position()>1 and ../../searchType/text()!=SIMPLE)]' , const.get_query_xml_namespace) ) )
        WHERE query_id   = p_query_id
      ) loop
 
          -- get translated location value from DTS
          v_translated_value := dts.GET_TRANSLATED_CONCEPT_VALUE( const.get_further_ontylog_nmspc_id, 'Code in Source', attr.v_value, const.get_updbl_namespace_id , 'Local Code' );
-         further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'VALUE TRANSLATION: ATTR="location" OLD_VAL="' || attr.v_value || '" NEW_VAL="' || v_translated_value || '"',1);
+         further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'VALUE TRANSLATION: ATTR=location OLD_VAL=' || attr.v_value || ' NEW_VAL=' || v_translated_value || '',1);
 
          if length(v_translated_value) > 0 then
              
@@ -3162,29 +1518,29 @@ BEGIN
            update query_temp q
            set q.query_xml = updatexml( 
                q.query_xml
-             , '//parameters[parameter[text()="' || v_attr_update || '"]]/parameter[text()="' || attr.v_value || '"]/text()'
+             , '//parameters[parameter[text()=' || v_attr_update || ']]/parameter[text()=' || attr.v_value || ']/text()'
              , v_translated_value, const.get_query_xml_namespace)
            where q.query_id = p_query_id
              and q.namespace_id = const.get_updbl_namespace_id;
              
            if sql%rowcount = 0 then 
-             v_error_msg := v_error_msg || 'ATTR VALUE UPDATE ERROR: ATTR="' || v_attr_update || '" VALUE="' || attr.v_value || '" ';           
+             v_error_msg := v_error_msg || 'ATTR VALUE UPDATE ERROR: ATTR=' || v_attr_update || ' VALUE=' || attr.v_value || ' ';           
            end if;
 
          else
-           v_error_msg := v_error_msg || 'VALUE TRANSLATION NOT SUPPORTED: ATTR="' || v_attr_update || '" VALUE="' || attr.v_value || '" ';
+           v_error_msg := v_error_msg || 'VALUE TRANSLATION NOT SUPPORTED: ATTR=' || v_attr_update || ' VALUE=' || attr.v_value || ' ';
          end if;
 
      end loop;
 
      delete_query_elements( const.get_updbl_namespace_id
-                            , p_query_id, '//criteria/parameters[parameter/text()="' || v_attr_update || '"]/untouched');
+                            , p_query_id, '//criteria/parameters[parameter/text()=' || v_attr_update || ']/untouched');
             
      -- delete location criteria for this alias - personLocationType and locationType (namespace which is handled later) 
      update query_temp q
        set q.query_xml = deletexml( q.query_xml
-                                  , '//criteria[parameters/parameter/text()="' || cc.v_alias || '.personLocationType" ' ||
-                                            'or parameters/parameter/text()="' || cc.v_alias || '.locationType"]'
+                                  , '//criteria[parameters/parameter/text()=' || cc.v_alias || '.personLocationType ' ||
+                                            'or parameters/parameter/text()=' || cc.v_alias || '.locationType]'
                                   , const.get_query_xml_namespace)
      where q.query_id = p_query_id
          and q.namespace_id = const.get_updbl_namespace_id;
@@ -3192,7 +1548,7 @@ BEGIN
      -- delete aliases - the new attrs are root elements ...?
      update query_temp q
        set q.query_xml = deletexml( q.query_xml
-                                  , '//alias[key/text()="' || cc.v_alias || '"]'
+                                  , '//alias[key/text()=' || cc.v_alias || ']'
                                   , const.get_query_xml_namespace)
      where q.query_id = p_query_id
          and q.namespace_id = const.get_updbl_namespace_id;
@@ -3214,7 +1570,7 @@ END TRANS_QUERY_LCTN_UPDBL;
 --------------------------------------------------------
 set define off;
 
-  CREATE OR REPLACE PROCEDURE "FRTHR_FQE"."TRANS_QUERY_LCTN_UUEDW" ( p_query_id number ) AS 
+CREATE OR REPLACE PROCEDURE FRTHR_FQE.TRANS_QUERY_LCTN_UUEDW ( p_query_id number ) AS 
 
   v_iter number;
   v_person_lctn_type varchar2(100);
@@ -3241,7 +1597,7 @@ BEGIN
     (select extract(column_value, '/alias/key/text()', const.get_query_xml_namespace).getstringval() v_alias,
             extract(column_value, '/alias/value/text()', const.get_query_xml_namespace).getstringval() v_object
      from query_def q
-         ,table(xmlsequence( q.query_xml.extract('//aliases/alias[value/text()="locations"]', const.get_query_xml_namespace) ) )
+         ,table(xmlsequence( q.query_xml.extract('//aliases/alias[value/text()=locations]', const.get_query_xml_namespace) ) )
      where query_id = p_query_id) loop
      
      v_iter := v_iter + 1;
@@ -3253,7 +1609,7 @@ BEGIN
      further_pkg.log_msg($$PLSQL_UNIT,'DEBUG',v_intro_msg || 'PROCESSING ' || cc.v_alias || '.' || cc.v_object || ' PERSON LOCATION TYPE=' || v_person_lctn_type || ' LOCATION TYPE=' || v_lctn_type, 1);
      
      /* ------------------------------------------------------ */
-     /* Location Type can only be "Current" location for UUEDW */
+     /* Location Type can only be Current location for UUEDW */
      /* ------------------------------------------------------ */
      if ( v_person_lctn_type = 'CurrentLocation' ) then
 
@@ -3275,13 +1631,13 @@ BEGIN
        
          if v_lctn_type = 'Health District Group' then -- Build a whole new criteria chunk and update it replaing the old
        
-           v_new_location := '<criteria xmlns="http://further.utah.edu/core/query" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><searchType>IN</searchType><parameters><parameter xsi:type="xs:string">' || v_attr_update || '</parameter>';
+           v_new_location := '<criteria xmlns=http://further.utah.edu/core/query xmlns:xsi=http://www.w3.org/2001/XMLSchema-instance><searchType>IN</searchType><parameters><parameter xsi:type=xs:string>' || v_attr_update || '</parameter>';
   
            for param in (
              SELECT extract(column_value, '/parameter/text()', const.get_query_xml_namespace).getstringval() val
              FROM query_def q ,
-               TABLE(xmlsequence( q.query_xml.extract('//parameters[parameter[text()="' || cc.v_alias || '.location"]] '
-                                                || '//parameter[(position()>2 and ../../searchType/text()="SIMPLE") or (position()>1 and ../../searchType/text()!="SIMPLE")]' , const.get_query_xml_namespace) ) )
+               TABLE(xmlsequence( q.query_xml.extract('//parameters[parameter[text()=' || cc.v_alias || '.location]] '
+                                                || '//parameter[(position()>2 and ../../searchType/text()=SIMPLE) or (position()>1 and ../../searchType/text()!=SIMPLE)]' , const.get_query_xml_namespace) ) )
              WHERE query_id = p_query_id
            ) loop
            
@@ -3291,9 +1647,9 @@ BEGIN
              ) loop
 
                v_translated_value := dts.GET_TRANSLATED_CONCEPT_VALUE( const.get_further_ontylog_nmspc_id, 'Code in Source', cparam.property_val , const.get_uuedw_namespace_id , 'Local Code' );
-               further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'VALUE TRANSLATION: ATTR="location" OLD_VAL="' || cparam.property_val || '" NEW_VAL="' || v_translated_value || '"',1);
+               further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'VALUE TRANSLATION: ATTR=location OLD_VAL=' || cparam.property_val || ' NEW_VAL=' || v_translated_value || '',1);
                    
-               v_new_location := v_new_location || '<parameter xsi:type="xs:integer">' || v_translated_value || '</parameter>';
+               v_new_location := v_new_location || '<parameter xsi:type=xs:integer>' || v_translated_value || '</parameter>';
              
              end loop;
            
@@ -3306,7 +1662,7 @@ BEGIN
            update query_temp q
            set q.query_xml = updatexml( 
                q.query_xml
-             , '//parameter[text()="' || cc.v_alias || '.location"]/../..'
+             , '//parameter[text()=' || cc.v_alias || '.location]/../..'
              , xmltype( v_new_location ), const.get_query_xml_namespace)
            where q.query_id = p_query_id
              and q.namespace_id = const.get_uuedw_namespace_id;       
@@ -3317,19 +1673,19 @@ BEGIN
            update query_temp q
            set q.query_xml = updatexml( 
                q.query_xml
-             , '//parameter[text()="' || cc.v_alias || '.location"]/text()'
+             , '//parameter[text()=' || cc.v_alias || '.location]/text()'
              , v_attr_update, const.get_query_xml_namespace)
            where q.query_id = p_query_id
              and q.namespace_id = const.get_uuedw_namespace_id;       
   
            if sql%rowcount = 0 then 
-             v_error_msg := v_error_msg || 'ATTR UPDATE ERROR: attribute="' || cc.v_alias || '.location" ';           
+             v_error_msg := v_error_msg || 'ATTR UPDATE ERROR: attribute=' || cc.v_alias || '.location ';           
            end if;
          
          end if;
        
        else 
-         v_error_msg := v_error_msg || 'TRANSLATION ERROR: locationType="' || v_lctn_type || '" IS NOT SUPPORTED. ';           
+         v_error_msg := v_error_msg || 'TRANSLATION ERROR: locationType=' || v_lctn_type || ' IS NOT SUPPORTED. ';           
        end if;
      
        /* ------------------------------------- */
@@ -3340,14 +1696,14 @@ BEGIN
        for attr in (
          SELECT extract(column_value, '/parameter/text()', const.get_query_xml_namespace).getstringval() v_value
          FROM query_def q ,
-           TABLE(xmlsequence( q.query_xml.extract('//parameters[parameter[text()="' || cc.v_alias || '.location"]] '
-                                            || '//parameter[(position()>2 and ../../searchType/text()="SIMPLE") or (position()>1 and ../../searchType/text()!="SIMPLE")]' , const.get_query_xml_namespace) ) )
+           TABLE(xmlsequence( q.query_xml.extract('//parameters[parameter[text()=' || cc.v_alias || '.location]] '
+                                            || '//parameter[(position()>2 and ../../searchType/text()=SIMPLE) or (position()>1 and ../../searchType/text()!=SIMPLE)]' , const.get_query_xml_namespace) ) )
          WHERE query_id   = p_query_id
        ) loop
 
          -- get translated location value from DTS
          v_translated_value := dts.GET_TRANSLATED_CONCEPT_VALUE( const.get_further_ontylog_nmspc_id, 'Code in Source', attr.v_value, const.get_uuedw_namespace_id , 'Local Code' );
-         further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'VALUE TRANSLATION: ATTR="location" OLD_VAL="' || attr.v_value || '" NEW_VAL="' || v_translated_value || '"',1);
+         further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'VALUE TRANSLATION: ATTR=location OLD_VAL=' || attr.v_value || ' NEW_VAL=' || v_translated_value || '',1);
 
          if length(v_translated_value) > 0 then
              
@@ -3355,37 +1711,37 @@ BEGIN
            update query_temp q
            set q.query_xml = updatexml( 
                q.query_xml
-             , '//parameters[parameter[text()="' || v_attr_update || '"]]/parameter[text()="' || attr.v_value || '"]/@xsi:type'
+             , '//parameters[parameter[text()=' || v_attr_update || ']]/parameter[text()=' || attr.v_value || ']/@xsi:type'
              , 'xs:integer'
-             , '//parameters[parameter[text()="' || v_attr_update || '"]]/parameter[text()="' || attr.v_value || '"]/text()'
+             , '//parameters[parameter[text()=' || v_attr_update || ']]/parameter[text()=' || attr.v_value || ']/text()'
              , v_translated_value, const.get_query_xml_namespace)
            where q.query_id = p_query_id
              and q.namespace_id = const.get_uuedw_namespace_id;
              
            if sql%rowcount = 0 then 
-             v_error_msg := v_error_msg || 'ATTR VALUE UPDATE ERROR: attribute="' || v_attr_update || '" value="' || attr.v_value || '" ';           
+             v_error_msg := v_error_msg || 'ATTR VALUE UPDATE ERROR: attribute=' || v_attr_update || ' value=' || attr.v_value || ' ';           
            end if;
 
          else
-           v_error_msg := v_error_msg || 'VALUE TRANSLATION ERROR: attribute="' || v_attr_update || '" value="' || attr.v_value || '" ';
+           v_error_msg := v_error_msg || 'VALUE TRANSLATION ERROR: attribute=' || v_attr_update || ' value=' || attr.v_value || ' ';
          end if;
 
        end loop;
        
        end if;
 
-       -- based on success of updates delete "untouched"
+       -- based on success of updates delete untouched
        delete_query_elements( const.get_uuedw_namespace_id
-                            , p_query_id, '//criteria[parameters/parameter/text()="' || v_attr_update || '"' ||
-                                                ' and ../criteria/parameters/parameter/text()="' || cc.v_alias || '.personLocationType"]/parameters/untouched');
+                            , p_query_id, '//criteria[parameters/parameter/text()=' || v_attr_update || '' ||
+                                                ' and ../criteria/parameters/parameter/text()=' || cc.v_alias || '.personLocationType]/parameters/untouched');
             
        -- delete other location criteria - personLocationType, locationType (except namespace which is handled later) 
          
        update query_temp q
        set q.query_xml = deletexml( q.query_xml
-                                  , '//criteria[parameters/parameter/text()="' || cc.v_alias || '.personLocationType" ' ||
-                                            'or parameters/parameter/text()="' || cc.v_alias || '.locationType" ' ||
-                                            'or parameters/parameter/text()="' || cc.v_alias || '.locationNamespaceId"]'
+                                  , '//criteria[parameters/parameter/text()=' || cc.v_alias || '.personLocationType ' ||
+                                            'or parameters/parameter/text()=' || cc.v_alias || '.locationType ' ||
+                                            'or parameters/parameter/text()=' || cc.v_alias || '.locationNamespaceId]'
                                   , const.get_query_xml_namespace)
        where q.query_id = p_query_id
          and q.namespace_id = const.get_uuedw_namespace_id;
@@ -3393,7 +1749,7 @@ BEGIN
        -- delete aliases - the attrs are root elements ...?
        update query_temp q
        set q.query_xml = deletexml( q.query_xml
-                                  , '//alias[key/text()="' || cc.v_alias || '"]'
+                                  , '//alias[key/text()=' || cc.v_alias || ']'
                                   , const.get_query_xml_namespace)
        where q.query_id = p_query_id
          and q.namespace_id = const.get_uuedw_namespace_id;
@@ -3416,7 +1772,7 @@ END TRANS_QUERY_LCTN_UUEDW;
 --------------------------------------------------------
 set define off;
 
-  CREATE OR REPLACE PROCEDURE "FRTHR_FQE"."TRANS_QUERY_OBS_IH_APO" ( p_query_id number ) AS 
+CREATE OR REPLACE PROCEDURE FRTHR_FQE.TRANS_QUERY_OBS_IH_APO ( p_query_id number ) AS 
 
   v_namespace_id number;
   v_iter number;
@@ -3445,10 +1801,10 @@ BEGIN
     (select extract(column_value, '/alias/key/text()', const.get_query_xml_namespace).getstringval() c_alias,
             extract(column_value, '/alias/value/text()', const.get_query_xml_namespace).getstringval() c_object
      from query_def q
-         ,table(xmlsequence( q.query_xml.extract('//aliases/alias[value/text()="observations"]', const.get_query_xml_namespace) ) )
+         ,table(xmlsequence( q.query_xml.extract('//aliases/alias[value/text()=observations]', const.get_query_xml_namespace) ) )
      where query_id = p_query_id) loop
      
-     further_pkg.log_msg($$PLSQL_UNIT,'DEBUG',v_intro_msg || 'ALIAS="' || c1.c_alias || '"',1);
+     further_pkg.log_msg($$PLSQL_UNIT,'DEBUG',v_intro_msg || 'ALIAS=' || c1.c_alias || '',1);
           
      v_phrase_index := 0;
      -- for each observation phrase of this alias - extract each observation type for the given alias
@@ -3457,7 +1813,7 @@ BEGIN
          from query_def q,
            table(xmlsequence
                  (q.query_xml.extract
-                   ('//searchType[text()="CONJUNCTION"]/../criteria/parameters/parameter[text()="' || c1.c_alias || '.observationType"]/../parameter[3]', const.get_query_xml_namespace)
+                   ('//searchType[text()=CONJUNCTION]/../criteria/parameters/parameter[text()=' || c1.c_alias || '.observationType]/../parameter[3]', const.get_query_xml_namespace)
                  )
                )
          where q.query_id = p_query_id
@@ -3475,8 +1831,8 @@ BEGIN
         for c3 in (
           select extract(column_value, '/parameter/text()', const.get_query_xml_namespace).getstringval() c_value
           from query_def q
-              ,table(xmlsequence( q.query_xml.extract('(//parameters[parameter[text()="' || c1.c_alias || '.observation' ||'"]])[' || v_phrase_index || ']' ||
-                                                       '//parameter[(position()>2 and ../../searchType/text()="SIMPLE") or (position()>1 and ../../searchType/text()!="SIMPLE")]'
+              ,table(xmlsequence( q.query_xml.extract('(//parameters[parameter[text()=' || c1.c_alias || '.observation' ||']])[' || v_phrase_index || ']' ||
+                                                       '//parameter[(position()>2 and ../../searchType/text()=SIMPLE) or (position()>1 and ../../searchType/text()!=SIMPLE)]'
                                                       ,const.get_query_xml_namespace) ) )
           where query_id = p_query_id
         ) loop
@@ -3501,7 +1857,7 @@ BEGIN
             v_attr_value := null;
             
             if c4.rs_attr_val = '{}' then -- need to fetch the value from the observation phrase
-              v_attr_value := get_string_value_by_xpath( v_namespace_id, p_query_id, '(//searchType[text()="CONJUNCTION"]/../../*/criteria/parameters[parameter/text()="' || c1.c_alias || '.valueNumber"])[1]/parameter[3]/text()' ); 
+              v_attr_value := get_string_value_by_xpath( v_namespace_id, p_query_id, '(//searchType[text()=CONJUNCTION]/../../*/criteria/parameters[parameter/text()=' || c1.c_alias || '.valueNumber])[1]/parameter[3]/text()' ); 
             else
               v_attr_value := c4.rs_attr_val;
             end if;
@@ -3513,19 +1869,19 @@ BEGIN
             end if;
                     
             v_clob := v_clob ||            
-'<criteria xmlns="http://further.utah.edu/core/query" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+'<criteria xmlns=http://further.utah.edu/core/query xmlns:xs=http://www.w3.org/2001/XMLSchema xmlns:xsi=http://www.w3.org/2001/XMLSchema-instance>
   <searchType>SIMPLE</searchType>
     <parameters>
-      <parameter xsi:type="RelationType">EQ</parameter>
-			<parameter xsi:type="xs:string">' || c4.rs_attr_label || '</parameter>
-			<parameter xsi:type="' || v_value_type || '">' || v_attr_value || '</parameter>
+      <parameter xsi:type=RelationType>EQ</parameter>
+			<parameter xsi:type=xs:string>' || c4.rs_attr_label || '</parameter>
+			<parameter xsi:type=' || v_value_type || '>' || v_attr_value || '</parameter>
     </parameters>
 </criteria>';
 
           end loop; -- for each translated value
                   
           if v_trans_value_index = 0 then
-            v_error_msg := v_error_msg || 'VALUE TRANSLATION ERROR: No translation currently exists for attribute=' || c1.c_alias || '.observation value="' || c3.c_value || '" ';
+            v_error_msg := v_error_msg || 'VALUE TRANSLATION ERROR: No translation currently exists for attribute=' || c1.c_alias || '.observation value=' || c3.c_value || ' ';
             --further_pkg.log_msg($$PLSQL_UNIT,'ERROR',v_intro_msg || v_error_msg ,1);       
           end if;
         
@@ -3534,7 +1890,7 @@ BEGIN
        if v_chunk_index > 1 then 
           
          v_clob := 
-'<criteria xmlns="http://further.utah.edu/core/query" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+'<criteria xmlns=http://further.utah.edu/core/query xmlns:xs=http://www.w3.org/2001/XMLSchema xmlns:xsi=http://www.w3.org/2001/XMLSchema-instance>
   <searchType>DISJUNCTION</searchType>' || v_clob || '</criteria>'; 
   
        end if;
@@ -3547,19 +1903,19 @@ BEGIN
          select count(1) into v_is_rootCriterion
          from query_def q
          where query_id = p_query_id
-           and q.query_xml.existsNode('(//searchType[text()="CONJUNCTION"]/../../rootCriterion[criteria/parameters/parameter/text()="' || c1.c_alias || '.observation"])[1]'
+           and q.query_xml.existsNode('(//searchType[text()=CONJUNCTION]/../../rootCriterion[criteria/parameters/parameter/text()=' || c1.c_alias || '.observation])[1]'
                         ,const.get_query_xml_namespace) = 1;
 
          if v_is_rootCriterion = 1 then
 
            v_clob := 
-  '<rootCriterion xmlns="http://further.utah.edu/core/query" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  '<rootCriterion xmlns=http://further.utah.edu/core/query xmlns:xs=http://www.w3.org/2001/XMLSchema xmlns:xsi=http://www.w3.org/2001/XMLSchema-instance>
     <searchType>CONJUNCTION</searchType>' || v_clob || '</rootCriterion>'; 
 
            update query_temp
            set query_xml = 
                 updatexml(query_xml
-                           ,'(//searchType[text()="CONJUNCTION"]/../../rootCriterion[criteria/parameters/parameter/text()="' || c1.c_alias || '.observation"])[1]'
+                           ,'(//searchType[text()=CONJUNCTION]/../../rootCriterion[criteria/parameters/parameter/text()=' || c1.c_alias || '.observation])[1]'
                            , xmltype(v_clob)
                            , const.get_query_xml_namespace )
            where query_id = p_query_id
@@ -3570,7 +1926,7 @@ BEGIN
            update query_temp
            set query_xml = 
                 updatexml(query_xml
-                           ,'(//searchType[text()="CONJUNCTION"]/../../*[criteria/parameters/parameter/text()="' || c1.c_alias || '.observation"])[1]'
+                           ,'(//searchType[text()=CONJUNCTION]/../../*[criteria/parameters/parameter/text()=' || c1.c_alias || '.observation])[1]'
                            , xmltype(v_clob)
                            , const.get_query_xml_namespace )
            where query_id = p_query_id
@@ -3584,7 +1940,7 @@ BEGIN
 
      end loop; -- for each alias observation phrase 
 
-     delete_query_elements( v_namespace_id, p_query_id, '//alias[key/text()="' || c1.c_alias || '"]');
+     delete_query_elements( v_namespace_id, p_query_id, '//alias[key/text()=' || c1.c_alias || ']');
      
   end loop; -- for each alias      
   
@@ -3602,7 +1958,7 @@ END TRANS_QUERY_OBS_IH_APO;
 --------------------------------------------------------
 set define off;
 
-  CREATE OR REPLACE PROCEDURE "FRTHR_FQE"."TRANS_QUERY_OBS_UPDBL" ( p_query_id number ) AS 
+CREATE OR REPLACE PROCEDURE FRTHR_FQE.TRANS_QUERY_OBS_UPDBL ( p_query_id number ) AS 
 
   v_iter number;
   v_new_alias varchar2(100);
@@ -3643,7 +1999,7 @@ BEGIN
     (select extract(column_value, '/alias/key/text()', const.get_query_xml_namespace).getstringval() c_alias,
             extract(column_value, '/alias/value/text()', const.get_query_xml_namespace).getstringval() c_object
      from query_def q
-         ,table(xmlsequence( q.query_xml.extract('//aliases/alias[value/text()="observations"]', const.get_query_xml_namespace) ) )
+         ,table(xmlsequence( q.query_xml.extract('//aliases/alias[value/text()=observations]', const.get_query_xml_namespace) ) )
      where query_id = p_query_id) loop
      
      v_obs_type_iter := 0;
@@ -3651,7 +2007,7 @@ BEGIN
      v_icd10_attr_count := 0;
      v_updbl_attr_count := 0;
      
-     further_pkg.log_msg($$PLSQL_UNIT,'DEBUG',v_intro_msg || 'ALIAS="' || c1.c_alias || '"',1);
+     further_pkg.log_msg($$PLSQL_UNIT,'DEBUG',v_intro_msg || 'ALIAS=' || c1.c_alias || '',1);
           
      -- for each observation phrase of this alias - extract each observation type for the given alias
      for c2 in (
@@ -3659,7 +2015,7 @@ BEGIN
          from query_def q,
            table(xmlsequence
                  (q.query_xml.extract
-                   ('//searchType[text()="CONJUNCTION"]/../criteria/parameters/parameter[text()="' || c1.c_alias || '.observationType"]/../parameter[3]', const.get_query_xml_namespace)
+                   ('//searchType[text()=CONJUNCTION]/../criteria/parameters/parameter[text()=' || c1.c_alias || '.observationType]/../parameter[3]', const.get_query_xml_namespace)
                  )
                )
          where q.query_id = p_query_id
@@ -3690,7 +2046,7 @@ BEGIN
               v_translated_mod_attr := 'Diagnosis.cancerBehaviorCode';                 
               v_updbl_attr_count := v_updbl_attr_count + 1;
            else  
-              v_error_msg := v_error_msg || 'Invalid namespace id "' || v_nmspc_id || '" declared for UPDB Dx. ';
+              v_error_msg := v_error_msg || 'Invalid namespace id ' || v_nmspc_id || ' declared for UPDB Dx. ';
               v_translated_attr := '';
            end if;
      
@@ -3710,7 +2066,7 @@ BEGIN
               update query_temp q
               set q.query_xml = updatexml( 
                 q.query_xml
-              , '(//parameter[text()="' || c1.c_alias || '.observation"])[1]/text()'
+              , '(//parameter[text()=' || c1.c_alias || '.observation])[1]/text()'
               , v_translated_attr, const.get_query_xml_namespace)
               where q.query_id = p_query_id
                 and q.namespace_id = const.get_updbl_namespace_id;
@@ -3720,7 +2076,7 @@ BEGIN
                 update query_temp q
                 set q.query_xml = updatexml( 
                   q.query_xml
-                , '(//parameter[text()="' || c1.c_alias || '.observationMod"])[1]/text()'
+                , '(//parameter[text()=' || c1.c_alias || '.observationMod])[1]/text()'
                 , v_translated_mod_attr, const.get_query_xml_namespace)
                 where q.query_id = p_query_id
                   and q.namespace_id = const.get_updbl_namespace_id;
@@ -3732,19 +2088,19 @@ BEGIN
               end if;
 
               if v_nmspc_id = const.get_icd9_namespace_id then 
-                 delete_query_elements( const.get_updbl_namespace_id, p_query_id, '(//criteria[parameters//parameter/text()="' || v_translated_attr || '"])['|| v_icd9_attr_count ||']/parameters/untouched');
+                 delete_query_elements( const.get_updbl_namespace_id, p_query_id, '(//criteria[parameters//parameter/text()=' || v_translated_attr || '])['|| v_icd9_attr_count ||']/parameters/untouched');
               elsif v_nmspc_id = const.get_icd10_namespace_id then
-                 delete_query_elements( const.get_updbl_namespace_id, p_query_id, '(//criteria[parameters//parameter/text()="' || v_translated_attr || '"])['|| v_icd10_attr_count ||']/parameters/untouched');
+                 delete_query_elements( const.get_updbl_namespace_id, p_query_id, '(//criteria[parameters//parameter/text()=' || v_translated_attr || '])['|| v_icd10_attr_count ||']/parameters/untouched');
               elsif v_nmspc_id = const.get_updbl_namespace_id then
-                 delete_query_elements( const.get_updbl_namespace_id, p_query_id, '(//criteria[parameters//parameter/text()="' || v_translated_attr || '"])['|| v_updbl_attr_count ||']/parameters/untouched');
-                 delete_query_elements( const.get_updbl_namespace_id, p_query_id, '(//criteria[parameters//parameter/text()="' || v_translated_mod_attr || '"])['|| v_updbl_attr_count ||']/parameters/untouched');
+                 delete_query_elements( const.get_updbl_namespace_id, p_query_id, '(//criteria[parameters//parameter/text()=' || v_translated_attr || '])['|| v_updbl_attr_count ||']/parameters/untouched');
+                 delete_query_elements( const.get_updbl_namespace_id, p_query_id, '(//criteria[parameters//parameter/text()=' || v_translated_mod_attr || '])['|| v_updbl_attr_count ||']/parameters/untouched');
               end if;
          
         end if;
 
         -- get the first (untranslated) time value/range (previous instances are translated already)
-        v_value1 := get_string_value_by_xpath( const.get_updbl_namespace_id, p_query_id, '(//parameters[parameter[text()="' || c1.c_alias || '.startDateTime"]])[1]/parameter[(position()=3 and ../../searchType/text()="SIMPLE") or (position()=2 and ../../searchType/text()!="SIMPLE")]/text()');
-        v_value2 := get_string_value_by_xpath( const.get_updbl_namespace_id, p_query_id, '(//parameters[parameter[text()="' || c1.c_alias || '.startDateTime"]])[1]/parameter[position()=3 and ../../searchType/text()!="SIMPLE"]/text()');
+        v_value1 := get_string_value_by_xpath( const.get_updbl_namespace_id, p_query_id, '(//parameters[parameter[text()=' || c1.c_alias || '.startDateTime]])[1]/parameter[(position()=3 and ../../searchType/text()=SIMPLE) or (position()=2 and ../../searchType/text()!=SIMPLE)]/text()');
+        v_value2 := get_string_value_by_xpath( const.get_updbl_namespace_id, p_query_id, '(//parameters[parameter[text()=' || c1.c_alias || '.startDateTime]])[1]/parameter[position()=3 and ../../searchType/text()!=SIMPLE]/text()');
         
         if length( v_value1 )> 0 then -- implies this observation phrase has time criterion.  
         
@@ -3762,19 +2118,19 @@ BEGIN
            update query_temp q
              set q.query_xml = updatexml( 
                q.query_xml
-              , '(//parameters[parameter[text()="' || c1.c_alias || '.startDateTime"]])[1]/parameter[(position()=3 and ../../searchType/text()="SIMPLE") or (position()=2 and ../../searchType/text()!="SIMPLE")]/text()'
+              , '(//parameters[parameter[text()=' || c1.c_alias || '.startDateTime]])[1]/parameter[(position()=3 and ../../searchType/text()=SIMPLE) or (position()=2 and ../../searchType/text()!=SIMPLE)]/text()'
               , substr( v_value1, 1, 4)
-              , '(//parameters[parameter[text()="' || c1.c_alias || '.startDateTime"]])[1]/parameter[position()=3 and ../../searchType/text()!="SIMPLE"]/text()'
+              , '(//parameters[parameter[text()=' || c1.c_alias || '.startDateTime]])[1]/parameter[position()=3 and ../../searchType/text()!=SIMPLE]/text()'
               , substr( v_value2, 1, 4)
-              , '(//parameters[parameter[text()="' || c1.c_alias || '.startDateTime"]])[1]/parameter[(position()>2 and ../../searchType/text()="SIMPLE") or (position()>1 and ../../searchType/text()!="SIMPLE")]/@xsi:type'
+              , '(//parameters[parameter[text()=' || c1.c_alias || '.startDateTime]])[1]/parameter[(position()>2 and ../../searchType/text()=SIMPLE) or (position()>1 and ../../searchType/text()!=SIMPLE)]/@xsi:type'
               , 'xs:int'
-              , '(//parameter[text()="' || c1.c_alias || '.startDateTime"])[1]/text()'
+              , '(//parameter[text()=' || c1.c_alias || '.startDateTime])[1]/text()'
               , 'Diagnosis.diagYr', const.get_query_xml_namespace)
            where q.query_id = p_query_id
              and q.namespace_id = const.get_updbl_namespace_id;
   
            -- delete untouched
-           delete_query_elements( const.get_updbl_namespace_id, p_query_id, '(//criteria[parameters//parameter/text()="Diagnosis.diagYr"])['|| v_time_attr_count ||']/parameters/untouched');
+           delete_query_elements( const.get_updbl_namespace_id, p_query_id, '(//criteria[parameters//parameter/text()=Diagnosis.diagYr])['|| v_time_attr_count ||']/parameters/untouched');
 
         end if;
      
@@ -3784,13 +2140,13 @@ BEGIN
         elsif c2.c_obs_type_str = const.get_observation_type_procedure then
            v_error_msg := v_error_msg || ' FURTHeR does not currently support Procedures for UPDBL.  Coming in a future release.';
         else 
-           v_error_msg := v_error_msg || 'Observation type "' || c2.c_obs_type_str || '" is not supported in UPDBL. ';
+           v_error_msg := v_error_msg || 'Observation type ' || c2.c_obs_type_str || ' is not supported in UPDBL. ';
         end if;
 
      end loop; -- for each alias observation phrase 
 
-     delete_query_elements( const.get_updbl_namespace_id, p_query_id, '//criteria[parameters//parameter/text()="' || c1.c_alias || '.observationType"]');
-     delete_query_elements( const.get_updbl_namespace_id, p_query_id, '//alias[key/text()="' || c1.c_alias || '"]');
+     delete_query_elements( const.get_updbl_namespace_id, p_query_id, '//criteria[parameters//parameter/text()=' || c1.c_alias || '.observationType]');
+     delete_query_elements( const.get_updbl_namespace_id, p_query_id, '//alias[key/text()=' || c1.c_alias || ']');
      
   end loop; -- for each alias      
   
@@ -3808,7 +2164,7 @@ END TRANS_QUERY_OBS_UPDBL;
 --------------------------------------------------------
 set define off;
 
-  CREATE OR REPLACE PROCEDURE "FRTHR_FQE"."TRANS_QUERY_OBS_UUEDW" ( p_query_id number ) AS 
+CREATE OR REPLACE PROCEDURE FRTHR_FQE.TRANS_QUERY_OBS_UUEDW ( p_query_id number ) AS 
 
   v_iter number;
   v_obs_type_iter number;
@@ -3857,7 +2213,7 @@ BEGIN
     (select extract(column_value, '/alias/key/text()', const.get_query_xml_namespace).getstringval() c_alias,
             extract(column_value, '/alias/value/text()', const.get_query_xml_namespace).getstringval() c_object
      from query_def q
-         ,table(xmlsequence( q.query_xml.extract('//aliases/alias[value/text()="observations"]', const.get_query_xml_namespace) ) )
+         ,table(xmlsequence( q.query_xml.extract('//aliases/alias[value/text()=observations]', const.get_query_xml_namespace) ) )
      where query_id = p_query_id) loop
      
       v_obs_type_iter := 0;
@@ -3877,7 +2233,7 @@ BEGIN
           from query_def q,
             table(xmlsequence
                   (q.query_xml.extract
-                    ('//searchType[text()="CONJUNCTION"]/../criteria/parameters/parameter[text()="' || c1.c_alias || '.observationType"]/../parameter[3]', const.get_query_xml_namespace)
+                    ('//searchType[text()=CONJUNCTION]/../criteria/parameters/parameter[text()=' || c1.c_alias || '.observationType]/../parameter[3]', const.get_query_xml_namespace)
                   )
                 )
           where q.query_id = p_query_id
@@ -3902,7 +2258,7 @@ BEGIN
             v_alias_dx_iter := v_alias_dx_iter + 1;
             v_new_aliased_time_attr := v_new_alias || '.admYear'; 
 
-            select q.query_xml.extract( '(//criteria/parameters[parameter/text()="'|| c1.c_alias ||'.observationNamespaceId"])['|| v_obs_type_iter ||']/parameter[3]/text()'
+            select q.query_xml.extract( '(//criteria/parameters[parameter/text()='|| c1.c_alias ||'.observationNamespaceId])['|| v_obs_type_iter ||']/parameter[3]/text()'
                                       ,const.get_query_xml_namespace ).getnumberval()
             into v_dx_nmspc_id
             from query_def q
@@ -3912,14 +2268,14 @@ BEGIN
 
                -- check to see that the Dx namespace is ICD9 (namespace_id=10), if not set error message.
                if ( v_dx_nmspc_id <> const.get_icd9_namespace_id) then 
-                  v_error_msg := v_error_msg || 'UUEDW does not support diagnosis codes from namespace "' || v_dx_nmspc_id || '" ';
+                  v_error_msg := v_error_msg || 'UUEDW does not support diagnosis codes from namespace ' || v_dx_nmspc_id || ' ';
                end if;
              
-               v_xpath := '(//criteria[parameters//parameter/text()="' || c1.c_alias || '.observationType" ' ||
-                            ' and parameters//parameter/text()="Dx"])[1]' || -- in query_temp the updated index is always 1 (previous instances have been translated) 
-                             '/parameters/parameter[text()="' || c1.c_alias || '.observationType"]/text()';
-               v_xpath2 := '(//criteria[parameters//parameter/text()="' || v_update || '"' ||
-                             ' and parameters//parameter/text()="Dx"])[1]/parameters/parameter[text()="Dx"]/text()';
+               v_xpath := '(//criteria[parameters//parameter/text()=' || c1.c_alias || '.observationType ' ||
+                            ' and parameters//parameter/text()=Dx])[1]' || -- in query_temp the updated index is always 1 (previous instances have been translated) 
+                             '/parameters/parameter[text()=' || c1.c_alias || '.observationType]/text()';
+               v_xpath2 := '(//criteria[parameters//parameter/text()=' || v_update || '' ||
+                             ' and parameters//parameter/text()=Dx])[1]/parameters/parameter[text()=Dx]/text()';
     
                v_update2 := 'ICD9';
            
@@ -3930,19 +2286,19 @@ BEGIN
                   v_error_msg := v_error_msg || 'UUEDW does not support procedure codes from namespace ' || v_dx_nmspc_id || ' ';
                end if;
 
-               v_xpath := '(//criteria[parameters//parameter/text()="' || c1.c_alias || '.observationType" ' ||
-                          ' and parameters//parameter/text()="Procedure"])[1]' || 
-                           '/parameters/parameter[text()="' || c1.c_alias || '.observationType"]/text()';
-               v_xpath2 := '(//criteria[parameters//parameter/text()="' || v_update || '"' ||
-                           ' and parameters//parameter/text()="Procedure"])[1]/parameters/parameter[text()="Procedure"]/text()';
+               v_xpath := '(//criteria[parameters//parameter/text()=' || c1.c_alias || '.observationType ' ||
+                          ' and parameters//parameter/text()=Procedure])[1]' || 
+                           '/parameters/parameter[text()=' || c1.c_alias || '.observationType]/text()';
+               v_xpath2 := '(//criteria[parameters//parameter/text()=' || v_update || '' ||
+                           ' and parameters//parameter/text()=Procedure])[1]/parameters/parameter[text()=Procedure]/text()';
   
                v_update2 := 'CPT4';
 
             end if;
         
             further_pkg.log_msg($$PLSQL_UNIT,'DEBUG',v_intro_msg || v_new_dx_alias || '.observationNamespaceId['|| v_obs_type_iter ||']=' || v_dx_nmspc_id ,1);
-            further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'XPath update "' || v_xpath || '"=' || v_update, 1);
-            further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'XPath2 update "' || v_xpath2 || '"=' || v_update2, 1);
+            further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'XPath update ' || v_xpath || '=' || v_update, 1);
+            further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'XPath2 update ' || v_xpath2 || '=' || v_update2, 1);
 
             /* change this observation phrase's observationType=Dx to dianosiscodeType=ICD9 */
             update query_temp q
@@ -3953,30 +2309,30 @@ BEGIN
             where q.query_id = p_query_id
               and q.namespace_id = const.get_uuedw_namespace_id;
            
-            delete_query_elements( const.get_uuedw_namespace_id, p_query_id, '(//criteria[parameters//parameter/text()="' || v_update ||'"])['|| v_alias_dx_iter ||']/parameters/untouched');
-            delete_query_elements( const.get_uuedw_namespace_id, p_query_id, '(//criteria[parameters//parameter/text()="' || v_update2 ||'"])['|| v_alias_dx_iter ||']/parameters/untouched');
+            delete_query_elements( const.get_uuedw_namespace_id, p_query_id, '(//criteria[parameters//parameter/text()=' || v_update ||'])['|| v_alias_dx_iter ||']/parameters/untouched');
+            delete_query_elements( const.get_uuedw_namespace_id, p_query_id, '(//criteria[parameters//parameter/text()=' || v_update2 ||'])['|| v_alias_dx_iter ||']/parameters/untouched');
          
             /* change observation to dx code */
             update query_temp q
             set q.query_xml = updatexml( 
               q.query_xml
-             , '(//criteria/parameters/parameter[text()="' || c1.c_alias || '.observation"])[1]/text()'
+             , '(//criteria/parameters/parameter[text()=' || c1.c_alias || '.observation])[1]/text()'
              , v_new_dx_alias || '.id.code', const.get_query_xml_namespace)
             where q.query_id = p_query_id
               and q.namespace_id = const.get_uuedw_namespace_id;
            
-            delete_query_elements( const.get_uuedw_namespace_id, p_query_id, '(//criteria[parameters//parameter/text()="' || v_new_dx_alias || '.id.code"])['|| v_alias_dx_iter ||']/parameters/untouched');
+            delete_query_elements( const.get_uuedw_namespace_id, p_query_id, '(//criteria[parameters//parameter/text()=' || v_new_dx_alias || '.id.code])['|| v_alias_dx_iter ||']/parameters/untouched');
            
             /* change observation time */
             update query_temp q
             set q.query_xml = updatexml( 
               q.query_xml
-             , '(//criteria/parameters/parameter[text()="' || c1.c_alias || '.startDateTime"])[1]/text()'
+             , '(//criteria/parameters/parameter[text()=' || c1.c_alias || '.startDateTime])[1]/text()'
              , v_new_dx_alias || '.admYear', const.get_query_xml_namespace)
             where q.query_id = p_query_id
               and q.namespace_id = const.get_uuedw_namespace_id;
 
-            delete_query_elements( const.get_uuedw_namespace_id, p_query_id, '(//criteria[parameters//parameter/text()="' || v_new_dx_alias || '.admYear"])['|| v_alias_dx_iter ||']/parameters/untouched');
+            delete_query_elements( const.get_uuedw_namespace_id, p_query_id, '(//criteria[parameters//parameter/text()=' || v_new_dx_alias || '.admYear])['|| v_alias_dx_iter ||']/parameters/untouched');
 
          end if;  -- procedure or dx
        
@@ -3994,7 +2350,7 @@ BEGIN
            for c3 in (
               select extract(column_value, '/parameter/text()', const.get_query_xml_namespace).getstringval() c_aliased_attr
               from query_def q
-                  ,table(xmlsequence( q.query_xml.extract('(//*[searchType="CONJUNCTION" and criteria/parameters/parameter[text()="'|| c1.c_alias ||'.observationType"]/../parameter/text()="Lab"])[' || v_alias_lab_iter || ']/criteria/parameters/parameter[ora:contains(text(),"' || c1.c_alias || '.")>0]', const.get_query_xml_namespace) ) )
+                  ,table(xmlsequence( q.query_xml.extract('(//*[searchType=CONJUNCTION and criteria/parameters/parameter[text()='|| c1.c_alias ||'.observationType]/../parameter/text()=Lab])[' || v_alias_lab_iter || ']/criteria/parameters/parameter[ora:contains(text(),' || c1.c_alias || '.)>0]', const.get_query_xml_namespace) ) )
               where query_id = p_query_id
            ) loop
        
@@ -4015,8 +2371,8 @@ BEGIN
                  v_new_aliased_attr := v_new_lab_alias || '.' || v_translated_attr;
                  v_working_attr := v_new_aliased_attr;
          
-                 v_xpath := '(//*[searchType="CONJUNCTION" and criteria/parameters/parameter[text()="'|| c1.c_alias ||'.observationType"]'
-                 || '/../parameter/text()="Lab"])['|| v_alias_lab_iter ||']/criteria/parameters/parameter[text()="' || c3.c_aliased_attr || '"]/text()';
+                 v_xpath := '(//*[searchType=CONJUNCTION and criteria/parameters/parameter[text()='|| c1.c_alias ||'.observationType]'
+                 || '/../parameter/text()=Lab])['|| v_alias_lab_iter ||']/criteria/parameters/parameter[text()=' || c3.c_aliased_attr || ']/text()';
 
                  -- update attr name
                  update query_temp q
@@ -4028,7 +2384,7 @@ BEGIN
                  where q.query_id = p_query_id
                    and q.namespace_id = const.get_uuedw_namespace_id;
          
-                 further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'TRASLATED ATTR "' || c3.c_aliased_attr || '" TO "' || v_new_aliased_attr || '"',1);
+                 further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'TRASLATED ATTR ' || c3.c_aliased_attr || ' TO ' || v_new_aliased_attr || '',1);
 
                end if;
 
@@ -4038,8 +2394,8 @@ BEGIN
                   for c4 in (
                      select extract(column_value, '/parameter/text()', const.get_query_xml_namespace).getstringval() c_value
                      from query_temp q
-                         ,table(xmlsequence( q.query_xml.extract('(//parameters[parameter[text()="'|| v_working_attr ||'"]])[' || v_alias_lab_iter || ']' ||
-                                                           '//parameter[(position()>2 and ../../searchType/text()="SIMPLE") or (position()>1 and ../../searchType/text()!="SIMPLE")]'
+                         ,table(xmlsequence( q.query_xml.extract('(//parameters[parameter[text()='|| v_working_attr ||']])[' || v_alias_lab_iter || ']' ||
+                                                           '//parameter[(position()>2 and ../../searchType/text()=SIMPLE) or (position()>1 and ../../searchType/text()!=SIMPLE)]'
                                                           , const.get_query_xml_namespace) ) )
                      where query_id = p_query_id
                        and namespace_id = const.get_uuedw_namespace_id
@@ -4063,7 +2419,7 @@ BEGIN
                         end if;
 
                         v_translated_value := dts.GET_TRANSLATED_CONCEPT_VALUE( v_src_nmspc_id, 'Code in Source', c4.c_value, const.get_uuedw_namespace_id , 'Local Code' );
-                        further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'VALUE TRANSLATION: ATTR="' || v_attr || '" FROM VALUE="' || c4.c_value || '" TO VALUE="' || v_translated_value || '"',1);
+                        further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'VALUE TRANSLATION: ATTR=' || v_attr || ' FROM VALUE=' || c4.c_value || ' TO VALUE=' || v_translated_value || '',1);
 
                         if length(v_translated_value) > 0 then
              
@@ -4071,16 +2427,16 @@ BEGIN
                            update query_temp q
                            set q.query_xml = updatexml( 
                                  q.query_xml
-                              , '(//parameters[parameter[text()="' || v_working_attr || '"]])[' || v_alias_lab_iter || ']/parameter[text()="' || c4.c_value || '"]/@xsi:type'
+                              , '(//parameters[parameter[text()=' || v_working_attr || ']])[' || v_alias_lab_iter || ']/parameter[text()=' || c4.c_value || ']/@xsi:type'
                               , v_type
-                              , '(//parameters[parameter[text()="' || v_working_attr || '"]])[' || v_alias_lab_iter || ']/parameter[text()="' || c4.c_value || '"]/text()'
+                              , '(//parameters[parameter[text()=' || v_working_attr || ']])[' || v_alias_lab_iter || ']/parameter[text()=' || c4.c_value || ']/text()'
                               , v_translated_value, const.get_query_xml_namespace)
                            where q.query_id = p_query_id
                              and q.namespace_id = const.get_uuedw_namespace_id;
 
                         else
               
-                           v_error_msg := v_error_msg || 'VALUE TRANSLATION ERROR: attribute="' || v_attr || '" value="' || c4.c_value || '" ';
+                           v_error_msg := v_error_msg || 'VALUE TRANSLATION ERROR: attribute=' || v_attr || ' value=' || c4.c_value || ' ';
              
                         end if;
 
@@ -4088,12 +2444,12 @@ BEGIN
 
                         v_type := get_trans_assoc_prop( const.get_analytical_obs_class_id, const.get_uuedw_lab_obs_class_id, v_attr, 'ATTR_VALUE_TRANS_TO_DATA_TYPE' );
 
-                        further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'VALUE TYPE TRANSLATION: attribute="' || v_attr || '" new type=' || v_type,1);
+                        further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'VALUE TYPE TRANSLATION: attribute=' || v_attr || ' new type=' || v_type,1);
 
                         update query_temp q
                         set q.query_xml = updatexml( 
                               q.query_xml
-                            , '(//parameters[parameter[text()="' || v_working_attr || '"]])[' || v_alias_lab_iter || ']/parameter[text()="' || c4.c_value || '"]/@xsi:type'
+                            , '(//parameters[parameter[text()=' || v_working_attr || ']])[' || v_alias_lab_iter || ']/parameter[text()=' || c4.c_value || ']/@xsi:type'
                             , v_type
                             , const.get_query_xml_namespace)
                         where q.query_id = p_query_id
@@ -4101,7 +2457,7 @@ BEGIN
 
                      else
               
-                        v_error_msg := v_error_msg || 'TRANSLATION LOGIC ERROR - should never get here.  Translating attribute="' || v_attr || '" value="' || c4.c_value || '" ';
+                        v_error_msg := v_error_msg || 'TRANSLATION LOGIC ERROR - should never get here.  Translating attribute=' || v_attr || ' value=' || c4.c_value || ' ';
                  
                      end if;
                   end loop; -- translate value codes loop
@@ -4119,7 +2475,7 @@ BEGIN
                      further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'REMOVING(8) untouched for ATTR=' || v_new_aliased_attr,1);
                      delete_query_elements( const.get_uuedw_namespace_id
                                , p_query_id
-                               ,'(//criteria[parameters/parameter[text()="' || v_new_aliased_attr || '"]])[' || v_alias_lab_iter || ']/parameters/untouched'
+                               ,'(//criteria[parameters/parameter[text()=' || v_new_aliased_attr || ']])[' || v_alias_lab_iter || ']/parameters/untouched'
                                );
                                  
                   elsif ( v_is_trans_attr  = 1 and v_is_trans_attr_value  = 1 ) then
@@ -4127,8 +2483,8 @@ BEGIN
                      further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'REMOVING(9) untouched for ATTR=' || v_new_aliased_attr || ' VALUE=' || v_translated_value,1);
                      delete_query_elements( const.get_uuedw_namespace_id
                                , p_query_id
-                               ,'(//criteria[parameters//parameter/text()="' || v_new_aliased_attr || 
-                                '" and parameters//parameter/text()="' || v_translated_value || '"])['|| v_alias_lab_iter ||']/parameters/untouched'
+                               ,'(//criteria[parameters//parameter/text()=' || v_new_aliased_attr || 
+                                ' and parameters//parameter/text()=' || v_translated_value || '])['|| v_alias_lab_iter ||']/parameters/untouched'
                                );
   
                   elsif ( v_is_trans_attr  = 0 and v_is_trans_attr_value  = 0 ) then
@@ -4136,13 +2492,13 @@ BEGIN
                      further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'REMOVING(10) untouched for ATTR=' || v_attr || ' VALUE=' || v_value,1);
                      delete_query_elements( const.get_uuedw_namespace_id
                                , p_query_id
-                               ,'(//criteria[parameters//parameter/text()="' || v_attr || '"])['|| v_alias_lab_iter ||']/parameters/untouched'
+                               ,'(//criteria[parameters//parameter/text()=' || v_attr || '])['|| v_alias_lab_iter ||']/parameters/untouched'
                                );
   
                   end if;
                   
                   -- May need this if there are gt 1 time variables (shouldn't happen with i2b2 implementation)
-                  delete_query_elements( const.get_uuedw_namespace_id, p_query_id, '//criteria[parameters//parameter/text()="' || v_new_aliased_time_attr ||'"]/parameters/untouched');
+                  delete_query_elements( const.get_uuedw_namespace_id, p_query_id, '//criteria[parameters//parameter/text()=' || v_new_aliased_time_attr ||']/parameters/untouched');
 
                else
         
@@ -4162,10 +2518,10 @@ BEGIN
     end loop; -- for each alias obs type loop   
         
     -- delete observation types for curret alias
-    delete_query_elements( const.get_uuedw_namespace_id, p_query_id, '//criteria[parameters/parameter/text()="' || c1.c_alias || '.observationType"]');
+    delete_query_elements( const.get_uuedw_namespace_id, p_query_id, '//criteria[parameters/parameter/text()=' || c1.c_alias || '.observationType]');
     
     -- delete current analytical model observation alias
-    delete_query_elements( const.get_uuedw_namespace_id, p_query_id, '//aliases/alias[key/text()="' || c1.c_alias || '"]');
+    delete_query_elements( const.get_uuedw_namespace_id, p_query_id, '//aliases/alias[key/text()=' || c1.c_alias || ']');
 
   end loop; -- for each alias loop      
   
@@ -4183,7 +2539,7 @@ END TRANS_QUERY_OBS_UUEDW;
 --------------------------------------------------------
 set define off;
 
-  CREATE OR REPLACE PROCEDURE "FRTHR_FQE"."TRANS_QUERY_ORDER_UUEDW" ( p_query_id number ) AS 
+CREATE OR REPLACE PROCEDURE FRTHR_FQE.TRANS_QUERY_ORDER_UUEDW ( p_query_id number ) AS 
 
   v_iter number;
   v_order_type_iter number;
@@ -4208,7 +2564,7 @@ BEGIN
     (select extract(column_value, '/alias/key/text()', const.get_query_xml_namespace).getstringval() c_alias,
             extract(column_value, '/alias/value/text()', const.get_query_xml_namespace).getstringval() c_object
      from query_def q
-         ,table(xmlsequence( q.query_xml.extract('//aliases/alias[value/text()="orders"]', const.get_query_xml_namespace) ) )
+         ,table(xmlsequence( q.query_xml.extract('//aliases/alias[value/text()=orders]', const.get_query_xml_namespace) ) )
      where query_id = p_query_id) loop
      
      v_iter := v_iter + 1;
@@ -4219,7 +2575,7 @@ BEGIN
          from query_def q,
            table(xmlsequence
                  (q.query_xml.extract
-                   ('//searchType[text()="CONJUNCTION"]/../criteria/parameters/parameter[text()="' || c1.c_alias || '.type"]/../parameter[3]', const.get_query_xml_namespace)
+                   ('//searchType[text()=CONJUNCTION]/../criteria/parameters/parameter[text()=' || c1.c_alias || '.type]/../parameter[3]', const.get_query_xml_namespace)
                  )
                )
          where q.query_id = p_query_id
@@ -4240,16 +2596,16 @@ BEGIN
            update query_temp q
            set q.query_xml = updatexml( 
               q.query_xml
-             , '(//criteria/parameters/parameter[text()="' || c1.c_alias || '.orderTime"])[1]/text()'
+             , '(//criteria/parameters/parameter[text()=' || c1.c_alias || '.orderTime])[1]/text()'
              , v_new_alias || '.startDate', const.get_query_xml_namespace)
            where q.query_id = p_query_id
              and q.namespace_id = const.get_uuedw_namespace_id;
 
-           delete_query_elements( const.get_uuedw_namespace_id, p_query_id, '(//criteria[parameters//parameter/text()="' || v_new_alias || '.startDate"])['|| v_order_type_iter ||']/parameters/untouched');
+           delete_query_elements( const.get_uuedw_namespace_id, p_query_id, '(//criteria[parameters//parameter/text()=' || v_new_alias || '.startDate])['|| v_order_type_iter ||']/parameters/untouched');
            
       
            /* change attr orderItem to multumDCode */
-           v_xpath := '(//parameter[text()="' || c1.c_alias || '.orderItem"])[1]/text()';
+           v_xpath := '(//parameter[text()=' || c1.c_alias || '.orderItem])[1]/text()';
            v_update := v_new_alias || '.multumDCode';
                          
            further_pkg.log_msg($$PLSQL_UNIT, 'DEBUG','XPATH Update: ' || v_xpath || ' TO ' || v_update, 1);
@@ -4265,17 +2621,17 @@ BEGIN
            for c3 in (
              select extract(column_value, '/parameter/text()', const.get_query_xml_namespace).getstringval() c_value
              from query_temp q
-                 ,table(xmlsequence( q.query_xml.extract('(//parameters[parameter[text()="'|| v_update ||'"]])['|| v_order_type_iter ||']' || -- index may NOT be CORRECT WHEN OTHER ORDER TYPES ARE ADDED
-                                                     '//parameter[(position()>2 and ../../searchType/text()="SIMPLE") or (position()>1 and ../../searchType/text()!="SIMPLE")]'
+                 ,table(xmlsequence( q.query_xml.extract('(//parameters[parameter[text()='|| v_update ||']])['|| v_order_type_iter ||']' || -- index may NOT be CORRECT WHEN OTHER ORDER TYPES ARE ADDED
+                                                     '//parameter[(position()>2 and ../../searchType/text()=SIMPLE) or (position()>1 and ../../searchType/text()!=SIMPLE)]'
                                                      , const.get_query_xml_namespace) ) )
              where query_id = p_query_id
                and namespace_id = const.get_uuedw_namespace_id
            )
            loop
              
-              v_translated_value := substr( c3.c_value, 4, 20 ); -- remove the "GN-" and only send the "d0000" segment
+              v_translated_value := substr( c3.c_value, 4, 20 ); -- remove the GN- and only send the d0000 segment
 
-              further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'VALUE TRANSLATION: attribute="' || v_update || '" orig-value="' || c3.c_value || '" new-value="' || v_translated_value || '"',1);
+              further_pkg.log_msg($$PLSQL_UNIT,'DEBUG', v_intro_msg || 'VALUE TRANSLATION: attribute=' || v_update || ' orig-value=' || c3.c_value || ' new-value=' || v_translated_value || '',1);
              
               if length(v_translated_value) > 0 then
              
@@ -4283,20 +2639,20 @@ BEGIN
                 update query_temp q
                 set q.query_xml = updatexml( 
                  q.query_xml
-                 , '(//parameters[parameter[text()="' || v_update || '"]])['|| v_order_type_iter ||']/parameter[text()="' || c3.c_value || '"]/text()'
+                 , '(//parameters[parameter[text()=' || v_update || ']])['|| v_order_type_iter ||']/parameter[text()=' || c3.c_value || ']/text()'
                  , v_translated_value, const.get_query_xml_namespace)
                 where q.query_id = p_query_id
                   and q.namespace_id = const.get_uuedw_namespace_id;
 
               else
               
-                v_error_msg := v_error_msg || 'VALUE TRANSLATION ERROR: attribute="' || v_update || '" value="' || c3.c_value || '" ';
+                v_error_msg := v_error_msg || 'VALUE TRANSLATION ERROR: attribute=' || v_update || ' value=' || c3.c_value || ' ';
              
               end if;
              
            end loop; -- value codes loop
 
-           delete_query_elements( const.get_uuedw_namespace_id, p_query_id, '(//criteria[parameters//parameter/text()="' || v_update ||'"])['|| v_order_type_iter ||']/parameters/untouched');
+           delete_query_elements( const.get_uuedw_namespace_id, p_query_id, '(//criteria[parameters//parameter/text()=' || v_update ||'])['|| v_order_type_iter ||']/parameters/untouched');
               
         end if; -- is a medication order type
         
@@ -4304,9 +2660,9 @@ BEGIN
              
      end loop; -- for each order type alias loop
 
-      delete_query_elements( const.get_uuedw_namespace_id, p_query_id, '//criteria[parameters//parameter/text()="' || c1.c_alias ||'.type"]');
+      delete_query_elements( const.get_uuedw_namespace_id, p_query_id, '//criteria[parameters//parameter/text()=' || c1.c_alias ||'.type]');
   
-      delete_query_elements( const.get_uuedw_namespace_id, p_query_id, '//aliases/alias[key/text()="' || c1.c_alias || '"]');
+      delete_query_elements( const.get_uuedw_namespace_id, p_query_id, '//aliases/alias[key/text()=' || c1.c_alias || ']');
    
   end loop; -- for each alias 
 
@@ -4325,7 +2681,7 @@ END TRANS_QUERY_ORDER_UUEDW;
 --------------------------------------------------------
 set define off;
 
-  CREATE OR REPLACE PROCEDURE "FRTHR_FQE"."TRANS_QUERY_SUBQ" (p_namespace_id number, p_query_id number ) AS 
+CREATE OR REPLACE PROCEDURE FRTHR_FQE.TRANS_QUERY_SUBQ (p_namespace_id number, p_query_id number ) AS 
 
   i number;
   xml xmltype;
@@ -4338,12 +2694,12 @@ begin
   for crs in (
     select extract( column_value, '/criteria/query/rootCriterion/*', const.get_query_xml_namespace ) subquery_criteria
     from query_temp q ,
-      TABLE(xmlsequence( extract( q.query_xml, '//criteria[searchType="IN" and parameters/parameter="udistID"]', const.get_query_xml_namespace ) )) 
+      TABLE(xmlsequence( extract( q.query_xml, '//criteria[searchType=IN and parameters/parameter=udistID]', const.get_query_xml_namespace ) )) 
     where query_id = p_query_id
       and namespace_id = p_namespace_id)
   loop
       
-    clob_val := '<criteria xmlns="http://further.utah.edu/core/query">';
+    clob_val := '<criteria xmlns=http://further.utah.edu/core/query>';
     dbms_lob.append( clob_val, crs.subquery_criteria.getclobval() );
     dbms_lob.append( clob_val, '</criteria>' );
     xml := xmltype( clob_val );
@@ -4351,7 +2707,7 @@ begin
     update query_temp q
          set q.query_xml = insertXmlAfter( 
              q.query_xml
-           , '//criteria[searchType="IN" and parameters/parameter="udistID"][' || i || ']'
+           , '//criteria[searchType=IN and parameters/parameter=udistID][' || i || ']'
            , xml, const.get_query_xml_namespace)
     where q.query_id = p_query_id
       and q.namespace_id = p_namespace_id;
@@ -4363,7 +2719,7 @@ begin
   update query_temp q
          set q.query_xml = deleteXml( 
              q.query_xml
-           , '//criteria[searchType="IN" and parameters/parameter="udistID"]'
+           , '//criteria[searchType=IN and parameters/parameter=udistID]'
            , const.get_query_xml_namespace)
     where q.query_id = p_query_id
       and q.namespace_id = p_namespace_id;
@@ -4376,7 +2732,7 @@ END TRANS_QUERY_SUBQ;
 --------------------------------------------------------
 set define off;
 
-  CREATE OR REPLACE PROCEDURE "FRTHR_FQE"."TRANS_QUERY_UPDBL" ( p_query_id number ) AS
+CREATE OR REPLACE PROCEDURE FRTHR_FQE.TRANS_QUERY_UPDBL ( p_query_id number ) AS
 
   v_trgt_attr varchar2(100);
   v_trnsltn_func varchar2(100);
@@ -4423,7 +2779,7 @@ BEGIN
   further_pkg.log_msg($$PLSQL_UNIT,'DEBUG',v_intro_msg || 'DELETE *NamespaceId',1);
 
   update query_temp q
-  set q.query_xml = deleteXML( q.query_xml, '//criteria[parameters/parameter[ora:contains(text(),"%NamespaceId")>0]]', const.get_query_xml_namespace )
+  set q.query_xml = deleteXML( q.query_xml, '//criteria[parameters/parameter[ora:contains(text(),%NamespaceId)>0]]', const.get_query_xml_namespace )
   where query_id = p_query_id
     and namespace_id = const.get_updbl_namespace_id;
 
@@ -4456,7 +2812,7 @@ END TRANS_QUERY_UPDBL ;
 --------------------------------------------------------
 set define off;
 
-  CREATE OR REPLACE PROCEDURE "FRTHR_FQE"."TRANS_QUERY_UUEDW" ( p_query_id number ) AS
+CREATE OR REPLACE PROCEDURE FRTHR_FQE.TRANS_QUERY_UUEDW ( p_query_id number ) AS
 
   v_trgt_attr varchar2(100);
   v_trnsltn_func varchar2(100);
@@ -4508,12 +2864,12 @@ BEGIN
   further_pkg.log_msg($$PLSQL_UNIT,'DEBUG',v_intro_msg || 'DELETE *Namespace',1);
 
   update query_temp q
-  set q.query_xml = deleteXML( q.query_xml, '//criteria[parameters/parameter[ora:contains(text(),"%NamespaceId")>0]]', const.get_query_xml_namespace )
+  set q.query_xml = deleteXML( q.query_xml, '//criteria[parameters/parameter[ora:contains(text(),%NamespaceId)>0]]', const.get_query_xml_namespace )
   where query_id = p_query_id
     and namespace_id = const.get_uuedw_namespace_id;
   
   /* ---------------------------------------------------------------- */
-  /* Check for "untouched" attributes - fail and report when detected */
+  /* Check for untouched attributes - fail and report when detected */
   /* ---------------------------------------------------------------- */
   check_translated_query( const.get_uuedw_namespace_id, p_query_id );
   
@@ -4536,7 +2892,7 @@ END TRANS_QUERY_UUEDW;
 --------------------------------------------------------
 set define off;
 
-  CREATE OR REPLACE PROCEDURE "FRTHR_FQE"."TRANS_QUERY_UUEDW_APO" ( p_query_id number ) AS
+CREATE OR REPLACE PROCEDURE FRTHR_FQE.TRANS_QUERY_UUEDW_APO ( p_query_id number ) AS
 
   v_trgt_attr varchar2(100);
   v_trnsltn_func varchar2(100);
@@ -4576,7 +2932,7 @@ END TRANS_QUERY_UUEDW_APO;
 --------------------------------------------------------
 set define off;
 
-  CREATE OR REPLACE PROCEDURE "FRTHR_FQE"."UPDATE_QUERY_OBJECT_ALIAS" ( p_namespace_id number, p_query_id number, p_old_alias varchar2, p_new_alias varchar2, p_new_object varchar2) AS 
+CREATE OR REPLACE PROCEDURE FRTHR_FQE.UPDATE_QUERY_OBJECT_ALIAS ( p_namespace_id number, p_query_id number, p_old_alias varchar2, p_new_alias varchar2, p_new_object varchar2) AS 
 BEGIN
 
 /*
@@ -4598,11 +2954,11 @@ BEGIN
   update query_temp qn 
      set query_xml = updatexml( 
          query_xml,
-         '//aliases/alias[key="'|| p_old_alias || '"]/key/text()', p_new_alias,        
-         '//aliases/alias[key="' || p_new_alias || '"]/value/text()', p_new_object, const.get_query_xml_namespace)         
+         '//aliases/alias[key='|| p_old_alias || ']/key/text()', p_new_alias,        
+         '//aliases/alias[key=' || p_new_alias || ']/value/text()', p_new_object, const.get_query_xml_namespace)         
   where qn.query_id = p_query_id;
   
-  delete_query_elements( p_namespace_id, p_query_id, '//alias[key/text()="' || p_new_alias || '"]/untouchedAlias');
+  delete_query_elements( p_namespace_id, p_query_id, '//alias[key/text()=' || p_new_alias || ']/untouchedAlias');
   
 END UPDATE_QUERY_OBJECT_ALIAS;
  
