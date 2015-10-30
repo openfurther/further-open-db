@@ -1,0 +1,1653 @@
+"ASSET_RESOURCE_ID","ASSET_RESOURCE_TYPE_ID","ASSET_VERSION_SEQ_ID","ASSET_ID","ASSET_VERSION","RESOURCE_NAME","RESOURCE_DSC","RESOURCE_FILE_NAME","STORAGE_CD","MIME_TYPE","RESOURCE_TEXT","RESOURCE_XML","RESOURCE_CLOB","RESOURCE_BLOB","RESOURCE_URL","RESOURCE_ACTIVATE_DT","RESOURCE_DEACTIVATE_DT","RELATIVE_RESOURCE_URL","RESOURCE_INDEX","ASSET_RESOURCE_VERSION","UPDATE_DTS","UPDATE_USER_ID"
+56,9,82,1,1,"Master/root FMDR XSD","Master/root FMDR XSD","F459096920/MasterFmdrLibrary.xsd","RESOURCE_XML","text/xml","",<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:fmdr="http://further.utah.edu/fmdr/lib" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:ddi.r="ddi:reusable:3_0" 
+	targetNamespace="http://further.utah.edu/fmdr/lib">
+	<xs:import namespace="ddi:reusable:3_0" schemaLocation="reusable.xsd"/>
+	<xs:complexType name="AssetComplexType">
+		<xs:sequence>
+			<xs:element name="AssetId" type="xs:int"/>
+			<xs:element name="AssetDisplayLabel" type="xs:string"/>
+			<xs:element name="AssetNamespaceId" type="xs:int"/>
+			<xs:element name="AssetTypeId" type="xs:int"/>
+			<xs:element name="AssetActivateDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="AssetDeactivateDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="AssetDescription" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="FmdrMasterComplexType">
+		<xs:sequence>
+			<xs:element name="Resources">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Resource"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AssetTypeComplexType"/>
+	<xs:complexType name="BaseTypeMetadataComplexType"/>
+	<xs:complexType name="DataSourceComplexType">
+		<xs:sequence>
+			<xs:element name="Name" type="xs:string"/>
+			<xs:element name="Description" type="xs:string"/>
+			<xs:element name="DataSourceConnection" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="WebServiceWsdl" type="xs:string" minOccurs="0"/>
+						<xs:element name="WebServiceRest" type="xs:string" minOccurs="0"/>
+						<xs:element name="Jdbc" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="DriverClass" type="xs:string"/>
+									<xs:element name="Dialect" type="xs:string" minOccurs="0"/>
+									<xs:element name="SchemaName" type="xs:string"/>
+									<xs:element name="Username" type="xs:string"/>
+									<xs:element name="Password" type="xs:string" minOccurs="0" maxOccurs="0"/>
+									<xs:element name="ServerIpAddress" type="xs:string" minOccurs="0"/>
+									<xs:element name="ServerPort" type="xs:int" minOccurs="0"/>
+									<xs:element name="JdbcUrl" type="xs:string" minOccurs="0"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="Other" type="xs:string" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ContributingSystem" type="fmdr:DataSourceSystemComplexType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="DataAccessPolicy" type="fmdr:DataAccessPolicyComplexType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ConceptComplexType">
+		<xs:sequence>
+			<xs:element name="SystemPropertyValue" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>The property that distinguishes which terminology system/services the concept comes from (Apelon, LexGrid, FMDR) if there are more than one.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NamespacePropertyValue" type="xs:string"/>
+			<xs:element name="LookupPropertyName" type="xs:string"/>
+			<xs:element name="LookupPropertyValue" type="xs:string"/>
+			<xs:element name="DisplayName" type="xs:anySimpleType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ModelDomainComplex">
+		<xs:sequence>
+			<xs:element name="ModelDomain" type="xs:string" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="XmiComplexType">
+		<xs:sequence>
+			<xs:element name="Packages">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Package" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="Description" type="xs:string" minOccurs="0"/>
+									<xs:element name="Instructions" type="xs:string" minOccurs="0"/>
+								</xs:sequence>
+								<xs:attribute name="name" use="req,"",,"",2009-05-01 00:00:00,,"MasterFmdrLibrary.xsd",,1,,
+108,41,128,86,1,"further.xq","further.xq","F1503780040/further.xq","RESOURCE_CLOB","text/plain","",,"(:
+ : Copyright (C) [2013] [The FURTHeR Project]
+ :
+ : Licensed under the Apache License, Version 2.0 (the ""License"");
+ : you may not use this file except in compliance with the License.
+ : You may obtain a copy of the License at
+ :
+ :         http://www.apache.org/licenses/LICENSE-2.0
+ :
+ : Unless required by applicable law or agreed to in writing, software
+ : distributed under the License is distributed on an ""AS IS"" BASIS,
+ : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ : See the License for the specific language governing permissions and
+ : limitations under the License.
+ :)
+
+module namespace further='http://further.utah.edu/xquery-functions-module';
+declare namespace dts='http://further.utah.edu/dts';
+declare namespace xmi='http://schema.omg.org/spec/XMI/2.1';
+
+(: Change the location of constants.xq when working locally :)
+(: import module namespace const = 'http://further.utah.edu/constants' at 'constants.xq'; :)
+import module namespace const = 'http://further.utah.edu/constants' 
+    at '${server.mdr.ws}${path.mdr.ws.resource.path}/fqe/further/xq/constants.xq';
+
+declare function further:getConceptTranslationRestUrl(
+  $srcNmspc as xs:string,
+  $srcPropNm as xs:string,
+  $srcPropVal as xs:string, 
+  $tgNmspc as xs:string, 
+  $tgPropNm as xs:string)
+{
+  (: EXAMPLE: http://dev-esb.further.utah.edu:9000/dts/rest/translate/UUEDW/DWID/106386/SNOMED CT/Code in Source?view=HUMAN :)
+  (:          http://dev-esb.further.utah.edu:9000/dts/rest/translate/{namespace}/{propertyName}/{propertyValue}/{targetNamespace}/{targetPropertyName}?view={view} :)
+  (: Sometimes we have values that contain special characters, such as a % for unitOfMeasure.
+     Therefore, we need to escape these special characters with the encode-for-uri function. 
+     The call to iri-to-uri function does not espace these special characters.
+     And the reason why we do not simply replace iri-to-uri with encode-for-uri is because
+     the encode-for-uri function escapes special characters such as : and / 
+     which are valid parts of a http://url that we DO NOT want to escape. :)
+  let $srcPropertyVal := if (fn:string-length( $srcPropVal ) = 0) then '0' else fn:encode-for-uri($srcPropVal)
+  let $fixedSrcNamespace := further:replaceBracketsWithHexCodes( $srcNmspc )
+  let $fixedTgNamespace := further:replaceBracketsWithHexCodes( $tgNmspc )
+  let $docUrl := fn:concat($const:restServer, $const:dtsRestService, '/', $fixedSrcNamespace, '/', $srcPropNm, '/', $srcPropertyVal, '/', $fixedTgNamespace, '/', $tgPropNm, '?view=HUMAN')
+
+  let $parsedDocUrl := iri-to-uri( $docUrl )
+  
+  return $parsedDocUrl
+
+};
+
+declare function further:replaceBracketsWithHexCodes( $inString as xs:string ) as xs:string* {
+
+  let $str := replace( $inString, '\[', '%5B' )
+  let $str := replace( $str, '\]', '%5D' )
+
+  return $str
+};
+
+declare function further:getTranslatedConcept(
+  $srcNmspc as xs:string,
+  $srcPropNm as xs:string,
+  $srcPropVal as xs:string,
+  $tgNmspc as xs:string,
+  $tgPropName as xs:string)
+{
+
+  let $restUrl := further:getConceptTranslationRestUrl( $srcNmspc, $srcPropNm, $srcPropVal, $tgNmspc, $tgPropName )
+  return doc( $restUrl )
+
+};
+
+declare function further:getConceptNamespace( $concept as node()? ) as xs:string*
+{
+  let $nmspc := $concept/dts:concepts/dts:conceptId/namespace/text()
+  return $nmspc
+};
+
+declare function further:getConceptPropertyName( $concept as node()? ) as xs:string*
+{
+  let $propertyName := $concept/dts:concepts/dts:conceptId/propertyName/text()
+  return $propertyName
+};
+
+declare function further:getConceptPropertyValue( $concept as node()? ) as xs:string*
+{
+  let $propertyValue := $concept/dts:concepts/dts:conceptId/propertyValue/text()
+  return $propertyValue
+};
+
+declare function further:getValueDomains()
+{
+  let $fmdrRestUrl := fn:concat( $const:fmdrRestServer, $const:fmdrRestService, $const:fmdrPathValueDomainsXmi)
+
+  return doc( $fmdrRestUrl )/xmi:XMI/xmi:Extension/elements
+
+};
+
+declare function further:getValueDomai",,"",2009-07-20 00:00:00,,"fqe/further/xq/further.xq",,1,,
+109,5,84,41,1,"Value Domains ","Value Domains ","F1716858459/valuedomains-xmi.xml","RESOURCE_XML","text/xml","",<?xml version="1.0" encoding="windows-1252"?>
+<xmi:XMI xmi:version="2.1" xmlns:uml="http://schema.omg.org/spec/UML/2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:thecustomprofile="http://www.sparxsystems.com/profiles/thecustomprofile/1.0">
+	<xmi:Documentation exporter="Enterprise Architect" exporterVersion="6.5"/>
+	<uml:Model xmi:type="uml:Model" name="EA_Model" visibility="public">
+		<packagedElement xmi:type="uml:Package" xmi:id="EAPK_1EF73AEB_2600_4c12_A38F_E6C8EE09F863" name="valuedomains" visibility="public">
+			<packagedElement xmi:type="uml:Package" xmi:id="EAPK_25ACA084_771E_418d_AF0B_2835FF308D0C" name="valuedomains" visibility="public">
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_51704D91_EA34_4860_ABE1_B21319213B25" name="AddressType" visibility="public"/>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_5AA190F5_4FF2_4d8d_A12A_6FE2EF64262D" name="AdmitSource" visibility="public">
+					<nestedClassifier xmi:type="uml:Class" xmi:id="EAID_DBE8FC46_CDD9_4fc4_9A80_54DCAC555CDB" name="CPTCode" visibility="public"/>
+				</packagedElement>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_3976BF82_EB50_4cc8_A2D9_495DB393E669" name="AdmitType" visibility="public"/>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_F9B08096_010D_4ac7_A662_6FDFBCE93716" name="Country" visibility="public"/>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_3ADA946E_A186_45c4_BEB2_31C9C095CA1C" name="County" visibility="public"/>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_22560428_F633_450f_BDAC_3BDF413E3D1A" name="Ethnicity" visibility="public"/>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_A773D593_6DE7_40fe_ACDA_A13447DD652B" name="Frequency" visibility="public"/>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_4D9B905C_FCDA_47b9_9455_1A615E99B278" name="HealthDistrictGroup" visibility="public"/>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_483FD227_330C_4e72_8042_88A91457FC5B" name="HospitalService" visibility="public"/>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_F119E702_7885_4d1a_91A5_A1104DCEA6C9" name="ICD9Code" visibility="public"/>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_A493CFD9_309C_42dc_AFF0_83BD87E78C68" name="ICD9ProcedureCode" visibility="public"/>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_770E7652_E6E4_40d2_9B2A_8F8F963D30A1" name="InterpretationCode" visibility="public"/>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_8429BBB8_3D4E_408b_A2B5_40BE75E61171" name="LabObservation" visibility="public"/>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_AF0FB883_AC44_4683_96FF_232B1CFAF69F" name="Language" visibility="public"/>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_400E3431_C7F1_4cab_B64C_075ECDF524FD" name="MaritalStatus" visibility="public"/>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_50C8CD04_807F_4a9d_99A1_7528DFA54524" name="Medication" visibility="public"/>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_38D361E0_D34C_454f_B4F1_6383878FB2BB" name="MedicationAdministrationRoute" visibility="public"/>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_8708CA88_E246_4b03_B5DB_206C114B0D9F" name="MedicationForm" visibility="public"/>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_8240DC1E_ABAE_434e_96FF_21B8DBFE2B07" name="ObservationInterpretation" visibility="public"/>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_2E3C62AA_3CED_4d96_86BD_8AB24B340631" name="Occupation" visibility="public"/>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_2B14E262_06F9_4125_8E13_FEB917EEFA61" name="OrderStatus" visibility="public"/>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_899E421E_2BF4_4e47_96DF_FF957ADF4F16" name="OrderType" visibility="public"/>
+				<packagedElement xmi:type="uml:Class" xmi:id="EAID_9FA80FA6_FF66_4b7f_9000_729A7EEF4B87" name="PatientClass" visibility="public"/>
+				<packagedElement xmi:t,"",,"",2009-07-20 00:00:00,,"fqe/further/lm/valuedomains.xmi",,1,,
+153,1,22,2,1,"Namespace Metamodel","Namespace Metamodel","F1778908663/NamespaceMetadata.xsd","RESOURCE_XML","text/xml","",<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2010 (http://www.altova.com) by Data Architect (The University of Utah) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:complexType name="NamespaceMetadataComplexType">
+		<xs:sequence>
+			<xs:element name="NamespaceLink" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="externalSystemCd"/>
+					<xs:attribute name="externalNamespaceName"/>
+					<xs:attribute name="externalNamespaceId"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Organization" type="xs:string" minOccurs="0"/>
+			<xs:element name="DisplayName" type="xs:string"/>
+			<xs:element name="Version" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>If a namespace is qualified by a version then this is where it goes.  </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ReleaseDate" type="xs:date" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="NamespaceMetadata" type="NamespaceMetadataComplexType">
+		<xs:annotation>
+			<xs:documentation>Comment describing your root element</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+</xs:schema>
+,"",,"",2010-02-02 00:00:00,,"namespaceMetamodel.xsd",,1,,
+8,1,61,4,1,"Logical Model Metadata XSD","Logical Model Metadata XSD","F1819931650/LogicalModelMetadataXSD.xml","RESOURCE_XML","text/xml","",<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2009 (http://www.altova.com) by Architect (University of Utah) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fmdr="http://further.utah.edu/fmdr/lib" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://further.utah.edu/fmdr/lib" schemaLocation="MasterFmdrLibrary.xsd"/>
+	<xs:complexType name="LogicalModelMetadataComplexType">
+		<xs:sequence>
+			<xs:element name="ModelDomains" type="fmdr:ModelDomainComplex"/>
+			<xs:element name="Implementation">
+				<xs:complexType>
+					<xs:choice>
+						<xs:element name="XMI" type="fmdr:XmiComplexType"/>
+					</xs:choice>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="LogicalModelMetadata" type="LogicalModelMetadataComplexType">
+		<xs:annotation>
+			<xs:documentation>Comment describing your root element</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+</xs:schema>
+,"",,"",2009-03-28 00:00:00,,"",,1,,
+12,5,84,41,1,"Logical Model XMI","Logical Model XMI","F1208355939/further-logical-model-xmi.xml","RESOURCE_XML","text/xml","",<?xml version="1.0" encoding="windows-1252"?>
+<xmi:XMI xmi:version="2.1" xmlns:uml="http://schema.omg.org/spec/UML/2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:thecustomprofile="http://www.sparxsystems.com/profiles/thecustomprofile/1.0">
+	<xmi:Documentation exporter="Enterprise Architect" exporterVersion="6.5"/>
+	<uml:Model xmi:type="uml:Model" name="EA_Model" visibility="public">
+		<packagedElement xmi:type="uml:Package" xmi:id="EAPK_FE4096F8_5F40_4b6d_82C0_C56242D0AB1A" name="edu" visibility="public">
+			<packagedElement xmi:type="uml:Package" xmi:id="EAPK_0DF6D9E6_3647_4965_A9C5_F4C4E02EE7A4" name="utah" visibility="public">
+				<packagedElement xmi:type="uml:Package" xmi:id="EAPK_655017D5_7B2E_45c5_A243_85F176DC45FE" name="order" visibility="public">
+					<packagedElement xmi:type="uml:Class" xmi:id="EAID_F61D712A_7888_479e_A5F0_2FFAD6F5DCF5" name="Order" visibility="public">
+						<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_6490F3BE_175E_4af1_8E12_168420FD521D" name="author" visibility="public" isDerived="false" isOrdered="false" isUnique="true">
+							<type xmi:idref="EAID_388376EF_8423_49d8_9A67_F1454AA6A752"/>
+							<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000001_175E_4af1_8E12_168420FD521D" value="1"/>
+							<upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000002_175E_4af1_8E12_168420FD521D" value="1"/>
+						</ownedAttribute>
+						<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_7CDFBCD4_C594_4e41_B2F9_8F1B33CD8C23" name="condition" visibility="public" isDerived="false" isOrdered="false" isUnique="true">
+							<type xmi:idref="EAID_388376EF_8423_49d8_9A67_F1454AA6A752"/>
+							<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000003_C594_4e41_B2F9_8F1B33CD8C23" value="1"/>
+							<upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000004_C594_4e41_B2F9_8F1B33CD8C23" value="1"/>
+						</ownedAttribute>
+						<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_F761657C_D561_4731_BFBD_7735E7D6F121" name="dateTime" visibility="public" isDerived="false" isOrdered="false" isUnique="true">
+							<type xmi:idref="EAID_7A632BF9_FAA7_491d_B3D1_32F63C29C471"/>
+							<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000005_D561_4731_BFBD_7735E7D6F121" value="1"/>
+							<upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000006_D561_4731_BFBD_7735E7D6F121" value="1"/>
+						</ownedAttribute>
+						<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_31498D28_CB6F_4810_A853_B6041220EA4A" name="discontinueDateTime" visibility="public" isDerived="false" isOrdered="false" isUnique="true">
+							<type xmi:idref="EAID_7A632BF9_FAA7_491d_B3D1_32F63C29C471"/>
+							<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000007_CB6F_4810_A853_B6041220EA4A" value="1"/>
+							<upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000008_CB6F_4810_A853_B6041220EA4A" value="1"/>
+						</ownedAttribute>
+						<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_0C3129EB_145A_42fa_B297_7F34B4E0106B" name="status" visibility="public" isDerived="false" isOrdered="false" isUnique="true">
+							<type xmi:idref="EAID_388376EF_8423_49d8_9A67_F1454AA6A752"/>
+							<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000009_145A_42fa_B297_7F34B4E0106B" value="1"/>
+							<upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000010_145A_42fa_B297_7F34B4E0106B" value="1"/>
+						</ownedAttribute>
+						<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_A51C8E1D_04EF_4287_9CF0_918300B907E2" name="type" visibility="public" isDerived="false" isOrdered="false" isUnique="true">
+							<type xmi:idref="EAID_388376EF_8423_49d8_9A67_F1454AA6A752"/>
+							<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000011_04EF_4287_9CF0_918300B907E2" value="1"/>
+							<upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000012_04EF_4287_9CF0_918300B907E2" value="1"/>
+						</ownedAttribute>
+						<ownedAttribute xmi:type="um,"",,"",2009-03-31 00:00:00,,"further/logicalModel.xmi",,1,,
+55,9,83,5,1,"Physical Model Metadata XSD","Physical Model Metadata XSD","F1683665368/PhysicalModelMetadata.xsd","RESOURCE_XML","text/xml","",<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2009 (http://www.altova.com) by Architect (University of Utah) -->
+<xs:schema xmlns:pm="http://futher.utah.edu/fmdr/pm" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:fmdr="http://further.utah.edu/fmdr/lib" 
+	targetNamespace="http://futher.utah.edu/fmdr/pm">
+	<xs:import namespace="http://further.utah.edu/fmdr/lib" schemaLocation="MasterFmdrLibrary.xsd"/>
+	<xs:complexType name="PhysicalModelMetadataCompexType">
+		<xs:sequence>
+			<xs:element name="AssetLink" type="xs:anyURI"/>
+			<xs:element name="DataStewards">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="DataSteward" type="fmdr:ContactComplexType" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="DataSource" type="fmdr:DataSourceComplexType"/>
+			<xs:element name="XmiLink" type="xs:anyURI" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="PhysicalModelMetadata" type="pm:PhysicalModelMetadataCompexType">
+		<xs:annotation>
+			<xs:documentation>Comment describing your root element</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+</xs:schema>
+,"",,"",2009-05-01 00:00:00,,"PhysicalModelMetadata.xsd",,1,,
+99,41,128,86,1,"commons lib","commons lib","F1828017249/commons.xq","RESOURCE_CLOB","text/plain","",,"module namespace com='http://further.utah.edu/commons';
+
+declare function com:getNode()
+{
+  <node/>
+};
+
+declare function com:emptyNode()
+{
+  let $n := com:getNode()
+  return $n/null
+};
+
+declare function com:add-commas-to-positive-integer ( $in as xs:string? ) as xs:string 
+{
+  if (string-length($in) < 4) then ($in)
+  else (
+        let $mod := string-length($in) mod 3
+        let $prefix := if ($mod = 0) then (concat(substring($in, 1, 3), ',')) else (concat(substring($in, 1, $mod), ','))
+        let $remainder :=  if ($mod = 0) then (substring($in, 4)) else (substring($in, $mod+1))
+        return concat($prefix, com:add-commas-to-positive-integer(($remainder)))
+     )
+ } ;
+",,"",2009-07-10 00:00:00,,"fqe/further/xq/commons.xq",,1,,
+254,5,236,419,1,"analytical-model-java-xmi.xml","","F1215951978/analytical-java-model-xmi.xml","RESOURCE_XML","text/xml","",<?xml version="1.0" encoding="windows-1252"?>
+<xmi:XMI xmi:version="2.1" xmlns:uml="http://schema.omg.org/spec/UML/2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:thecustomprofile="http://www.sparxsystems.com/profiles/thecustomprofile/1.0">
+	<xmi:Documentation exporter="Enterprise Architect" exporterVersion="6.5"/>
+	<uml:Model xmi:type="uml:Model" name="EA_Model" visibility="public">
+		<packagedElement xmi:type="uml:Package" xmi:id="EAPK_5647B382_CEC6_40f6_8CA4_5E3119FB6E81" name="java" visibility="public">
+			<packagedElement xmi:type="uml:Package" xmi:id="EAPK_D865B942_D7B1_4ef9_86AD_6B12B8D2E244" name="edu" visibility="public">
+				<packagedElement xmi:type="uml:Package" xmi:id="EAPK_8654348B_06BC_4c6f_A88D_511C735448FC" name="utah" visibility="public">
+					<packagedElement xmi:type="uml:Package" xmi:id="EAPK_0307D560_65DE_40b6_AC17_0FC7257F0BB8" name="further" visibility="public">
+						<packagedElement xmi:type="uml:Package" xmi:id="EAPK_CD7791B7_E056_4489_A1C2_46568AD148F6" name="fqe" visibility="public">
+							<packagedElement xmi:type="uml:Package" xmi:id="EAPK_9CD91A6B_BAF9_4716_807C_8C6702204423" name="model" visibility="public">
+								<packagedElement xmi:type="uml:Package" xmi:id="EAPK_F78E503E_0EDD_4c74_9D1C_BFC2BFFF651B" name="impl" visibility="public">
+									<packagedElement xmi:type="uml:Package" xmi:id="EAPK_58DDFCBD_5B68_446f_8F46_B55FDCE1B868" name="domain" visibility="public">
+										<packagedElement xmi:type="uml:Class" xmi:id="EAID_F4E0CF57_56CB_489f_9BCC_103E71B38FD5" name="EncounterEmbeddableId" visibility="public">
+											<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_29457D09_D0BC_4e4a_9F5E_B09AEEA8F049" name="serialVersionUID" visibility="private" isStatic="true" isDerived="false" isOrdered="false" isUnique="true">
+												<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000001_D0BC_4e4a_9F5E_B09AEEA8F049" value="1"/>
+												<upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000002_D0BC_4e4a_9F5E_B09AEEA8F049" value="1"/>
+												<defaultValue xmi:type="uml:LiteralString" xmi:id="EAID_LI000003_D0BC_4e4a_9F5E_B09AEEA8F049" value="-7945024798159885132L"/>
+												<type xmi:idref="EAJava_long"/>
+											</ownedAttribute>
+											<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_35B4F5EC_F11E_4185_914A_54B67EAD730D" name="id" visibility="private" isDerived="false" isOrdered="false" isUnique="true">
+												<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000003_F11E_4185_914A_54B67EAD730D" value="1"/>
+												<upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000004_F11E_4185_914A_54B67EAD730D" value="1"/>
+												<type xmi:idref="EAJava_Long"/>
+											</ownedAttribute>
+											<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_D164C8AB_9C60_4c0c_B3F2_F75C2963AA95" name="queryId" visibility="private" isDerived="false" isOrdered="false" isUnique="true">
+												<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000005_9C60_4c0c_B3F2_F75C2963AA95" value="1"/>
+												<upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000006_9C60_4c0c_B3F2_F75C2963AA95" value="1"/>
+												<type xmi:idref="EAJava_Long"/>
+											</ownedAttribute>
+											<ownedOperation xmi:id="EAID_5ED74AC0_38DD_46e0_8971_DFFD91D4DE03" name="getId" visibility="public" concurrency="sequential">
+												<ownedParameter xmi:id="EAID_RT000000_38DD_46e0_8971_DFFD91D4DE03" name="return" direction="return" type="EAJava_Long"/>
+											</ownedOperation>
+											<ownedOperation xmi:id="EAID_A9BB507B_549F_40c4_B507_7F12631023D6" name="setId" visibility="public" concurrency="sequential">
+												<ownedParameter xmi:id="EAID_36D6ED7A_5F3B_448c_AE0A_E68D40716083" name="id" direction="in" type="EAJava_Long"/>
+												<ownedParameter xmi:id="EAID_RT000000_549F_40c4_B507_7F12631023D6" name="return" direction="return" type="EAJava_void"/>
+											</ownedOperation>
+			,"",,"",2010-06-29 00:00:00,,"",,1,,
+374,10,335,696,1,"kr-base-types.xsd","Reusable XML models for KR/MDR","F1280064002/kr-base-types.xsd","RESOURCE_XML","text/xml","",<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2011 rel. 2 sp1 (x64) (http://www.altova.com) by Rick Bradshaw (The University of Utah) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://hsc.utah.edu/kr/coreTypes/1.0" targetNamespace="http://hsc.utah.edu/kr/coreTypes/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:complexType name="ResourceHeaderComplexType">
+		<xs:sequence>
+			<xs:element name="assetLink" type="AssetLinkComplexType"/>
+			<xs:element name="createdBy" type="PersonComplexType"/>
+			<xs:element name="releaseDate" type="xs:date" minOccurs="0"/>
+			<xs:element name="collaborators" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="collaborator" type="PersonComplexType" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="custodian" type="PersonComplexType">
+				<xs:annotation>
+					<xs:documentation>The person/people who manage this resource, not necessarily the author.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="version" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>This is the version of the source, not the version of the asset resource in the repository</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="contextOfUse" type="ContextOfUseComplexType" minOccurs="0"/>
+			<xs:element name="collections" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Collections may be used to group resources </xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="collection" type="AssetLinkComplexType" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attributeGroup ref="ResourceLinkAttributeGroup"/>
+	</xs:complexType>
+	<xs:complexType name="ResourceLinkComplexType">
+		<xs:attributeGroup ref="ResourceLinkAttributeGroup"/>
+	</xs:complexType>
+	<xs:attributeGroup name="ResourceLinkAttributeGroup">
+		<xs:attribute name="resourceId" type="xs:integer" use="required"/>
+		<xs:attribute name="label" type="xs:string" use="required"/>
+		<xs:attribute name="displayLabel" type="xs:string" use="required"/>
+		<xs:attribute name="type" type="xs:integer"/>
+		<xs:attribute name="version" type="xs:integer" use="required"/>
+		<xs:attribute name="status" type="xs:string" use="required"/>
+		<xs:attribute name="parameterName" type="xs:string" use="required"/>
+		<xs:attribute name="parameterIndex" type="xs:integer" use="optional"/>
+		<xs:attribute name="filePath" type="xs:string" use="optional"/>
+		<xs:attribute name="uri" type="xs:string" use="optional"/>
+	</xs:attributeGroup>
+	<xs:attributeGroup name="AssetLinkAttributeGroup">
+		<xs:attribute name="assetId" type="xs:integer" use="required"/>
+		<xs:attribute name="label" type="xs:string" use="required"/>
+		<xs:attribute name="uri" type="xs:anyURI" use="optional"/>
+	</xs:attributeGroup>
+	<xs:complexType name="AssetLinkComplexType">
+		<xs:sequence>
+			<xs:element name="namespace" type="AssetLinkComplexType" minOccurs="0"/>
+			<xs:element name="type" type="AssetLinkComplexType" minOccurs="0"/>
+			<xs:element name="resource" type="ResourceLogicalLinkComplexType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="AssetLinkAttributeGroup"/>
+	</xs:complexType>
+	<xs:attributeGroup name="LookupAttributeGroup">
+		<xs:attribute name="id" type="xs:string" use="required"/>
+		<xs:attribute name="label" type="xs:string" use="required"/>
+		<xs:attribute name="order" type="xs:integer" use="optional"/>
+	</xs:attributeGroup>
+	<xs:complexType name="LookupComplexType">
+		<xs:attributeGroup ref="LookupAttributeGroup"/>
+		<xs:attributeGroup ref="TerminologyCodeAttributeGroup"/>
+	</xs:complexType>
+	<xs:complexType name="PersonComplexType">
+		<xs:sequence>
+			<xs:element name="contact,"",,"",2010-10-25 00:00:00,,"kr/kr-base-types.xsd",,1,,
+633,5,553,933,1,"Logical View Model","Metadata that represents a logical view of the further data model","F965261964/view-model-java-xmi.xml","RESOURCE_XML","text/xml","",<?xml version="1.0" encoding="windows-1252"?>
+<xmi:XMI xmi:version="2.1" xmlns:uml="http://schema.omg.org/spec/UML/2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:thecustomprofile="http://www.sparxsystems.com/profiles/thecustomprofile/1.0">
+	<xmi:Documentation exporter="Enterprise Architect" exporterVersion="6.5"/>
+	<uml:Model xmi:type="uml:Model" name="EA_Model" visibility="public">
+		<packagedElement xmi:type="uml:Package" xmi:id="EAPK_4698C18E_6F3C_4091_89DA_3D6072E167D5" name="java" visibility="public">
+			<packagedElement xmi:type="uml:Package" xmi:id="EAPK_B9E8F84E_2FF2_4a1e_BA67_11587B3A7758" name="edu" visibility="public">
+				<packagedElement xmi:type="uml:Package" xmi:id="EAPK_C112DB4E_77E3_4892_A8F0_AF23F6DDE77C" name="utah" visibility="public">
+					<packagedElement xmi:type="uml:Package" xmi:id="EAPK_2E142DB9_F5A6_43b2_B970_B493AAE4D073" name="further" visibility="public">
+						<packagedElement xmi:type="uml:Package" xmi:id="EAPK_03A53E02_0776_4a5e_B113_F307164F04EA" name="demographics" visibility="public">
+							<packagedElement xmi:type="uml:Class" xmi:id="EAID_850626EA_2114_4b7b_8653_960BCEC9FD2E" name="BirthLocation" visibility="public"/>
+							<packagedElement xmi:type="uml:Class" xmi:id="EAID_51B45886_1C72_427e_A96C_449667D4695A" name="CurrentLocation" visibility="public">
+								<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_933AE4FD_6ED7_406e_8C75_C0FBFDE105DC" name="city" visibility="private" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+									<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000001_6ED7_406e_8C75_C0FBFDE105DC" value="1"/>
+									<upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000002_6ED7_406e_8C75_C0FBFDE105DC" value="1"/>
+									<type xmi:idref="EAJava_CodedValue"/>
+								</ownedAttribute>
+								<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_D708DB29_74BF_43b9_98C6_2BCE85CAB802" name="country" visibility="private" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+									<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000003_74BF_43b9_98C6_2BCE85CAB802" value="1"/>
+									<upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000004_74BF_43b9_98C6_2BCE85CAB802" value="1"/>
+									<type xmi:idref="EAJava_CodedValue"/>
+								</ownedAttribute>
+								<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_30262A63_72B1_40cf_A6EA_8EC189238D37" name="county" visibility="private" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+									<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000005_72B1_40cf_A6EA_8EC189238D37" value="1"/>
+									<upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000006_72B1_40cf_A6EA_8EC189238D37" value="1"/>
+									<type xmi:idref="EAJava_CodedValue"/>
+								</ownedAttribute>
+								<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_927AB738_45E3_47d4_8534_FF6E5038A12E" name="locationType" visibility="private" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+									<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000007_45E3_47d4_8534_FF6E5038A12E" value="1"/>
+									<upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000008_45E3_47d4_8534_FF6E5038A12E" value="1"/>
+									<type xmi:idref="EAJava_LocationType"/>
+								</ownedAttribute>
+								<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_2F103A5D_2F22_4632_BE2B_E73A39578BC0" name="state" visibility="private" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+									<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000009_2F22_4632_BE2B_E73A39578BC0" value="1"/>
+									<upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000010_2F22_4632_BE2B,"",,"",2011-02-18 00:00:00,,"further/lm/logical-view-xmi.xml",,1,,
+1213,108,1073,1453,1,"Geographic Location","","F675147516/GeographicLocation.xml","RESOURCE_XML","text/xml","",<metadata>
+   <class description="A location on Earth" name="General Location">
+      <dataSource count="" updated="2011-03-03" name="UPDBL"/>
+      <dataSource count="1235986" updated="2011-03-03" name="UUEDW"/>
+      <attribute description="A state of country."
+                 name="state">
+         <dataSource name="UPDBL"/>
+         <dataSource name="UUEDW"/>
+      </attribute>
+      <attribute description="A county of a state." name="county">
+         <dataSource name="UPDBL"/>
+         <dataSource name="UUEDW"/>
+      </attribute>
+      <attribute description="A geographic region of a state." name="healthDistrict">
+         <dataSource name="UPDBL"/>
+         <dataSource name="UUEDW"/>
+      </attribute>
+   </class>
+</metadata>,"",,"",2011-04-06 00:00:00,,"further/lm/GeographicLocation/metadata.xml",,1,,
+2597,2,2331,3589,1,"Observation metadata","","","RESOURCE_URL","","",,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/omop/lm/omop-logical-view-xmi.xml/transformer/XQUERY/further/lm/class-metadata.xq;className=Observation",2012-06-25 00:00:00,,"omop/Observation/metadata.xml",,,,
+2599,2,2332,3871,1,"Drug Exposure metadata","","","RESOURCE_URL","","",,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/omop/lm/omop-logical-view-xmi.xml/transformer/XQUERY/further/lm/class-metadata.xq;className=Drug%20Exposure",2012-06-26 00:00:00,,"omop/DrugExposure/metadata.xml",,,,
+615,1,535,736,1,"Data source XSD","","F641710921/DataSource.xsd","RESOURCE_XML","text/xml","",<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2011 sp1 (x64) (http://www.altova.com) by Rick Bradshaw (The University of Utah) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://hsc.utah.edu/kr/coreTypes/1.0" targetNamespace="http://hsc.utah.edu/kr/coreTypes/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="kr-base-types.xsd"/>
+	<xs:element name="dataSource">
+		<xs:annotation>
+			<xs:documentation>Comment describing your root element</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="header" type="ResourceHeaderComplexType"/>
+				<xs:element name="body" type="DataSourceBodyComplexType"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="SchemaComplexType">
+		<xs:sequence>
+			<xs:element name="description" type="xs:string" minOccurs="0"/>
+			<xs:element name="class" type="AssetLinkComplexType" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" use="required">
+			<xs:annotation>
+				<xs:documentation>the literal name of the schema in the system</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="label">
+			<xs:annotation>
+				<xs:documentation>the string used for diaplay purposes - may be more descriptive and verbose than the name</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="DataSourceBodyComplexType">
+		<xs:sequence>
+			<xs:element name="description" type="xs:string"/>
+			<xs:element name="location" type="LocationComplexType"/>
+			<xs:element name="dataStewards" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="dataSteward" type="PersonComplexType" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="schemas" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="schema" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="class" type="AssetLinkComplexType" maxOccurs="unbounded"/>
+								</xs:sequence>
+								<xs:attribute name="name" use="required"/>
+								<xs:attribute name="label"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="contributingSystems" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="system" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="systemContext" type="ContextOfUseComplexType" minOccurs="0"/>
+									<xs:element name="systemDescription" type="xs:string" minOccurs="0"/>
+								</xs:sequence>
+								<xs:attribute name="name" use="required"/>
+								<xs:attribute name="version"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="accessPolicy" type="AccessPolicyComplexType" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="name" use="required">
+			<xs:annotation>
+				<xs:documentation>literal name</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="label">
+			<xs:annotation>
+				<xs:documentation>display name or label</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="dataSourceType" use="required">
+			<xs:annotation>
+				<xs:documentation>web service, relational db, xml db, etc</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="vendor">
+			<xs:annotation>
+				<xs:documentation>Oracle, SQL Server, etc</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="AccessPolicyComplexType">
+		<xs:sequence>
+			<xs:element name="accessPolicyLink" type="xs:anyURI" minOccurs="0"/>
+			<xs:element name="accessPolicyDescription" type="xs:string" minOccurs="0"/>
+	,"",,"",2011-02-09 00:00:00,,"kr/dataSource.xsd",,1,,
+617,2,536,217,1,"administrativeGender descriptive metadata","","","RESOURCE_URL","","",,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/further/logicalModel.xmi/transformer/XQUERY/i2b2/get-attribute-metadata.xq/params;className=Person;attrName=administrativeGender",2011-02-10 00:00:00,,"further/Person/administrativeGender.xml",,1,,
+634,108,554,934,1,"Data Sources","","","RESOURCE_URL","","",,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/ds/updbl/metadata.xml/transformer/XQUERY/ds/further/data-sources.xq",2011-02-18 00:00:00,,"ds/further/metadata.xml",,1,,
+665,2,582,963,1,"Date Of Death Metadata","","","RESOURCE_URL","","",,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/further/lm/logical-view-xmi.xml/transformer/XQUERY/further/lm/attribute-metadata.xq;className=Person;attrName=dateOfDeath",2011-02-23 00:00:00,,"further/Person/dateOfDeath/metadata.xml",,1,,
+661,108,578,959,1,"Cause of Death Metadata","","","RESOURCE_URL","","",,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/further/lm/logical-view-xmi.xml/transformer/XQUERY/further/lm/class-metadata.xq;className=CauseOfDeath",2011-02-23 00:00:00,,"further/CauseOfDeath/metadata.xml",,1,,
+660,108,577,958,1,"Pharmaceutical  Order Metadata","","","RESOURCE_URL","","",,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/further/lm/logical-view-xmi.xml/transformer/XQUERY/further/lm/class-metadata.xq;className=PharmaceuticalOrder",2011-02-23 00:00:00,,"further/PharmaceuticalOrder/metadata.xml",,1,,
+662,2,579,960,1,"Administrative Gender Metadata","","","RESOURCE_URL","","",,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/further/lm/logical-view-xmi.xml/transformer/XQUERY/further/lm/attribute-metadata.xq;className=Person;attrName=administrativeGender",2011-02-23 00:00:00,,"further/Person/administrativeGender/metadata.xml",,1,,
+654,41,128,86,1,"attribute-metadata.xq","","F1238685708/attribute-metadata-mdr.xq","RESOURCE_CLOB","text/plain","",,"xquery version ""1.0"";
+declare namespace xmi=""http://schema.omg.org/spec/XMI/2.1"";
+declare namespace uml=""http://schema.omg.org/spec/UML/2.1"";
+declare variable $docName as document-node(element(*, xs:untyped)) external;
+declare variable $className as xs:string external;
+declare variable $attrName as xs:string external;
+
+<metadata>
+{
+  let $xmiDoc := $docName 
+ (:
+  let $xmiDoc := doc(""viewModel-xmi.xml"")
+  let $className := 'Person'
+  let $attrName := 'race'
+ :)
+ 
+  for $class in $xmiDoc//element[@xmi:type=""uml:Class"" and @name=$className] 
+  return  
+  <class name=""{$className}"" description=""{$class/properties/@documentation}"">
+  {
+		for $classDs in tokenize($class/tags/tag[@name=""FurtherQueryDataSource""]/@value, ',')
+		
+			let $classDsCountVarName := concat( ""FurtherDataSource"", $classDs, ""Count"" ) 
+			let $classDsCount := $class/tags/tag[@name=$classDsCountVarName]/@value
+            let $classDsDateVarName := concat( ""FurtherDataSource"", $classDs, ""MetadataDate"" ) 
+            let $classDsUpdated := $class/tags/tag[@name=$classDsDateVarName]/@value
+            let $classDsStartYearVarName := concat( ""FurtherDataSource"", $classDs, ""DataClassStartYear"" ) 
+            let $classDsStartYear := $class/tags/tag[@name=$classDsStartYearVarName]/@value
+		
+    return <dataSource name=""{$classDs}"" count=""{$classDsCount}"" updated=""{$classDsUpdated}"" dataStartYear=""{$classDsStartYear}""/>
+  }  
+  {    
+    for $attr in $class/attributes/attribute[tags/tag/@name=""FurtherQueryDataSource"" and @name=$attrName]
+    return    
+    <attribute name=""{$attr/@name}"" description=""{$attr/documentation/@value}"">
+    {
+          for $attrDs in  tokenize($attr/tags/tag[@name=""FurtherQueryDataSource""]/@value, ',')
+          
+			let $attrDsCountVarName := concat( ""FurtherDataSource"", $attrDs, ""Count"" ) 
+			let $attrDsCount := $attr/tags/tag[@name=$attrDsCountVarName]/@value          
+            let $classDsDateVarName := concat( ""FurtherDataSource"", $attrDs, ""MetadataDate"" ) 
+            let $classDsUpdated := $attr/../../tags/tag[@name=$classDsDateVarName]/@value
+          
+          return <dataSource name=""{$attrDs}"" count=""{$attrDsCount}"" updated=""{$classDsUpdated}""/>
+    }
+    </attribute>
+  }
+  </class>
+
+}  
+</metadata>
+",,"",2011-02-23 00:00:00,,"further/lm/attribute-metadata.xq",,1,,
+663,2,580,961,1,"Age Metadata","","","RESOURCE_XML","","",<div>
+   <h2>Definition</h2>
+   <p>Age - Person's Current Age.</p>
+   <h2>Datasources</h2>
+   <p>Age is available from the following datasources: </p>
+   <ul>
+      <li>
+      Hello World
+      </li>
+   </ul>
+</div>,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/further/lm/logical-view-xmi.xml/transformer/XQUERY/further/lm/attribute-metadata.xq;className=Person;attrName=age",2011-02-23 00:00:00,,"further/Person/age/metadata.xml",,1,,
+668,2,585,966,1,"Ethnicity Metadata","","","RESOURCE_URL","","",,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/further/lm/logical-view-xmi.xml/transformer/XQUERY/further/lm/attribute-metadata.xq;className=Person;attrName=ethnicity",2011-02-23 00:00:00,,"further/Person/ethnicity/metadata.xml",,1,,
+669,2,586,967,1,"Religion Metadata","","","RESOURCE_URL","","",,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/further/lm/logical-view-xmi.xml/transformer/XQUERY/further/lm/attribute-metadata.xq;className=Person;attrName=religion",2011-02-23 00:00:00,,"further/Person/religion/metadata.xml",,1,,
+671,2,588,969,1,"Primary Language Metadata","","","RESOURCE_URL","","",,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/further/lm/logical-view-xmi.xml/transformer/XQUERY/further/lm/attribute-metadata.xq;className=Person;attrName=primaryLanguage",2011-02-23 00:00:00,,"further/Person/primaryLanguage/metadata.xml",,1,,
+667,2,584,965,1,"Race Metadata","","","RESOURCE_URL","","",,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/further/lm/logical-view-xmi.xml/transformer/XQUERY/further/lm/attribute-metadata.xq;className=Person;attrName=race",2011-02-23 00:00:00,,"further/Person/race/metadata.xml",,1,,
+655,41,128,86,1,"data-sources.xq","all further data sources - pass as parameter updbl and the rest are currently hard coded!!!","F1467140596/udated-data-source-metadata.xq","RESOURCE_CLOB","text/plain","",,"xquery version ""1.0"";
+declare namespace xmi=""http://schema.omg.org/spec/XMI/2.1"";
+declare namespace uml=""http://schema.omg.org/spec/UML/2.1"";
+
+declare variable $docName as document-node(element(*, xs:untyped)) external;
+
+(: Assuming ""ds/omop_v2/metadata.xml"" is being passed in as docName :)
+<dataSources xmlns=""http://hsc.utah.edu/kr/coreTypes/1.0"">
+{
+  let $ds1 := $docName
+  return $ds1
+}
+{
+  let $ds2 := doc(""${server.mdr.ws}${path.mdr.ws.resource.path}/ds/openmrs_v19/metadata.xml"")
+  return $ds2
+}
+</dataSources>
+
+",,"",2011-02-23 00:00:00,,"ds/further/data-sources.xq",,1,,
+664,2,581,962,1,"Date of Birth Metadata","","","RESOURCE_URL","","",,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/further/lm/logical-view-xmi.xml/transformer/XQUERY/further/lm/attribute-metadata.xq;className=Person;attrName=dateOfBirth",2011-02-23 00:00:00,,"further/Person/dateOfBirth/metadata.xml",,1,,
+666,2,583,964,1,"Vital Status Metadata","","","RESOURCE_URL","","",,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/further/lm/logical-view-xmi.xml/transformer/XQUERY/further/lm/attribute-metadata.xq;className=Person;attrName=vitalStatus",2011-02-23 00:00:00,,"further/Person/vitalStatus/metadata.xml",,1,,
+670,2,587,968,1,"Marital Status Metadata","","","RESOURCE_URL","","",,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/further/lm/logical-view-xmi.xml/transformer/XQUERY/further/lm/attribute-metadata.xq;className=Person;attrName=maritalStatus",2011-02-23 00:00:00,,"further/Person/maritalStatus/metadata.xml",,1,,
+672,2,589,971,1,"Pedigree Quality","","","RESOURCE_URL","","",,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/further/lm/logical-view-xmi.xml/transformer/XQUERY/further/lm/attribute-metadata.xq;className=Person;attrName=pedigreeQuality",2011-02-23 00:00:00,,"further/Person/pedigreeQuality/metadata.xml",,1,,
+653,41,128,86,1,"class-metadata.xq","View of the specified class read from XMI","F651972711/class-metadata-mdr.xq","RESOURCE_CLOB","text/plain","",,"declare namespace xmi=""http://schema.omg.org/spec/XMI/2.1"";
+declare namespace uml=""http://schema.omg.org/spec/UML/2.1"";
+declare variable $docName as document-node(element(*, xs:untyped)) external;
+declare variable $className as xs:string external;
+<metadata>
+{
+let $lm := $docName
+(:
+  let $lm := doc(""viewModel-xmi.xml"")
+  let $className := ""Diagnosis""
+:)  
+  for $class in $lm//element[@xmi:type=""uml:Class"" and @name=$className and tags/tag/@name=""FurtherQueryDataSource""]
+    
+  return 
+  <class name=""{$class/@name}"" description=""{$class/properties/@documentation}"">
+  {
+    for $classDs in  tokenize($class/tags/tag[@name=""FurtherQueryDataSource""]/@value, ',')
+		
+      let $classDsCountVarName := concat( ""FurtherDataSource"", $classDs, ""Count"" ) 
+      let $classDsCount := $class/tags/tag[@name=$classDsCountVarName]/@value
+      let $classDsDateVarName := concat( ""FurtherDataSource"", $classDs, ""MetadataDate"" ) 
+      let $classDsUpdated := $class/tags/tag[@name=$classDsDateVarName]/@value
+      let $classDsStartYearVarName := concat( ""FurtherDataSource"", $classDs, ""DataClassStartYear"" ) 
+      let $classDsStartYear := $class/tags/tag[@name=$classDsStartYearVarName]/@value
+		
+    return <dataSource name=""{$classDs}"" count=""{$classDsCount}"" updated=""{$classDsUpdated}"" dataStartYear=""{$classDsStartYear}""/>
+  }  
+  {    
+    for $attr in $class/attributes/attribute[tags/tag/@name=""FurtherQueryDataSource""]
+    return    
+    <attribute name=""{$attr/@name}"" description=""{$attr/documentation/@value}"">
+    {
+          for $d in  tokenize($attr/tags/tag[@name=""FurtherQueryDataSource""]/@value, ',')
+          return <dataSource name=""{$d}""/>
+    }
+    </attribute>
+  }
+  </class>
+
+}
+</metadata>
+",,"",2011-02-23 00:00:00,,"further/lm/class-metadata.xq",,1,,
+656,108,573,954,1,"Person class metadata","","","RESOURCE_URL","","",,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/further/lm/logical-view-xmi.xml/transformer/XQUERY/further/lm/class-metadata.xq;className=Person",2011-02-23 00:00:00,,"further/Person/metadata.xml",,1,,
+657,108,574,955,1,"Diagnosis Class Metadata","","","RESOURCE_URL","","",,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/further/lm/logical-view-xmi.xml/transformer/XQUERY/further/lm/class-metadata.xq;className=Diagnosis",2011-02-23 00:00:00,,"further/Diagnosis/metadata.xml",,1,,
+658,108,575,956,1,"Procedure Metadata","","","RESOURCE_URL","","",,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/further/lm/logical-view-xmi.xml/transformer/XQUERY/further/lm/class-metadata.xq;className=Procedure",2011-02-23 00:00:00,,"further/Procedure/metadata.xml",,1,,
+659,108,576,957,1,"Lab Result Metadata","","","RESOURCE_URL","","",,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/further/lm/logical-view-xmi.xml/transformer/XQUERY/further/lm/class-metadata.xq;className=LabResult",2011-02-23 00:00:00,,"further/LabResult/metadata.xml",,1,,
+2592,5,2329,3869,1,"OMOP View Model","","F1483292716/omop-view-model-java-xmi.xml","RESOURCE_XML","text/xml","",<?xml version="1.0" encoding="windows-1252"?>
+<xmi:XMI xmi:version="2.1" xmlns:uml="http://schema.omg.org/spec/UML/2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:thecustomprofile="http://www.sparxsystems.com/profiles/thecustomprofile/1.0">
+	<xmi:Documentation exporter="Enterprise Architect" exporterVersion="6.5"/>
+	<uml:Model xmi:type="uml:Model" name="EA_Model" visibility="public">
+		<packagedElement xmi:type="uml:Package" xmi:id="EAPK_F6F322DF_2741_4888_9404_FF2BC93FC92B" name="OMOP_View" visibility="public">
+			<packagedElement xmi:type="uml:Class" xmi:id="EAID_AC7E461F_9471_496f_B408_DE5D36808C81" name="Biological Specimen" visibility="public">
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_29154545_9E5A_4de0_A421_3745B2794A09" name="specimen_id" visibility="private" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000001_9E5A_4de0_A421_3745B2794A09" value="1"/>
+					<upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000002_9E5A_4de0_A421_3745B2794A09" value="1"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_F4BDEACE_D080_4c2a_A93C_A52E6C9EED26" name="specimen_type" visibility="private" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000003_D080_4c2a_A93C_A52E6C9EED26" value="1"/>
+					<upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000004_D080_4c2a_A93C_A52E6C9EED26" value="1"/>
+				</ownedAttribute>
+			</packagedElement>
+			<packagedElement xmi:type="uml:Class" xmi:id="EAID_139BDD08_9B59_459b_874E_5D15849D71AB" name="Drug Exposure" visibility="public">
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_B56CD081_C58C_481c_8E6F_14D392A432D1" name="days_supply" visibility="private" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000005_C58C_481c_8E6F_14D392A432D1" value="1"/>
+					<upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000006_C58C_481c_8E6F_14D392A432D1" value="1"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_8B284F32_CBC6_45c8_A6E2_918651767B30" name="drug_concept_id" visibility="private" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000007_CBC6_45c8_A6E2_918651767B30" value="1"/>
+					<upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000008_CBC6_45c8_A6E2_918651767B30" value="1"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_2CC24B9D_238C_4be8_8760_0A39DCA2FA95" name="drug_exposure_end_date" visibility="private" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000009_238C_4be8_8760_0A39DCA2FA95" value="1"/>
+					<upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000010_238C_4be8_8760_0A39DCA2FA95" value="1"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_F5313D6C_D77C_42d0_B7BD_4009C9E18B29" name="drug_exposure_id" visibility="private" isStatic="false" isReadOnly="false" isDerived="false" isOrdered="false" isUnique="true" isDerivedUnion="false">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000011_D77C_42d0_B7BD_4009C9E18B29" value="1"/>
+					<upperValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000012_D77C_42d0_B7BD_4009C9E18B29" value="1"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_0318EAAA_0A5E_4cbf_AC35_436F03CFC11D" name="drug_exposure_start_date" visibility="private" isStatic="false" isReadOnly="false" isDe,"",,"",2012-06-25 00:00:00,,"omop/lm/omop-logical-view-xmi.xml",,,,
+2595,2,2330,3870,1,"Biological Specimen metadata","","","RESOURCE_URL","","",,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/omop/lm/omop-logical-view-xmi.xml/transformer/XQUERY/further/lm/class-metadata.xq;className=Biological%20Specimen",2012-06-25 00:00:00,,"omop/BiologicalSpecimen/metadata.xml",,,,
+2511,41,176,177,1,"frthr-person-to-i2b2-patient.xq","","F1913436117/frthr-person-to-i2b2-pts.xq","RESOURCE_CLOB","text/plain","",,"module namespace        frthr-to-i2b2 = 'http://further.utah.edu/frthr-to-i2b2';
+import module namespace further = ""http://further.utah.edu/xquery-functions-module"" at ""${server.mdr.ws}${path.mdr.ws.resource.path}/fqe/further/xq/further.xq"";
+import module namespace i2b2 = ""http://further.utah.edu/i2b2"" at ""${server.mdr.ws}${path.mdr.ws.resource.path}/fqe/i2b2/xq/i2b2.xq"";
+
+(: declare namespace        frthr-to-i2b2 = 'http://further.utah.edu/frthr-to-i2b2'; :)
+(: import module namespace further = ""http://further.utah.edu/xquery-functions-module"" at "" http://dev-esb.further.utah.edu:9000/mdr/rest/asset/resource/path/fqe/further/xq/further.xq""; :)
+(: import module namespace i2b2 = ""http://further.utah.edu/i2b2"" at "" http://dev-esb.further.utah.edu:9000/mdr/rest/asset/resource/path/fqe/i2b2/xq/i2b2.xq""; :)
+
+declare namespace xs = 'http://www.w3.org/2001/XMLSchema';
+declare namespace fn = 'http://www.w3.org/2005/xpath-functions';
+declare namespace fqe = ""http://further.utah.edu/fqe"";
+declare namespace dts='http://further.utah.edu/dts';
+
+declare function frthr-to-i2b2:getPatientDimensions( $frthrPersons as document-node(element(*, xs:untyped)), $queryId as xs:string, $localNamespaceId as xs:string ) {
+
+let $valueDomains := further:getValueDomains()
+
+return
+	<PatientDimensions>
+		{
+		(
+	for $person in $frthrPersons/persons/person
+
+    		let $birthDate := xs:dateTime(fn:string($person/dateOfBirth))
+    		let $i2b2AgeConcept := if ( xs:integer($person/age) != 0 ) then fn:concat('DEM|AGE:', $person/age) else $person/null 
+    		let $i2b2GenderConcept := concat('SNOMED:',$person/administrativeGender/text())
+    		let $i2b2RaceConcept := if ( string-length( $person/race/text() ) > 0 ) then concat('SNOMED:',$person/race/text()) else $person/null
+    		
+            (:  let $furtherPersonId := doc(concat(""http://dev-esb.further.utah.edu:9000/fqe/rest/fqe/id/generate/PERSON/PERSON_ID/32776/PATIENTS/PAT_DE_ID/"", $person/PersonPk/id/text() )) :)
+            let $furtherPersonId := doc(concat(""${server.fqe.ws}${path.fqe.ws.idgenerate}/PERSON/PERSON_ID/32776/PATIENTS/PAT_DE_ID/"", $person/personId/id))/fqe:id/value/text()
+            
+            let $demographicVisitId := doc(concat(""${server.fqe.ws}${path.fqe.ws.idgenerate}/new?id="",$person/personId/id))/fqe:id/value/text()
+            let $dataSource := 'UUEDW_APO'
+            let $currentTime := fn:current-dateTime()
+			
+			return
+				<PatientDimension>
+					{
+					(
+						<patientDimensionPK>
+                            <patientNum>{ xs:string(xs:integer(fn:string($furtherPersonId))) }</patientNum>
+                            <queryId>{$queryId}</queryId>
+						</patientDimensionPK>,
+						<birthDate>{$birthDate}</birthDate>,
+						<sexCd>{$i2b2GenderConcept}</sexCd>,
+						<ageInYearsNum>{ xs:string(xs:integer(fn:string($person/age))) }</ageInYearsNum>,
+						<languageCd/>,
+						<raceCd>{$i2b2RaceConcept}</raceCd>,
+						<maritalStatusCd/>,
+						<religionCd/>,
+					    <VisitDimensions>
+					      { i2b2:getVisitDimension( $furtherPersonId, $demographicVisitId, $currentTime, $currentTime ) }
+					    </VisitDimensions>,
+					    <ObservationFacts>
+					      { i2b2:getDemographicObservationFact( $furtherPersonId, fn:string($demographicVisitId), $i2b2AgeConcept, fn:string($dataSource), $currentTime ) }
+					      { i2b2:getDemographicObservationFact( $furtherPersonId, fn:string($demographicVisitId), $i2b2GenderConcept, fn:string($dataSource), $currentTime ) }
+					      { i2b2:getDemographicObservationFact( $furtherPersonId, fn:string($demographicVisitId), $i2b2RaceConcept, fn:string($dataSource), $currentTime ) }
+					    </ObservationFacts>
+					)
+					}				
+				</PatientDimension>
+		)
+		}
+	</PatientDimensions>
+};",,"",2012-05-30 00:00:00,,"ds/further/person/xq/frthr-person-to-i2b2-patient.xq",,,,
+2513,41,176,177,1,"frthr-person-to-i2b2-patient-exe.xq","","F845281281/frthr-person-to-i2b2-patient-exe.xq","RESOURCE_CLOB","text/plain","",,"xquery version ""1.0"";
+import module namespace frthr-to-i2b2 = 'http://further.utah.edu/frthr-to-i2b2' at '${server.mdr.ws}${path.mdr.ws.resource.path}/ds/further/person/xq/frthr-person-to-i2b2-patient.xq';
+declare variable $docName as document-node(element(*, xs:untyped)) external;
+declare variable $queryId as xs:string external;
+declare variable $localNamespaceId as xs:string external;
+
+<PatientDimensions>
+{
+  let $i2b2Patients := frthr-to-i2b2:getPatientDimensions( $docName, $queryId, $localNamespaceId )
+  return $i2b2Patients/PatientDimension
+}
+</PatientDimensions>
+
+",,"",2012-05-30 00:00:00,,"ds/further/person/xq/frthr-person-to-i2b2-patient-exe.xq",,,,
+2431,108,2209,2729,1,"Encounter metadata","","","RESOURCE_URL","","",,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/further/lm/logical-view-xmi.xml/transformer/XQUERY/further/lm/class-metadata.xq;className=Encounter",2012-02-28 00:00:00,,"further/Encounter/metadata.xml",,,,
+2532,64,176,177,1,"FurtherPersonsResultSet.xsd","","F2111420847/FurtherPersonsResultSet.xsd","RESOURCE_XML","text/xml","",<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="persons">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="person" maxOccurs="unbounded" />
+	
+			</xs:sequence>
+			<xs:attribute name="uri" type="xs:anyURI" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="person">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="personId" />
+				<xs:element ref="personCompositeId" />
+				<xs:element ref="administrativeGenderNamespaceId" minOccurs="0" />
+				<xs:element ref="administrativeGender" minOccurs="0" />
+				<xs:element ref="raceNamespaceId" minOccurs="0" />
+				<xs:element ref="race" minOccurs="0" />
+				<xs:element ref="ethnicityNamespaceId" minOccurs="0" />
+				<xs:element ref="ethnicity" minOccurs="0" />
+				<xs:element ref="dateOfBirth" minOccurs="0" />
+				<xs:element ref="birthYear" minOccurs="0" />
+				<xs:element ref="birthMonth" minOccurs="0" />
+				<xs:element ref="birthDay" minOccurs="0" />
+				<xs:element ref="educationLevel" minOccurs="0" />
+				<xs:element ref="primaryLanguageNamespaceId" minOccurs="0" />
+				<xs:element ref="primaryLanguage" minOccurs="0" />
+				<xs:element ref="maritalStatusNamespaceId" minOccurs="0" />
+				<xs:element ref="maritalStatus" minOccurs="0" />
+				<xs:element ref="religionNamespaceId" minOccurs="0" />
+				<xs:element ref="religion" minOccurs="0" />
+				<xs:element ref="multipleBirthIndicator" minOccurs="0" />
+				<xs:element ref="multipleBirthIndicatorOrderNumber" minOccurs="0" />
+				<xs:element ref="vitalStatusNamespaceId" minOccurs="0" />
+				<xs:element ref="vitalStatus" minOccurs="0" />
+				<xs:element ref="causeOfDeathNamespaceId" minOccurs="0" />
+				<xs:element ref="causeOfDeath" minOccurs="0" />
+				<xs:element ref="dateOfDeath" minOccurs="0" />
+				<xs:element ref="deathYear" minOccurs="0" />
+				<xs:element ref="pedigreeQuality" minOccurs="0" />
+				<xs:element ref="age" minOccurs="0" />
+			</xs:sequence>
+
+			<xs:attribute name="uri" type="xs:anyURI" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="personId">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="id" />
+				<xs:element ref="datasetId" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="id" type="xs:long" />
+	<xs:element name="datasetId" type="xs:long" />
+	<xs:element name="personCompositeId" type="xs:string" />
+	<xs:element name="administrativeGenderNamespaceId" type="xs:long" />
+	<xs:element name="administrativeGender" type="xs:long" />
+	<xs:element name="raceNamespaceId" type="xs:long" />
+	<xs:element name="race" type="xs:long" />
+	<xs:element name="ethnicityNamespaceId" type="xs:long" />
+	<xs:element name="ethnicity" type="xs:long" />
+	<xs:element name="dateOfBirth" type="xs:dateTime" />
+	<xs:element name="birthYear" type="xs:long" />
+	<xs:element name="birthMonth" type="xs:long" />
+	<xs:element name="birthDay" type="xs:long" />
+	<xs:element name="educationLevel" type="xs:long" />
+	<xs:element name="primaryLanguageNamespaceId" type="xs:long" />
+	<xs:element name="primaryLanguage" type="xs:long" />
+	<xs:element name="maritalStatusNamespaceId" type="xs:long" />
+	<xs:element name="maritalStatus" type="xs:long" />
+	<xs:element name="religionNamespaceId" type="xs:long" />
+	<xs:element name="religion" type="xs:long" />
+	<xs:element name="multipleBirthIndicator" type="xs:boolean" />
+	<xs:element name="multipleBirthIndicatorOrderNumber" type="xs:int" />
+	<xs:element name="vitalStatusNamespaceId" type="xs:long" />
+	<xs:element name="vitalStatus" type="xs:long" />
+	<xs:element name="causeOfDeathNamespaceId" type="xs:long" />
+	<xs:element name="causeOfDeath" type="xs:long" />
+	<xs:element name="dateOfDeath" type="xs:dateTime" />
+	<xs:element name="deathYear" type="xs:long" />
+	<xs:element name="pedigreeQuality" type="xs:long" />
+	<xs:element name="age" type="xs:int" />
+</xs:schema>,"",,"",2012-06-11 00:00:00,,"ds/further/person/result/FurtherPersonsResultSet.xsd",,,,
+2551,2,176,177,1,"Person model metadata","","","RESOURCE_URL","","",,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/further/lm/logical-view-xmi.xml/transformer/XQUERY/further/lm/class-metadata.xq;className=Person",2012-06-13 00:00:00,,"further/analyticalModel/PersonClass.xml",,,,
+50000946,108,535,50000000,1,"Data Source Description in XML Content","XML Data Source Content for OMOP Version 2","metadata.xml","RESOURCE_XML","","",<?xml version="1.0" encoding="UTF-8"?>
+<dataSource xmlns="http://hsc.utah.edu/kr/coreTypes/1.0" 
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+            xsi:schemaLocation="http://hsc.utah.edu/kr/coreTypes/1.0 ${server.mdr.ws}${path.mdr.ws.resource.path}/kr/dataSource.xsd">
+  <header resourceType="content" resourceId="613" 
+          resourceStatusCd="Active" resourceVersion="1" 
+          resourceLabel="OMOP Version 2 Data Source Content" resourceDisplayLabel="OMOP Version 2 Data Source">
+		<resourceAssetLink assetLabel="OMOP Version 2 Data Source" assetId="913"/>
+		<createdBy lastName="Mo" firstName="Peter"/>
+		<custodian lastName="Mo" firstName="Peter"/>
+		<contextOfUse>
+			<topical preferredLabel="Demographics"/>
+			<topical preferredLabel="Diagnoses"/>
+			<topical preferredLabel="Laboratory Results"/>
+			<topical preferredLabel="Medication Orders"/>
+			<topical preferredLabel="Procedures"/>
+		</contextOfUse>
+	</header>
+	<body name="OMOPv2" dataSourceType="RelationalDatabase">
+		<description>The Schultz Cancer Repository houses various cancer centric health information in an OMOP-V2 format.</description>
+		<location name="Schultz Cancer Repository"/>
+		<dataStewards>
+			<dataSteward lastName="Mo" firstName="Peter" title="Data Architect">
+				<contact contactTypeContext="Work" contactType="email" contactString="peter.mo@utah.edu"/>
+				<organization>University of Utah Health Sciences BMIC</organization>
+			</dataSteward>
+		</dataStewards>
+		<contributingSystems>	
+			<system name="Observational Medical Outcomes Partnership">
+				<systemContext>
+					<spatial preferredLabel="Schultz Cancer Repository"/>
+					<temporal startDateValue="2013" startDateUnits="Year" endDateValue="present" endDateUnits="Year"/>
+				</systemContext>
+			</system>
+		</contributingSystems>
+		<accessPolicy>
+			<accessPolicyDescription>Please contact the data steward for access policy information.</accessPolicyDescription>
+		</accessPolicy>
+	</body>
+</dataSource>,"",,"",2013-10-23 10:54:06,,"ds/omop_v2/metadata.xml",,1,,
+50000943,41,128,106,1,"i2b2 general ds metadata","HTML page for GUI Data Source Info Button","general-ds-metadata.html","RESOURCE_URL","","",,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/ds/i2b2/data-sources.xml/transformer/XQUERY/ds/i2b2/get-ds-html.xq",2013-10-23 09:56:01,,"i2b2/general-ds-metadata.html",,1,,
+50000944,41,128,106,1,"Get data source html view","XQuery Program to generate html","get-ds-html.xq","RESOURCE_CLOB","","",,"xquery version ""1.0"";
+declare namespace ct=""http://hsc.utah.edu/kr/coreTypes/1.0"";
+declare variable $docName as document-node(element(*, xs:untyped)) external;
+(:let $docName := doc(""datasources.xml"")
+return:)
+<html>
+<body>
+<link rel=""stylesheet"" type=""text/css"" href=""help/assets/help.css"" />
+	<div style=""text-align:center"">
+		<h1>Data Source Information</h1>
+		Version 1.0<br />
+		Updated November, 2013
+	</div>
+		
+	<h2>Data Sources</h2>
+	{
+	for $ds in $docName/ct:dataSources/ct:dataSource
+	let $body := $ds/ct:body
+	let $location := $body/ct:location
+	let $dStewers := $body/ct:dataStewards
+	let $contrib := $body/ct:contributingSystems
+	let $access := $body/ct:accessPolicy
+	return
+	<div>
+		<h2>{data($location/@name)}: {data($body/@name)}</h2>
+		<p>{data($body/ct:description)}</p>
+		<p>It contains the following types of data. Click the <img src=""js-i2b2/cells/ONT/assets/info-icon.png""/> icon within the 
+<span class=""view"">Navigate Terms</span> view for more information about specific data types. </p>
+		<ul>{
+			for $topic in $ds/ct:header/ct:contextOfUse/ct:topical
+			return <li>{data($topic/@preferredLabel)}</li>
+		}</ul>
+		<h3>Contributing Sources</h3>
+		<div>
+		{	if ($contrib/@url) then (
+				<div>
+					<p>For more information about contributing sources to {data($body/@name)}, please click the 
+following link:</p>
+					<ul>
+						<li><a href=""{data($contrib/@url)}"" target=""_blank"">{data($contrib/@url)}</a></li>
+					</ul>
+				</div>
+			)
+			else
+				<ul>{
+				 for $sys in ($contrib/ct:system)
+				let $spatial := $sys/ct:systemContext/ct:spatial
+				let $temporal := $sys/ct:systemContext/ct:temporal
+				 return <li>{data($spatial/@preferredLabel)} - {data($sys/@name)}: {data($temporal/@startDateValue)}-
+{data($temporal/@endDateValue)} </li>
+				 }</ul> 
+		}
+		</div>
+	</div>
+	}
+</body>
+</html>
+",,"",2013-10-23 10:02:32,,"ds/i2b2/get-ds-html.xq",,1,,
+50000945,41,128,106,1,"Data sources view","Calls XQuery Program data-sources.xq","data-sources.xml","RESOURCE_URL","","",,"",,"${server.mdr.ws}/rest/asset/resource/transform/XML/ds/omop_v2/metadata.xml/transformer/XQUERY/ds/further/data-sources.xq",2013-10-23 10:06:36,,"ds/i2b2/data-sources.xml",,1,,
+50000864,41,128,86,1,"fqt.xqm","FURTHeR Query Translation XQuery Module","","RESOURCE_CLOB","text/plain","",,"(:
+ : Copyright (C) [2013] [The FURTHeR Project]
+ :
+ : Licensed under the Apache License, Version 2.0 (the ""License"");
+ : you may not use this file except in compliance with the License.
+ : You may obtain a copy of the License at
+ :
+ :         http://www.apache.org/licenses/LICENSE-2.0
+ :
+ : Unless required by applicable law or agreed to in writing, software
+ : distributed under the License is distributed on an ""AS IS"" BASIS,
+ : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ : See the License for the specific language governing permissions and
+ : limitations under the License.
+ :)
+xquery version ""3.0"";
+module namespace fqt = ""http://further.utah.edu/query-translation"";
+
+(: Import FURTHeR Module :)
+(: Change the location of further.xq when working locally :)
+(: import module namespace further = ""http://further.utah.edu/xquery-functions-module"" 
+    at ""../fqe/further/xq/further.xq""; :)
+import module namespace further = 'http://further.utah.edu/xquery-functions-module' 
+       at '${server.mdr.ws}${path.mdr.ws.resource.path}/fqe/further/xq/further.xq';
+
+(: Import FURTHeR Constants Module :)
+(: Change the location of constants.xq when working locally :)
+(: import module namespace const = 'http://further.utah.edu/constants' 
+    at '../fqe/further/xq/constants.xq'; :)
+import module namespace const = 'http://further.utah.edu/constants' 
+       at '${server.mdr.ws}${path.mdr.ws.resource.path}/fqe/further/xq/constants.xq';
+
+
+(: ALWAYS Define Namespaces in XQUERY PROLOG! :)
+declare namespace fn  = 'http://www.w3.org/2005/xpath-functions';
+declare namespace fq = ""http://further.utah.edu/core/query"";
+declare namespace dts = 'http://further.utah.edu/dts';
+declare namespace mdr = ""http://further.utah.edu/mdr"";
+declare namespace xs = ""http://www.w3.org/2001/XMLSchema"";
+declare namespace xsi = ""http://www.w3.org/2001/XMLSchema-instance"";
+(: DO NOT USE DEFAULT NAMESPACE, it may conflict with the response Namespaces :)
+
+(: Global CONSTANTS, Always Translating FROM FURTHeR Namespace ID :)
+declare variable $fqt:FURTHeR := 'FURTHER';
+declare variable $fqt:FURTHER as xs:string := '32769';
+(: We are using SNOMED (Namespace ID 30) for ObservationType Values :)
+declare variable $fqt:SNOMED as xs:string := '30';
+
+(: OMOP has a special case where ICD-9 needs to be translated to SNOMED first, 
+   before translating to OMOP-V2 
+   SNOMED uses the Standard 'Code in Source' Property Name :)
+declare variable $fqt:OMOP-V2 as xs:string := '32868';
+declare variable $fqt:ICD-9 as xs:string := '10';
+declare variable $fqt:LOINC as xs:string := '5102';
+
+(: Empty String Value for Substituting Empty Arguments to Functions :)
+declare variable $fqt:EMPTY as xs:string := '';
+
+(: Mark Criterias that got Skipped :)
+declare variable $fqt:SKIP as xs:string := 'S';
+
+(: Yes Value Used for Translation Flag transFlag :)
+declare variable $fqt:YES as xs:string := 'Y';
+
+(: No Value Used for Translation Flag transFlag :)
+declare variable $fqt:NO as xs:string := 'N';
+
+(: ERROR Value Used for Translation Flag transFlag :)
+declare variable $fqt:ERROR as xs:string := 'E';
+
+(: Placeholder in case preTranslation Fails :)
+declare variable $fqt:ZERO as xs:string := '0';
+
+(: General Delimiter :)
+declare variable $fqt:DELIMITER as xs:string := '^';
+
+(: MDR Static Property Names CASE SENSITIVE! :)
+declare variable $fqt:ATTR_TRANS_FUNC as xs:string := 'ATTR_TRANS_FUNC';
+declare variable $fqt:ATTR_VALUE_TRANS_FUNC as xs:string := 'ATTR_VALUE_TRANS_FUNC';
+declare variable $fqt:ATTR_VALUE_TRANS_TO_DATA_TYPE as xs:string := 'ATTR_VALUE_TRANS_TO_DATA_TYPE';
+declare variable $fqt:MORE_CRITERIA as xs:string := 'MORE_CRITERIA';
+declare variable $fqt:ATTR_ALIAS as xs:string := 'ATTR_ALIAS';
+declare variable $fqt:EXTRA_ALIAS as xs:string := 'EXTRA_ALIAS';
+
+declare variable $fqt:skipATTR as xs:string := 'skipAttr';
+declare variable $fqt:translateCode as xs:string := 'translateCode';
+declare variable $fqt:ageToBirthYear as xs:string := 'ageToBirthYear';
+declare variable $fqt:d",,"",2013-09-24 12:27:52,,"query/fqt.xqm",,1,,
+154,41,128,86,1,"constants.xq","constants.xq","F465918438/constants.xq","RESOURCE_CLOB","text/plain","",,"(:
+ : Copyright (C) [2013] [The FURTHeR Project]
+ :
+ : Licensed under the Apache License, Version 2.0 (the ""License"");
+ : you may not use this file except in compliance with the License.
+ : You may obtain a copy of the License at
+ :
+ :         http://www.apache.org/licenses/LICENSE-2.0
+ :
+ : Unless required by applicable law or agreed to in writing, software
+ : distributed under the License is distributed on an ""AS IS"" BASIS,
+ : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ : See the License for the specific language governing permissions and
+ : limitations under the License.
+ :)
+ 
+module namespace const='http://further.utah.edu/constants';
+
+(: This file centralizes constants common to all XQuery programs, in particular :)
+(: URLs to external services.                                                   :)
+
+(: ================================================= :)
+(: URLs                                              :)
+(: ================================================= :)
+(: FURTHeR terminology web services server URL :)
+declare variable $const:restServer       := '${server.dts.ws}';
+
+(: Terminology translation web services URL prefix :)
+declare variable $const:dtsSearchService := '${path.dts.ws.search}';
+
+(: Terminology translation web services URL prefix :)
+declare variable $const:dtsRestService   := '${path.dts.ws.translate}';
+
+(: MDR web services server URL :)
+declare variable $const:fmdrRestServer   := '${server.mdr.ws}';
+(: MDR resource-retrieval-by-path web service :)
+declare variable $const:fmdrRestService  := '${path.mdr.ws.resource.path}';
+
+(: FQE web services server URL :)
+declare variable $const:fqeRestServer := '${server.fqe.ws}';
+
+(: ================================================= :)
+(: MDR resource paths                                :)
+(: ================================================= :)
+declare variable $const:fmdrPathValueDomainsXmi := '/fqe/further/lm/valuedomains.xmi';
+",,"",2010-04-21 00:00:00,,"fqe/further/xq/constants.xq",,1,,
+50000865,41,128,86,1,"frt.xqm","FURTHeR Result Translation XQuery Module","","RESOURCE_CLOB","text/plain","",,"(:
+ : Copyright (C) [2013] [The FURTHeR Project]
+ :
+ : Licensed under the Apache License, Version 2.0 (the ""License"");
+ : you may not use this file except in compliance with the License.
+ : You may obtain a copy of the License at
+ :
+ :         http://www.apache.org/licenses/LICENSE-2.0
+ :
+ : Unless required by applicable law or agreed to in writing, software
+ : distributed under the License is distributed on an ""AS IS"" BASIS,
+ : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ : See the License for the specific language governing permissions and
+ : limitations under the License.
+ :)
+xquery version ""3.0"";
+module namespace frt = ""http://further.utah.edu/result-translation"";
+
+(: Import FURTHeR Module :)
+(: import module namespace further = ""http://further.utah.edu/xquery-functions-module""
+    at ""further.xq""; :)
+import module namespace further = 'http://further.utah.edu/xquery-functions-module'
+    at '${server.mdr.ws}${path.mdr.ws.resource.path}/fqe/further/xq/further.xq';
+
+(: Import FURTHeR Constants Module :)
+(: import module namespace const = 'http://further.utah.edu/constants' 
+    at 'constants.xq'; :)
+import module namespace const = 'http://further.utah.edu/constants' 
+    at '${server.mdr.ws}${path.mdr.ws.resource.path}/fqe/further/xq/constants.xq';
+
+(: ALWAYS Define Namespaces in XQUERY PROLOG! :)
+declare namespace fn  = 'http://www.w3.org/2005/xpath-functions';
+declare namespace fq = ""http://further.utah.edu/core/query"";
+declare namespace dts = 'http://further.utah.edu/dts';
+declare namespace mdr = ""http://further.utah.edu/mdr"";
+declare namespace xs = ""http://www.w3.org/2001/XMLSchema"";
+declare namespace xsi = ""http://www.w3.org/2001/XMLSchema-instance"";
+declare namespace fqe = 'http://further.utah.edu/fqe';
+(: DO NOT USE DEFAULT NAMESPACE, it may conflict with the response Namespaces :)
+
+(: Global CONSTANTS, Always Translating FROM FURTHeR Namespace ID :)
+declare variable $frt:FURTHER as xs:string := '32769';
+declare variable $frt:FURTHeR as xs:string := 'FURTHeR';
+
+(: We are using SNOMED (Namespace ID 30) for ObservationType Values :)
+declare variable $frt:SNOMED as xs:string := '30';
+
+(: DTS Terminology Namespace IDs :)
+declare variable $frt:OMOP-V2 as xs:string := '32868';
+declare variable $frt:ICD-9 as xs:string := '10';
+declare variable $frt:LOINC as xs:string := '5102';
+
+(: Empty String Value for Substituting Empty Arguments to Functions :)
+declare variable $frt:EMPTY as xs:string := '';
+
+(: Mark Criterias that got Skipped :)
+declare variable $frt:SKIP as xs:string := 'S';
+
+(: Yes Value Used for Translation Flag transFlag :)
+declare variable $frt:YES as xs:string := 'Y';
+
+(: No Value Used for Translation Flag transFlag :)
+declare variable $frt:NO as xs:string := 'N';
+
+(: ERROR Value Used for Translation Flag transFlag :)
+declare variable $frt:ERROR as xs:string := 'E';
+
+(: Placeholder in case preTranslation Fails :)
+declare variable $frt:ZERO as xs:string := '0';
+
+(: DELIMITER :)
+declare variable $frt:DELIMITER as xs:string := '^';
+
+(: MDR Static Property Names CASE SENSITIVE! :)
+declare variable $frt:ATTR_TRANS_FUNC as xs:string := 'ATTR_TRANS_FUNC';
+declare variable $frt:ATTR_VALUE_TRANS_FUNC as xs:string := 'ATTR_VALUE_TRANS_FUNC';
+declare variable $frt:ATTR_VALUE_TRANS_TO_DATA_TYPE as xs:string := 'ATTR_VALUE_TRANS_TO_DATA_TYPE';
+declare variable $frt:CODING_SYSTEM as xs:string := 'CODING_SYSTEM';
+declare variable $frt:EXT_PERSON as xs:string := 'EXT_PERSON';
+declare variable $frt:EXT_ROOT_ID_ATTR as xs:string := 'EXT_ROOT_ID_ATTR';
+
+declare variable $frt:pickMe as xs:string := 'pickMe';
+declare variable $frt:skipATTR as xs:string := 'skipAttr';
+declare variable $frt:translateCode as xs:string := 'translateCode';
+declare variable $frt:ageToBirthYear as xs:string := 'ageToBirthYear';
+
+(: DTS Static Property Names CASE SENSITIVE! :)
+declare variable $frt:CodeInSource as xs:string := 'Code in Source';
+declare variable $frt:LocalCode as xs:string := 'Local Code';
+
+
+(:=====================",,"",2013-09-24 13:18:00,,"result/frt.xqm",,1,,
+706,41,84,106,1,"Medication order metadata","","","RESOURCE_XML","","",<div>
+   <h2>Definition</h2>
+   <p>Medication Order - An authorized health professional's request and instructions to have a medication or pharmaceutical product delivered to a patient.</p>
+   <h2>Datasources</h2>
+   <p>Available from the following datasources: </p>
+   <ul>
+	<li>Schultz Cancer Repository (OMOP data source)</li>
+	<li>Schultz Healthcare Systems (OpenMRS data source)</li>
+
+   </ul>
+</div>,"",(BLOB),"${server.mdr.ws}/rest/asset/resource/transform/XML/further/PharmaceuticalOrder/metadata.xml/transformer/XQUERY/i2b2/concept-metadata.xq;concept=Medication%20Order",2011-02-26 08:17:30,,"i2b2/medicationorder.xml",,1,,
+705,41,84,106,1,"Lab test order metadata","","","RESOURCE_XML","","",<div>
+   <h2>Definition</h2>
+   <p>Laboratory Tests - The result of a laboratory test. The existence of a specific test may be queried or the specific value or value range for the test.</p>
+   <h2>Datasources</h2>
+   <p>Available from the following datasources: </p>
+   <ul>
+	<li>Schultz Cancer Repository (OMOP data source)</li>
+	<li>Schultz Healthcare Systems (OpenMRS data source)</li>
+
+   </ul>
+</div>
+,"",(BLOB),"${server.mdr.ws}/rest/asset/resource/transform/XML/further/LabResult/metadata.xml/transformer/XQUERY/i2b2/concept-metadata.xq;concept=Laboratory%20Tests",2011-02-26 08:17:30,,"i2b2/laboratorytests.xml",,1,,
+1215,41,84,106,1,"Vital Status","","","RESOURCE_XML","","",<div>
+   <h2>Definition</h2>
+   <p>Vital Status - Indicates whether a death record exists for the individual.</p>
+   <h2>Datasources</h2>
+   <p>Available from the following datasources: </p>
+   <ul>
+	<li>Schultz Cancer Repository (OMOP data source)</li>
+	<li>Schultz Healthcare Systems (OpenMRS data source)</li>
+   </ul>
+</div>,"",(BLOB),"${server.mdr.ws}/rest/asset/resource/transform/XML/further/Person/vitalStatus/metadata.xml/transformer/XQUERY/i2b2/concept-metadata.xq;concept=Vital%20Status",2011-04-06 00:00:00,,"i2b2/vitalstatus.xml",,1,,
+703,41,84,106,1,"Religion metadata","","","RESOURCE_XML","","",<div>
+   <h2>Definition</h2>
+   <p>Religion - The subjects affiliation for their belief in or lack of worshiping a superhuman controlling power, esp. a personal God or gods.</p>
+   <h2>Datasources</h2>
+   <p>Available from the following datasources: </p>
+   <ul>
+		<li>Schultz Healthcare Systems (OpenMRS data source)</li>
+   </ul>
+</div>,"",(BLOB),"${server.mdr.ws}/rest/asset/resource/transform/XML/further/Person/religion/metadata.xml/transformer/XQUERY/i2b2/concept-metadata.xq;concept=Religion",2011-02-26 08:17:29,,"i2b2/religion.xml",,1,,
+702,41,84,106,1,"Race metadata","","","RESOURCE_XML","","",<div>
+   <h2>Definition</h2>
+   <p>Race - Race refers to the commonalities in a person's physical appearance, such as skin color, eye color, hair color, bone/jaw structure etc. Ethnicity, relates to cultural factors such as nationality, culture, ancestry, language and beliefs.</p>
+   <h2>Datasources</h2>
+   <p>Available from the following datasources: </p>
+   <ul>
+	<li>Schultz Cancer Repository (OMOP data source)</li>
+	<li>Schultz Healthcare Systems (OpenMRS data source)</li>
+   </ul>
+</div>,"",(BLOB),"${server.mdr.ws}/rest/asset/resource/transform/XML/further/Person/race/metadata.xml/transformer/XQUERY/i2b2/concept-metadata.xq;concept=Race",2011-02-26 08:17:29,,"i2b2/race.xml",,1,,
+700,41,84,106,1,"Language metadata","","","RESOURCE_XML","","",<div>
+   <h2>Definition</h2>
+   <p>Language - The person's primary written and/or spoken language.</p>
+   <h2>Datasources</h2>
+   <p>Available from the following datasources: </p>
+   <ul>
+	<li>Schultz Cancer Repository (OMOP data source)</li>
+	<li>Schultz Healthcare Systems (OpenMRS data source)</li>
+   </ul>
+</div>,"",(BLOB),"${server.mdr.ws}/rest/asset/resource/transform/XML/further/Person/primaryLanguage/metadata.xml/transformer/XQUERY/i2b2/concept-metadata.xq;concept=Language",2011-02-26 08:17:29,,"i2b2/language.xml",,1,,
+699,41,84,106,1,"Gender metadata","","","RESOURCE_XML","","",<div>
+   <h2>Definition</h2>
+   <p>Gender - The gender (i.e., the behavioral, cultural, or psychological traits typically associated with one sex) of a living subject as defined for administrative purposes.</p>
+   <h2>Datasources</h2>
+   <p>Available from the following datasources: </p>
+   <ul>
+	<li>Schultz Cancer Repository (OMOP data source)</li>
+	<li>Schultz Healthcare Systems (OpenMRS data source)</li>
+   </ul>
+</div>
+,"",(BLOB),"${server.mdr.ws}/rest/asset/resource/transform/XML/further/Person/administrativeGender/metadata.xml/transformer/XQUERY/i2b2/concept-metadata.xq;concept=Gender",2011-02-26 08:17:29,,"i2b2/gender.xml",,1,,
+696,41,84,106,1,"Demographics metadata","","","RESOURCE_XML","","",<div>
+   <h2>Definition</h2>
+   <p>Demographics - The characteristics of human beings. Unless otherwise specified, demographic values represent the current values known in the data sources. See sub-categories under Demographics for examples of supported demographic attributes.</p>
+   <h2>Datasources</h2>
+   <p>Available from the following datasources: </p>
+   <ul>
+	<li>Schultz Cancer Repository (OMOP data source)</li>
+	<li>Schultz Healthcare Systems (OpenMRS data source)</li>
+   </ul>
+</div>,"",(BLOB),"${server.mdr.ws}/rest/asset/resource/transform/XML/further/Person/metadata.xml/transformer/XQUERY/i2b2/concept-metadata.xq;concept=Demographics",2011-02-26 08:17:29,,"i2b2/demographics.xml",,1,,
+50001028,41,84,106,1,"Concept Metadata","","concept-metadata-mdr.xq","RESOURCE_CLOB","text/plain","",,"xquery version ""1.0"";
+import module namespace com = 'http://further.utah.edu/commons' at '${server.mdr.ws}${path.mdr.ws.resource.path}/fqe/further/xq/commons.xq';
+
+declare variable $docName as document-node(element(*, xs:untyped)) external;
+declare variable $concept as xs:string external;
+(:
+let $docName := doc(""race-metadata.xml"")
+let $concept := 'Race'
+:)
+let $className := data($docName/metadata/class/@name)
+let $attrCount := count($docName/metadata/class/attribute)
+let $attrDesc := 
+  if ( $attrCount = 0 or $attrCount > 1) then 
+    data( $docName/metadata/class/@description)
+  else 
+    data( $docName/metadata/class/attribute/@description )
+
+let $dataSources := $docName/metadata/class/dataSource
+let $attributes :=  $docName/metadata/class/attribute
+return
+<div>
+    {
+      if ( fn:string-length($attrDesc) > 0 ) then (
+	    <h2>Definition</h2>,
+	    <p>{concat($concept, "" - "", $attrDesc)}</p>
+	  )
+	  else ()
+	}
+	<h2>Datasources</h2>
+	<p>{$concept} is available from the following datasources: </p>
+	{
+		if ($attrCount  > 1 or $attrCount = 0) then (
+			<ul>{
+				for $ds in $dataSources 
+				let $dsDataClassStartYear := if ( string-length( data($ds/@dataStartYear) ) > 0 ) then concat( ' since ', data($ds/@dataStartYear) ) else ''
+				return if (number($ds/@count) > 0) 
+				then <li>{concat(data($ds/@name), "": "", com:add-commas-to-positive-integer( data($ds/@count) ), "" records have been collected"", $dsDataClassStartYear, ""; count computed "", fn:month-from-date( xs:date( data($ds/@updated) ) ), ""/"", fn:day-from-date( xs:date( data($ds/@updated) ) ), ""/"", fn:year-from-date( xs:date( data($ds/@updated) )))}</li>
+				else if (data($ds/@name)='UPDBL') then  <li><a href=""http://www.hci.utah.edu/groups/ppr/data.html"" target=""_blank"" title=""Click here to see UPDBL data sources and counts."">{data($ds/@name)}</a></li> else <li>{data($ds/@name)}</li>
+			}</ul>
+		)
+		else
+		(for $attr in $attributes 
+				return
+				<div>
+					<ul>{
+						for $attrDs in $attr/dataSource
+						let $dsName := data($attrDs/@name)
+						let $dsDataClassStartYear := data($dataSources[@name=$dsName]/@dataStartYear)
+						return if (number(($attrDs/@count)) > 0) 
+						then <li>{concat($dsName, "": "", com:add-commas-to-positive-integer( data($attrDs/@count) ) ,"" records have been collected since "", $dsDataClassStartYear , ""; "", fn:round((xs:integer($attrDs/@count) div xs:integer($dataSources[@name=$attrDs/@name]/@count))*10000) div 100.00, ""&#37; "", $className, "" records have a value for "", $concept, ""; count computed "", fn:month-from-date( xs:date( data($attrDs/@updated) ) ), ""/"", fn:day-from-date( xs:date( data($attrDs/@updated) ) ), ""/"", fn:year-from-date( xs:date( data($attrDs/@updated) ) ), "".""  )}</li>
+         				else if (data($attrDs/@name) = 'UPDBL') then <li><a href=""http://www.hci.utah.edu/groups/ppr/data.html"" target=""_blank"" title=""Click here to see UPDBL data sources and counts."">{data($attrDs/@name)}</a></li> else <li>{data($attrDs/@name)}</li>
+						
+					}</ul>
+				</div>
+		)
+	}
+</div>",(BLOB),"",2011-02-26 00:00:00,,"i2b2/concept-metadata.xq",,1,,
+1193,41,84,106,1,"Pedigree quality metadata","","","RESOURCE_URL","","",,"",(BLOB),"${server.mdr.ws}/rest/asset/resource/transform/XML/further/Person/pedigreeQuality/metadata.xml/transformer/XQUERY/i2b2/concept-metadata.xq;concept=Pedigree%20Quality",2011-03-24 00:00:00,,"i2b2/pedigreequality.xml",,1,,
+1214,41,84,106,1,"Geographic Location","","","RESOURCE_URL","","",,"",(BLOB),"${server.mdr.ws}/rest/asset/resource/transform/XML/further/lm/GeographicLocation/metadata.xml/transformer/XQUERY/i2b2/concept-metadata.xq;concept=Geographic%20Location",2011-04-06 00:00:00,,"i2b2/geographiclocation.xml",,1,,
+2596,41,84,106,1,"Observation metadata","","","RESOURCE_URL","","",,"",(BLOB),"${server.mdr.ws}/rest/asset/resource/transform/XML/omop/Observation/metadata.xml/transformer/XQUERY/i2b2/concept-metadata.xq;concept=Observation",2012-06-25 00:00:00,,"i2b2/observation.xml",,,,
+2598,41,84,106,1,"Drug Exposure metadata","","","RESOURCE_URL","","",,"",(BLOB),"${server.mdr.ws}/rest/asset/resource/transform/XML/omop/DrugExposure/metadata.xml/transformer/XQUERY/i2b2/concept-metadata.xq;concept=Drug%20Exposure",2012-06-26 00:00:00,,"i2b2/drugexposure.xml",,,,
+674,41,84,106,1,"i2b2 Person Metadata","","","RESOURCE_URL","","",,"",(BLOB),"${server.mdr.ws}/rest/asset/resource/transform/XML/further/lm/logical-view-xmi.xml/transformer/XQUERY/further/lm/class-metadata.xq;className=Person",2011-02-23 00:00:00,,"i2b2/Person/metadata.xml",,1,,
+694,41,84,106,1,"Cause of death metadata","","","RESOURCE_URL","","",,"",(BLOB),"${server.mdr.ws}/rest/asset/resource/transform/XML/further/CauseOfDeath/metadata.xml/transformer/XQUERY/i2b2/concept-metadata.xq;concept=Cause%20Of%20Death",2011-02-26 08:12:54,,"i2b2/causeofdeath.xml",,1,,
+701,41,84,106,1,"Marital status metadata","","","RESOURCE_XML","","",<div>
+   <h2>Definition</h2>
+   <p>Marital Status - A value representing the domestic partnership status of a person.</p>
+   <h2>Datasources</h2>
+   <p>Available from the following datasources: </p>
+   <ul>
+		<li>Schultz Healthcare Systems (OpenMRS data source)</li>
+   </ul>
+</div>
+,"",(BLOB),"${server.mdr.ws}/rest/asset/resource/transform/XML/further/Person/maritalStatus/metadata.xml/transformer/XQUERY/i2b2/concept-metadata.xq;concept=Marital%20Status",2011-02-26 08:17:29,,"i2b2/maritalstatus.xml",,1,,
+704,41,84,106,1,"Diagnosis metadata","","","RESOURCE_XML","","",<div>
+   <h2>Definition</h2>
+   <p>Diagnosis -The identification of the nature of an illness or other problem by examination of the symptoms.</p>
+   <h2>Datasources</h2>
+   <p>Available from the following datasources: </p>
+   <ul>
+	<li>Schultz Cancer Repository (OMOP data source)</li>
+	<li>Schultz Healthcare Systems (OpenMRS data source)</li>
+
+   </ul>
+</div>,"",(BLOB),"${server.mdr.ws}/rest/asset/resource/transform/XML/further/Diagnosis/metadata.xml/transformer/XQUERY/i2b2/concept-metadata.xq;concept=Diagnosis",2011-02-26 08:17:30,,"i2b2/diagnosis.xml",,1,,
+697,41,84,106,1,"Age metadata","","","RESOURCE_XML","","",<div>
+   <h2>Definition</h2>
+   <p>Age - How long the person has existed since birth. Current age is calculated in whole years from the year of birth (current year - birth year). This does not imply the person is still alive.</p>
+   <h2>Datasources</h2>
+   <p>Available from the following datasources: </p>
+   <ul>
+		<li>Schultz Healthcare Systems (OpenMRS data source)</li>
+   </ul>
+</div>
+,"",(BLOB),"${server.mdr.ws}/rest/asset/resource/transform/XML/further/Person/age/metadata.xml/transformer/XQUERY/i2b2/concept-metadata.xq;concept=Age",2011-02-26 08:17:29,,"i2b2/age.xml",,1,,
+698,41,84,106,1,"Birth year metadata","","","RESOURCE_XML","","",<div>
+   <h2>Definition</h2>
+   <p>Birth Year - The year the person was born.</p>
+   <h2>Datasources</h2>
+   <p>Available from the following datasources: </p>
+   <ul>
+	<li>Schultz Cancer Repository (OMOP data source)</li>
+	<li>Schultz Healthcare Systems (OpenMRS data source)</li>
+   </ul>
+</div>
+,"",(BLOB),"${server.mdr.ws}/rest/asset/resource/transform/XML/further/Person/dateOfBirth/metadata.xml/transformer/XQUERY/i2b2/concept-metadata.xq;concept=Birth%20Year",2011-02-26 08:17:29,,"i2b2/birthyear.xml",,1,,
+2593,41,84,106,1,"Biological Specimen metadata","","","RESOURCE_URL","","",,"",(BLOB),"${server.mdr.ws}/rest/asset/resource/transform/XML/omop/BiologicalSpecimen/metadata.xml/transformer/XQUERY/i2b2/concept-metadata.xq;concept=Biological%20Specimen",2012-06-25 00:00:00,,"i2b2/biologicalspecimen.xml",,,,
+2631,10,84,106,1,"Oncology UCR metadata content","","","RESOURCE_URL","","",,"",(BLOB),"${server.mdr.ws}/rest/asset/resource/transform/XML/updbl/ucr/metadata.xml/transformer/XQUERY/i2b2/concept-metadata.xq;concept=Utah%20Cancer%20Registry",2012-08-20 00:00:00,,"i2b2/utahcancerregistry.xml",,,,
+50000947,108,535,50000441,1,"Data Source Description in XML Content","XML Data Source Content for OpenMRS Version 1.9","metadata.xml","RESOURCE_XML","","",<?xml version="1.0" encoding="UTF-8"?>
+<dataSource xmlns="http://hsc.utah.edu/kr/coreTypes/1.0" 
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+            xsi:schemaLocation="http://hsc.utah.edu/kr/coreTypes/1.0 ${server.mdr.ws}${path.mdr.ws.resource.path}/kr/dataSource.xsd">
+  <header resourceType="content" resourceId="613" 
+          resourceStatusCd="Active" resourceVersion="1" 
+          resourceLabel="OpenMRS Version 1.9 Data Source Content" resourceDisplayLabel="OpenMRS Version 1.9 Data Source">
+		<resourceAssetLink assetLabel="OMOP Version 2 Data Source" assetId="913"/>
+		<createdBy lastName="Mo" firstName="Peter"/>
+		<custodian lastName="Mo" firstName="Peter"/>
+		<contextOfUse>
+			<topical preferredLabel="Demographics"/>
+			<topical preferredLabel="Diagnoses"/>
+			<topical preferredLabel="Laboratory Results"/>
+			<topical preferredLabel="Medication Orders"/>
+			<topical preferredLabel="Procedures"/>
+		</contextOfUse>
+	</header>
+	<body name="OpenMRS_V1.9" dataSourceType="RelationalDatabase">
+		<description>Schultz Healthcare Systems store health information using OpenMRS Version 1.9.</description>
+		<location name="Schultz Healthcare Systems"/>
+		<dataStewards>
+			<dataSteward lastName="Mo" firstName="Peter" title="Data Architect">
+				<contact contactTypeContext="Work" contactType="email" contactString="peter.mo@utah.edu"/>
+				<organization>University of Utah Health Sciences BMIC</organization>
+			</dataSteward>
+		</dataStewards>
+		<contributingSystems>	
+			<system name="Schultz Healthcare Systems">
+				<systemContext>
+					<spatial preferredLabel="OpenMRS"/>
+					<temporal startDateValue="2013" startDateUnits="Year" endDateValue="present" endDateUnits="Year"/>
+				</systemContext>
+			</system>
+		</contributingSystems>
+		<accessPolicy>
+			<accessPolicyDescription>Please contact the data steward for access policy information.</accessPolicyDescription>
+		</accessPolicy>
+	</body>
+</dataSource>
+,"",,"",2013-10-23 10:56:17,,"ds/openmrs_v19/metadata.xml",,1,,
+2432,41,84,106,1,"i2b2 Encounter metadata","","","RESOURCE_URL","","",,"",(BLOB),"${server.mdr.ws}/rest/asset/resource/transform/XML/further/Encounter/metadata.xml/transformer/XQUERY/i2b2/concept-metadata.xq;concept=Encounters",2012-02-28 00:00:00,,"i2b2/encounter.xml",,,,
+50000866,41,128,86,1,"fqtCall.xq","FURTHeR Query Translation XQuery Calling Program","","RESOURCE_CLOB","text/plain","",,"(:
+ : Copyright (C) [2013] [The FURTHeR Project]
+ :
+ : Licensed under the Apache License, Version 2.0 (the ""License"");
+ : you may not use this file except in compliance with the License.
+ : You may obtain a copy of the License at
+ :
+ :         http://www.apache.org/licenses/LICENSE-2.0
+ :
+ : Unless required by applicable law or agreed to in writing, software
+ : distributed under the License is distributed on an ""AS IS"" BASIS,
+ : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ : See the License for the specific language governing permissions and
+ : limitations under the License.
+ :)
+xquery version ""3.0"";
+
+(: Change the location of fqt.xqm when working locally :)
+(: import module namespace fqt = ""http://further.utah.edu/query-translation""
+    at 'fqt.xqm'; :)
+import module namespace fqt = ""http://further.utah.edu/query-translation""
+       at '${server.mdr.ws}${path.mdr.ws.resource.path}/query/fqt.xqm';
+
+(: ALWAYS PUT THIS IN THE XQUERY PROLOG! :)
+declare namespace fn  = 'http://www.w3.org/2005/xpath-functions';
+declare namespace xs = ""http://www.w3.org/2001/XMLSchema"";
+declare namespace xsi = ""http://www.w3.org/2001/XMLSchema-instance"";
+declare namespace fq = ""http://further.utah.edu/core/query"";
+
+(: Turn On the Option to Output the <xml> heading on the first Line :)
+declare namespace output = ""http://www.w3.org/2010/xslt-xquery-serialization"";
+declare option output:omit-xml-declaration ""no"";
+
+(: Get Target Namespace ID from External :)
+declare variable $tgNmspcId as xs:string external;
+declare variable $docName as document-node() external;
+
+(: END PROLOG :)
+
+
+(:==================================================================:)
+(: Call Main Translate Query Function                               :)
+(:==================================================================:)
+
+(: Sanitize Data to Prevent XQuery Injection Attacks :)
+let $sanitizedDoc := fqt:sanitize($docName)
+
+(: Use the Target Namespace ID instead of Namespace Name :)
+return fqt:transQuery($sanitizedDoc,$tgNmspcId)
+",,"",2013-09-24 14:28:02,,"query/fqtCall.xq",,1,,
+50000867,41,128,86,1,"frtCall.xq","FURTHeR Result Translation XQuery Calling Program","F1922204586/frtCall.xq","RESOURCE_CLOB","text/plain","",,"(:
+ : Copyright (C) [2013] [The FURTHeR Project]
+ :
+ : Licensed under the Apache License, Version 2.0 (the ""License"");
+ : you may not use this file except in compliance with the License.
+ : You may obtain a copy of the License at
+ :
+ :         http://www.apache.org/licenses/LICENSE-2.0
+ :
+ : Unless required by applicable law or agreed to in writing, software
+ : distributed under the License is distributed on an ""AS IS"" BASIS,
+ : WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ : See the License for the specific language governing permissions and
+ : limitations under the License.
+ :)
+xquery version ""3.0"";
+(: import module namespace frt = ""http://further.utah.edu/result-translation""
+    at 'frt.xqm'; :)
+import module namespace frt = ""http://further.utah.edu/result-translation""
+    at '${server.mdr.ws}${path.mdr.ws.resource.path}/result/frt.xqm';
+       
+(: ALWAYS PUT THIS IN THE XQUERY PROLOG! :)
+declare namespace fn  = 'http://www.w3.org/2005/xpath-functions';
+declare namespace xs = ""http://www.w3.org/2001/XMLSchema"";
+declare namespace xsi = ""http://www.w3.org/2001/XMLSchema-instance"";
+declare namespace fq = ""http://further.utah.edu/core/query"";
+
+(: Turn On the Option to Output the <xml> heading on the first Line :)
+declare namespace output = ""http://www.w3.org/2010/xslt-xquery-serialization"";
+declare option output:omit-xml-declaration ""no"";
+
+(: Set docName :)
+declare variable $docName as document-node() external;
+
+(: Get Source Namespace ID from External :)
+declare variable $srcNmspcId as xs:string external;
+
+(: Set DataSet ID :)
+declare variable $dataSetId as xs:string external;
+
+(: END PROLOG :)
+
+
+(:==================================================================:)
+(: Call Main Translate Query Function                               :)
+(:==================================================================:)
+
+(: Sanitize Data to Prevent XQuery Injection Attacks :)
+let $sanitizedDoc := frt:sanitize($docName)
+
+(: Use the Source Namespace ID instead of Namespace Name :)
+return frt:transResult($sanitizedDoc,$srcNmspcId,$dataSetId)
+",,"",2013-09-24 14:28:34,,"result/frtCall.xq",,1,,
+707,41,84,106,1,"Procedure metadata","","","RESOURCE_XML","","",<div>
+   <h2>Definition</h2>
+   <p>Procedure - A set of medical methods or actions performed for or on a patient to treat or prevent disease or adverse anomaly.</p>
+   <h2>Datasources</h2>
+   <p>Available from the following datasources: </p>
+   <ul>
+	<li>Schultz Cancer Repository (OMOP data source)</li>
+	<li>Schultz Healthcare Systems (OpenMRS data source)</li>
+   </ul>
+</div>,"",(BLOB),"${server.mdr.ws}/rest/asset/resource/transform/XML/further/Procedure/metadata.xml/transformer/XQUERY/i2b2/concept-metadata.xq;concept=Procedure",2011-02-26 08:17:30,,"i2b2/procedure.xml",,1,,

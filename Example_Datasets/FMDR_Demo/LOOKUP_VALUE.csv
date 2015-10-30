@@ -1,0 +1,12 @@
+"LOOKUP_VALUE_ID","LOOKUP_VALUE_LABEL","LOOKUP_VALUE_ALT_ID","CODE_NAMESPACE_ID","CODE_PROPERTY_NAME","CODE_PROPERTY_VALUE","LOOKUP_VALUE_ORDER"
+1,"Active","",,"","",
+2,"Inactive","",,"","",
+6,"dts.ws.context.url","",,"","",
+7,"No","N",,"","",
+8,"Yes","Y",,"","",
+10,"Under Review","",,"","",
+9,"In Progress","",,"","",
+11,"Waiting for Approval","",,"","",
+3,"FURTHeR","32769",,"","",
+4,"UUEDW","32776",,"","",
+5,"UPDBL","32774",,"","",

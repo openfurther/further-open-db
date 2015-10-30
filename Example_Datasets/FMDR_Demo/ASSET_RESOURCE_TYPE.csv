@@ -1,0 +1,19 @@
+"ASSET_RESOURCE_TYPE_ID","ASSET_RESOURCE_TYPE_DSC","PARENT_RESOURCE_TYPE_ID"
+2,"Content Metadata (XML)",
+3,"Content Metadata Form (SPS)",2
+4,"Content Metadata View Transform (XSLT)",2
+5,"Structural Metadata (XMI)",
+6,"UML Diagram (JPEG)",
+7,"Physical to Analytical Model Transform (XQ)",
+9,"System Library (XSD)",
+10,"System Metamodel (XSD)",
+41,"XQuery Library (XQ)",
+1,"Content Metamodel (XSD)",108
+12,"Documentation",
+124,"Content View Transform (XSLT)",108
+144,"Default Content (XML)",
+64,"Result Set Model (XSD)",
+84,"Administrative Metadata (XML)",
+105,"Content Metadata Metamodel (XSD)",2
+107,"Content Form (SPS)",108
+108,"Content",
