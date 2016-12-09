@@ -10,8 +10,23 @@ CREATE TABLE FRTHR_FQE.APP_LOG
   APP_MSG_CD VARCHAR2(255), 
   APP_LOG_MSG CLOB, 
   APP_LOG_DTS DATE, 
-  APP_USER_ID NUMBER
+  APP_USER_ID NUMBER,
+  CONSTRAINT APP_LOG_PK PRIMARY KEY (APP_LOG_ID)
 );
+-- Initially used by Query Translation Programs
+COMMENT ON  TABLE FRTHR_FQE.APP_LOG IS 'Application Modules Logging Table, Logs details of program Execution.';
+COMMENT ON COLUMN FRTHR_FQE.APP_LOG.APP_LOG_ID
+        IS 'Surrogate Application Log ID';
+COMMENT ON COLUMN FRTHR_FQE.APP_LOG.APP_MODULE
+        IS 'Application Module Source or Function Generating the Log Message.';
+COMMENT ON COLUMN FRTHR_FQE.APP_LOG.APP_MSG_CD
+        IS 'Message Code such as DEBUG, WARNING, INFO, ERROR, etc.';
+COMMENT ON COLUMN FRTHR_FQE.APP_LOG.APP_LOG_MSG
+        IS 'Log Message';
+COMMENT ON COLUMN FRTHR_FQE.APP_LOG.APP_LOG_DTS
+        IS 'Log Date Time Stamp';
+COMMENT ON COLUMN FRTHR_FQE.APP_LOG.APP_USER_ID
+        IS 'User ID who is generating the Log Message, if available.';
 
 --------------------------------------------------------
 --  DDL for Table AUDIT_LOG
@@ -21,13 +36,34 @@ CREATE TABLE FRTHR_FQE.AUDIT_LOG
   AUDIT_LOG_ID NUMBER(19,0), 
   AUTHORIZATION_BODY VARCHAR2(255), 
   AUTHORIZATION_DETAIL VARCHAR2(255), 
-  EVENT_DTS TIMESTAMP (6), 
+  EVENT_DTS TIMESTAMP(6),
   EVENT_DSC CLOB, 
   EVENT_SOURCE VARCHAR2(255), 
   EVENT_STATUS_CD VARCHAR2(255), 
   EVENT_TYPE_CD VARCHAR2(255), 
-  USER_ID VARCHAR2(255)
+  USER_ID VARCHAR2(255),
+  CONSTRAINT AUDIT_LOG_PK PRIMARY KEY (AUDIT_LOG_ID)
 );
+COMMENT ON  TABLE FRTHR_FQE.AUDIT_LOG IS 'Logs high level process of a Federated Query';
+COMMENT ON COLUMN FRTHR_FQE.AUDIT_LOG.AUDIT_LOG_ID
+        IS 'Surrogate Audit Log ID';
+COMMENT ON COLUMN FRTHR_FQE.AUDIT_LOG.AUTHORIZATION_BODY
+        IS 'The authorization/regulatory body (UU, IHC, UDOH, etc.) after integration with e-IRBs in the future. It is null for now.';
+COMMENT ON COLUMN FRTHR_FQE.AUDIT_LOG.AUTHORIZATION_DETAIL
+        IS 'The authorization details. This could be the IRB number and a brief extract of the IRB review decision. It is null for now.';
+COMMENT ON COLUMN FRTHR_FQE.AUDIT_LOG.EVENT_DTS
+        IS 'Event Date Time Stamp';
+COMMENT ON COLUMN FRTHR_FQE.AUDIT_LOG.EVENT_DSC
+        IS 'Event Description';
+COMMENT ON COLUMN FRTHR_FQE.AUDIT_LOG.EVENT_SOURCE
+        IS 'The source of the event. For query events, it would be the data source name.';
+COMMENT ON COLUMN FRTHR_FQE.AUDIT_LOG.EVENT_STATUS_CD
+        IS 'The status of the event. For query events, it would be "queued, completed, or failed".';
+COMMENT ON COLUMN FRTHR_FQE.AUDIT_LOG.EVENT_TYPE_CD
+        IS 'The type of the event. For query events, it would be "query".';
+COMMENT ON COLUMN FRTHR_FQE.AUDIT_LOG.USER_ID
+        IS 'The user id responsible for the event.';
+
 
 --------------------------------------------------------
 --  DDL for Table COM_AUDIT_TRAIL
